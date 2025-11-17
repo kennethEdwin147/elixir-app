@@ -1,0 +1,105 @@
+<!DOCTYPE html>
+<html lang="fr">
+<head>
+    <meta charset="UTF-8">
+    <meta name="viewport" content="width=device-width, initial-scale=1.0">
+    <title>Zendesk - Quoi de Neuf</title>
+
+    <script src="https://cdn.tailwindcss.com"></script>
+    <script type="module" src="http://localhost:5173/main.js"></script>
+
+    <style>
+        /* Couleurs pour les badges */
+
+    </style>
+</head>
+<body class="font-sans bg-yellow-50/30">
+
+<nav class="p-4 md:px-12 ">
+  <div class=" mx-auto flex items-center justify-between">
+    <!-- Logo/Brand -->
+    <div>
+      <img width="50"  class="img--sized colorize-ink push_quarter--bottom" aria-hidden="true" src="https://bc3-production-assets-cdn.basecamp-static.com/assets/logos/paperclip-logo-8b4a8489c6697e42de5c8410f32b4944f2e96d7061a378d2858862b135037ae0.svg">
+    </div>
+
+    <!-- Navigation Links -->
+    <div class="flex items-center space-x-4">
+      <a href="#" class="">About</a>
+      <a href="#" class="">Services</a>
+      <a href="#" class="">Contact</a>
+    </div>
+
+    <!-- Call to Action Button (Optional) -->
+    <div>
+      <a href="/auth/login" class="bg-black hover:bg-black text-white font-bold py-2 px-4 rounded">
+        Sign In
+      </a>
+    </div>
+  </div>
+</nav>
+
+
+   <section class="min-h-screen flex flex-col items-center">
+
+
+
+ <%!-- Conteneur principal (La carte centrée) --%>
+  <div class="w-full max-w-3xl  p-6 sm:p-8 ">
+
+
+
+<div class="max-w-4xl mx-auto rounded-md p-8 ">
+  <!-- Header Section -->
+  <!-- Features Section -->
+  <div class="space-y-12">
+    <!-- Modular Feature -->
+    <div class="flex items-start space-x-4">
+      <div class="flex-shrink-0">
+        <div class="w-12 h-12 bg-black rounded-lg flex items-center justify-center">
+          <svg class="w-6 h-6 text-white" fill="currentColor" viewBox="0 0 24 24">
+            <path d="M4 4h4v4H4V4zm6 0h4v4h-4V4zm6 0h4v4h-4V4zM4 10h4v4H4v-4zm6 0h4v4h-4v-4zm6 0h4v4h-4v-4zM4 16h4v4H4v-4zm6 0h4v4h-4v-4zm6 0h4v4h-4v-4z"/>
+          </svg>
+        </div>
+      </div>
+      <div>
+        <h2 class="text-2xl font-bold  mb-3">
+          <span class="text-black">Modular...</span> and all in one
+        </h2>
+        <p class="text-slate-600 leading-relaxed">
+          Get only what you need. Most softwares have a lot of things you don't want. With buddies, choose only relevant apps for your usage.
+        </p>
+      </div>
+    </div>
+
+        <img class="object-cover " src="https://d3njjcbhbojbot.cloudfront.net/api/utilities/v1/imageproxy/https://images.ctfassets.net/wp1lcwdav1p1/49WvIx0O6onAvDfOZqez31/9dcdf56c79ee447efe2b7510a6104d50/GettyImages-2035047212__1_.jpg?w=1500&h=680&q=60&fit=fill&f=faces&fm=jpg&fl=progressive&auto=format%2Ccompress&dpr=1&w=1000"></img>
+
+
+    <!-- 100% in Slack Feature -->
+    <div class="flex items-start space-x-4">
+      <div class="flex-shrink-0">
+        <div class="w-12 h-12 bg-black rounded-lg flex items-center justify-center">
+          <svg class="w-6 h-6 text-white" fill="currentColor" viewBox="0 0 24 24">
+            <path d="M5.042 15.165a2.528 2.528 0 0 1-2.52 2.523A2.528 2.528 0 0 1 0 15.165a2.527 2.527 0 0 1 2.522-2.52h2.52v2.52zM6.313 15.165a2.527 2.527 0 0 1 2.521-2.52 2.527 2.527 0 0 1 2.521 2.52v6.313A2.528 2.528 0 0 1 8.834 24a2.528 2.528 0 0 1-2.521-2.522v-6.313zM8.834 5.042a2.528 2.528 0 0 1-2.521-2.52A2.528 2.528 0 0 1 8.834 0a2.528 2.528 0 0 1 2.521 2.522v2.52H8.834zM8.834 6.313a2.528 2.528 0 0 1 2.521 2.521 2.528 2.528 0 0 1-2.521 2.521H2.522A2.528 2.528 0 0 1 0 8.834a2.528 2.528 0 0 1 2.522-2.521h6.312zM18.956 8.834a2.528 2.528 0 0 1 2.522-2.521A2.528 2.528 0 0 1 24 8.834a2.528 2.528 0 0 1-2.522 2.521h-2.522V8.834zM17.688 8.834a2.528 2.528 0 0 1-2.522 2.521 2.527 2.527 0 0 1-2.52-2.521V2.522A2.527 2.527 0 0 1 15.166 0a2.528 2.528 0 0 1 2.522 2.522v6.312zM15.166 18.956a2.528 2.528 0 0 1 2.522 2.522A2.528 2.528 0 0 1 15.166 24a2.527 2.527 0 0 1-2.52-2.522v-2.522h2.52zM15.166 17.688a2.527 2.527 0 0 1-2.52-2.522 2.526 2.526 0 0 1 2.52-2.52h6.312A2.527 2.527 0 0 1 24 15.166a2.528 2.528 0 0 1-2.522 2.522h-6.312z"/>
+          </svg>
+        </div>
+      </div>
+      <div>
+        <h2 class="text-2xl font-bold mb-3">
+          <span class="text-black">100% in slack</span>
+        </h2>
+        <p class="text-slate-600 leading-relaxed">
+          This is where the culture happens. We know you don't want to have, again, another app to signup to. Each module is an app for Slack. All apps are configurable independently (each one can have separate channels and notification settings)
+        </p>
+      </div>
+    </div>
+  </div>
+</div>
+
+
+
+
+  </div>
+
+</section>
+</body>
+</html>

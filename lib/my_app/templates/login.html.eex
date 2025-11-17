@@ -1,0 +1,99 @@
+
+<!DOCTYPE html>
+<html lang="en">
+<head>
+    <meta charset="UTF-8">
+    <meta name="viewport" content="width=device-width, initial-scale=1.0">
+    <title>Document</title>
+
+    <script src="https://cdn.tailwindcss.com"></script>
+    <script type="module" src="http://localhost:5173/main.js"></script>
+
+</head>
+<body>
+
+   <div class="min-h-screen px-4  bg-yellow-50/30 flex flex-col items-center pt-8">
+  <%!-- Logo/Icône --%>
+  <div class="mb-8">
+    <a href="/">
+    <img width="60" height="78" class="img--sized colorize-ink push_quarter--bottom" aria-hidden="true" src="https://bc3-production-assets-cdn.basecamp-static.com/assets/logos/paperclip-logo-8b4a8489c6697e42de5c8410f32b4944f2e96d7061a378d2858862b135037ae0.svg">
+  </a>
+  </div>
+
+ <%= if @error_msg do %>
+      <p style="color:red; " class="my-2"><%= @error_msg %></p>
+    <% end %>
+
+  <%!-- Conteneur principal (La carte centrée) --%>
+  <div class="w-full max-w-xl bg-white p-6 sm:p-8 shadow-2xl border border-gray-100">
+
+    <h2 class="text-xl font-bold text-gray-800 mb-6">
+      Log in to Basecamp
+    </h2>
+
+
+
+    <%!-- Séparateur "Or, use my email address" --%>
+
+
+    <%!-- Formulaire HTML pur --%>
+    <form class="space-y-4" action="/auth/login" method="POST">
+
+      <%!-- Champ Email ou Username --%>
+      <div>
+        <label for="email" class="block text-sm font-bold text-gray-700">Email or username</label>
+        <div class="mt-1">
+          <input
+            id="email"
+            name="email"
+            type="email"
+            placeholder="e.g. julie.young@hey.com"
+            required
+            value="<%= @email_value %>"
+            class="appearance-none bg-gray-100 block w-full px-4 py-3 text-black rounded-lg shadow-sm placeholder-gray-400 focus:outline-none focus:ring-blue-500 focus:border-blue-500 sm:text-sm"
+          >
+        </div>
+      </div>
+
+       <%!-- Champ Password --%>
+      <div>
+        <label for="password" class="block text-sm font-bold text-gray-700">Mot de passe</label>
+        <div class="mt-1">
+          <input
+            id="password"
+            name="password"
+            type="password"
+            placeholder="************"
+            required
+            class="appearance-none bg-gray-100 block w-full px-4 py-3 text-black rounded-lg shadow-sm placeholder-gray-400 focus:outline-none focus:ring-blue-500 focus:border-blue-500 sm:text-sm"
+          >
+        </div>
+      </div>
+
+      <%!-- Bouton Next --%>
+      <div>
+        <button type="submit" class="w-full flex justify-center py-3 px-4 border border-transparent rounded-lg shadow-sm text-sm font-bold text-white bg-black hover:bg-gray-900 focus:outline-none focus:ring-2 focus:ring-offset-2 focus:ring-gray-700 transition duration-150 ease-in-out">
+          Next
+        </button>
+      </div>
+
+    </form>
+
+  </div>
+
+
+  <%!-- Liens bas de page --%>
+  <div class=" text-center text-xs mt-4">
+    <a href="#" class="font-bold text-black hover:text-gray-900 transition duration-150 ease-in-out">
+      Forgot your password?
+    </a>
+
+    <p class="mt-4 text-gray-500 text-xs">
+      New to Basecamp?
+      <a href="/register" class="font-bold text-black hover:text-gray-900 transition duration-150 ease-in-out">Sign up for free</a>
+    </p>
+  </div>
+</div>
+
+</body>
+</html>

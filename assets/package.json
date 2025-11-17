@@ -1,0 +1,42 @@
+{
+  "name": "assets",
+  "version": "1.0.0",
+  "description": "",
+  "main": "index.js",
+  "scripts": {
+    "dev": "vite",
+    "build": "vite build",
+    "watch": "vite build --watch"
+  },
+  "keywords": [],
+  "author": "",
+  "license": "ISC",
+  "type": "commonjs",
+  "devDependencies": {
+    "@tailwindcss/postcss": "^4.1.17",
+    "autoprefixer": "^10.4.22",
+    "postcss": "^8.5.6",
+    "tailwindcss": "^4.1.17",
+    "vite": "^7.2.2"
+  },
+  "dependencies": {
+    "baseline-browser-mapping": "^2.8.28",
+    "browserslist": "^4.28.0",
+    "caniuse-lite": "^1.0.30001754",
+    "electron-to-chromium": "^1.5.253",
+    "esbuild": "^0.25.12",
+    "escalade": "^3.2.0",
+    "fdir": "^6.5.0",
+    "fraction.js": "^5.3.4",
+    "nanoid": "^3.3.11",
+    "node-releases": "^2.0.27",
+    "normalize-range": "^0.1.2",
+    "picocolors": "^1.1.1",
+    "picomatch": "^4.0.3",
+    "postcss-value-parser": "^4.2.0",
+    "rollup": "^4.53.2",
+    "source-map-js": "^1.2.1",
+    "tinyglobby": "^0.2.15",
+    "update-browserslist-db": "^1.1.4"
+  }
+}
