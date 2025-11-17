@@ -1,0 +1,31 @@
+<!DOCTYPE html>
+<html lang="fr">
+<head>
+  <meta charset="UTF-8">
+  <meta name="viewport" content="width=device-width, initial-scale=1.0">
+  <title>Mes Wraps</title>
+</head>
+<body>
+  <h1>Mes Wraps</h1>
+
+  <%= if length(@wraps) == 0 do %>
+    <p>Tu n'as pas encore créé de wrap.</p>
+    <a href="/create">
+      <button>Créer mon premier Wrap</button>
+    </a>
+  <% else %>
+    <div>
+      <%= for wrap <- @wraps do %>
+        <div>
+          <p>Wrap <%= wrap.created_at %> - <%= wrap.template %></p>
+          <a href="/v/<%= wrap.id %>">Voir</a>
+        </div>
+      <% end %>
+    </div>
+
+    <a href="/create">
+      <button>Créer un nouveau Wrap</button>
+    </a>
+  <% end %>
+</body>
+</html>

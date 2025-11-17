@@ -1,4 +1,4 @@
-defmodule MyApp.Controllers.AuthController do
+defmodule MyApp.Controllers.LoginController do
   use Plug.Router
   alias MyApp.Services.Validation
 

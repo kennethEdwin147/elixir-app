@@ -30,9 +30,11 @@ defmodule MyApp.Router do
     send_resp(conn, 200, html)
   end
 
-    forward "/auth",     to: MyApp.Controllers.AuthController
+    forward "/home",     to: MyApp.Controllers.HomeController
+    forward "/login",    to: MyApp.Controllers.LoginController
     forward "/register", to: MyApp.Controllers.RegisterController
     forward "/user",     to: MyApp.Controllers.UserController
+    forward "/create",   to: MyApp.Controllers.CreateController
 
   match _ do
     send_resp(conn, 404, "Not Found")

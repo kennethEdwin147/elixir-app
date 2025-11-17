@@ -1,0 +1,30 @@
+<!DOCTYPE html>
+<html lang="fr">
+<head>
+  <meta charset="UTF-8">
+  <meta name="viewport" content="width=device-width, initial-scale=1.0">
+  <title>Preview - Wrapped 2025</title>
+</head>
+<body>
+  <h1>Preview de ton Wrapped</h1>
+  <p>Voici un aperçu de tes 7 slides</p>
+
+  <div>
+    <p>Slide 1: Photo + texte</p>
+    <p>Slide 2: 4 photos</p>
+    <p>Slide 3: Personnes importantes</p>
+    <p>Slide 4: Lieux</p>
+    <p>Slide 5: Moment préféré</p>
+    <p>Slide 6: Ce que tu retiens</p>
+    <p>Slide 7: Objectifs 2026</p>
+  </div>
+
+  <form action="/create/<%= @wrap_id %>/generate" method="POST">
+    <button type="submit">Générer mon Wrapped</button>
+  </form>
+
+  <a href="/create/<%= @wrap_id %>/step/7">
+    <button type="button">← Modifier</button>
+  </a>
+</body>
+</html>

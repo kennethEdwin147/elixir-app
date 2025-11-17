@@ -1,0 +1,40 @@
+<!DOCTYPE html>
+<html lang="fr">
+<head>
+  <meta charset="UTF-8">
+  <meta name="viewport" content="width=device-width, initial-scale=1.0">
+  <title>Étape <%= @step_num %> / <%= @total_steps %></title>
+</head>
+<body>
+  <div>
+    <p>Étape <%= @step_num %> / <%= @total_steps %></p>
+  </div>
+
+  <h1>Slide <%= @step_num %></h1>
+  <p>Upload tes photos pour cette slide</p>
+
+  <form action="/create/<%= @wrap_id %>/step/<%= @step_num %>" method="POST" enctype="multipart/form-data">
+    <div>
+      <label>Photos:</label>
+      <input type="file" name="photos[]" multiple accept="image/*">
+    </div>
+
+    <div>
+      <label>Texte (optionnel):</label>
+      <textarea name="text" rows="3"></textarea>
+    </div>
+
+    <div>
+      <%= if @step_num > 1 do %>
+        <a href="/create/<%= @wrap_id %>/step/<%= @step_num - 1 %>">
+          <button type="button">← Retour</button>
+        </a>
+      <% end %>
+
+      <button type="submit">
+        <%= if @step_num < @total_steps, do: "Suivant →", else: "Terminer" %>
+      </button>
+    </div>
+  </form>
+</body>
+</html>
