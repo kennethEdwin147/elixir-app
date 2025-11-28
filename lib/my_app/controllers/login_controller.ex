@@ -1,13 +1,12 @@
 defmodule MyApp.Controllers.LoginController do
   use Plug.Router
   alias MyApp.Services.Validation
-
+  alias MyApp.Services.UserStorage
 
   plug :match
   plug :dispatch
 
-  # Formulaire de login
-  get "/login" do
+  get "/" do
     html = EEx.eval_file("lib/my_app/templates/login.html.eex",
       assigns: %{
         email_value: "",
@@ -20,27 +19,26 @@ defmodule MyApp.Controllers.LoginController do
     |> send_resp(200, html)
   end
 
-
-  # Traitement du login
-  post "/login" do
+  post "/" do
     params = conn.params
-    IO.inspect(conn.params, label: "Params reçus")
 
     with {:ok, _} <- Validation.validate_required(params, ["email", "password"]),
          {:ok, _} <- Validation.validate_email(params["email"]),
-         {:ok, _} <- Validation.validate_length(params["password"], "Mot de passe", min: 6) do # <--- CORRECTION DU 'do' MANQUANT
+         user when not is_nil(user) <- UserStorage.find_by_email(params["email"]),
+         true <- UserStorage.verify_password(user, params["password"]) do
+
       conn
-        |> put_session(:user_email, params["email"])
-        |> put_resp_header("location", "/user/dashboard")
-        |> send_resp(302, "")
+      |> put_session(:user_id, user.id)
+      |> put_session(:user_email, user.email)
+      |> put_resp_header("location", "/dashboard")
+      |> send_resp(302, "")
 
     else
-      {:error, msg} ->
-          IO.inspect(msg, label: "Erreur login")
+      _ ->
         html = EEx.eval_file("lib/my_app/templates/login.html.eex",
           assigns: %{
             email_value: params["email"] || "",
-            error_msg: msg
+            error_msg: "Email ou mot de passe incorrect"
           }
         )
 
@@ -50,13 +48,10 @@ defmodule MyApp.Controllers.LoginController do
     end
   end
 
-
-  # Déconnexion
   post "/logout" do
-    # Ici tu détruis la session ou invalide le cookie
     conn
     |> configure_session(drop: true)
-    |> send_resp(200, "Déconnexion effectuée")
+    |> put_resp_header("location", "/")
+    |> send_resp(302, "")
   end
-
-end # <--- Fin du module. Assurez-vous d'avoir bien fermé tous les blocs précédents.
+end

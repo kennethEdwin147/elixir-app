@@ -24,6 +24,8 @@ defmodule MyApp.MixProject do
       {:plug, "~> 1.14"},
       {:plug_cowboy, "~> 2.6"},
       {:jason, "~> 1.4"},
+      {:uuid, "~> 1.1"}  # Ajoute cette ligne
+
     ]
   end
 

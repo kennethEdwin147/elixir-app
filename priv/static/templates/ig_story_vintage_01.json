@@ -1,0 +1,59 @@
+{
+  "id": "ig_story_vintage_01",
+  "name": "Vintage Polaroid Story",
+  "category": "vintage",
+  "format": "ig_story",
+  "dimensions": {
+    "width": 1080,
+    "height": 1920
+  },
+  "background": "/static/templates/assets/ig_story_vintage_01/background.png",
+  "frames": [
+    {
+      "id": "frame_1",
+      "type": "rect",
+      "x": 100,
+      "y": 200,
+      "width": 400,
+      "height": 500,
+      "rotation": -5
+    },
+    {
+      "id": "frame_2",
+      "type": "rect",
+      "x": 550,
+      "y": 250,
+      "width": 400,
+      "height": 500,
+      "rotation": 8
+    },
+    {
+      "id": "frame_3",
+      "type": "rect",
+      "x": 150,
+      "y": 850,
+      "width": 350,
+      "height": 450,
+      "rotation": 3
+    },
+    {
+      "id": "frame_4",
+      "type": "rect",
+      "x": 580,
+      "y": 900,
+      "width": 380,
+      "height": 480,
+      "rotation": -7
+    },
+    {
+      "id": "frame_5",
+      "type": "rect",
+      "x": 250,
+      "y": 1450,
+      "width": 580,
+      "height": 380,
+      "rotation": 2
+    }
+  ],
+  "preview": "/static/templates/assets/ig_story_vintage_01/preview.jpg"
+}

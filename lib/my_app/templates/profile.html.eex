@@ -1,0 +1,48 @@
+<!DOCTYPE html>
+<html lang="fr">
+<head>
+    <meta charset="UTF-8">
+    <meta name="viewport" content="width=device-width, initial-scale=1.0">
+    <title>@<%= @username %> - Link in Bio</title>
+</head>
+<body>
+    <header>
+        <%= if @profile_image do %>
+            <img src="<%= @profile_image %>" alt="<%= @username %>" width="100" height="100">
+        <% end %>
+
+        <h1>@<%= @username %></h1>
+
+        <%= if @bio != "" do %>
+            <p><%= @bio %></p>
+        <% end %>
+    </header>
+
+    <hr>
+
+    <main>
+        <%= if length(@links) > 0 do %>
+            <ul>
+                <%= for link <- @links do %>
+                    <li>
+                        <a href="/<%= @username %>/l/<%= link.id %>">
+                            <%= if link.icon do %>
+                                <%= link.icon %>
+                            <% end %>
+                            <%= link.title %>
+                        </a>
+                    </li>
+                <% end %>
+            </ul>
+        <% else %>
+            <p>Aucun lien disponible pour le moment.</p>
+        <% end %>
+    </main>
+
+    <hr>
+
+    <footer>
+        <small>Créé avec Link in Bio</small>
+    </footer>
+</body>
+</html>

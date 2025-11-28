@@ -3,23 +3,45 @@
 <head>
     <meta charset="UTF-8">
     <meta name="viewport" content="width=device-width, initial-scale=1.0">
-    <title>Wrapped 2025 - Revivre tes moments</title>
-
-
-    <style>
-        /* Custom styles si besoin */
-    </style>
+    <title>Accueil du service de liens (SaaS)</title>
 </head>
-<body class="">
+<body>
 
-    <div class="">
-        <h1 class="">Wrapped 2025</h1>
-        <p class="">Revivez vos meilleurs moments de l'année en 7 slides</p>
+    <p>
+        <a href="/login">**Connexion**</a>
+        |
+        <a href="/register">**Inscription**</a>
+    </p>
 
-        <a href="/create" class="underline">
-            Commencer
-        </a>
-    </div>
+    <hr>
+
+    <h1>Bienvenue sur notre service de liens bio</h1>
+
+    <p>
+        Créez votre page de liens personnalisée en quelques secondes.
+        Un seul lien à partager pour regrouper tous vos réseaux sociaux,
+        sites web et projets.
+    </p>
+
+    <h2>
+        <a href="/register">Commencer Gratuitement Maintenant</a>
+    </h2>
+
+    <hr>
+
+    <h3>Fonctionnalités Clés</h3>
+    <ul>
+        <li>Nombre illimité de liens</li>
+        <li>Statistiques de clics (Analytics)</li>
+        <li>Thèmes personnalisables (pour la version finale)</li>
+        <li>Interface d'administration simple</li>
+    </ul>
+
+    <p>
+        <a href="/terms">Conditions d'utilisation</a>
+        |
+        <a href="/privacy">Politique de confidentialité</a>
+    </p>
 
 </body>
 </html>

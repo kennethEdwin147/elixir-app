@@ -5,8 +5,8 @@ defmodule MyApp.Router do
 
    # Sert les fichiers statiques
   plug Plug.Static,
-    at: "/",
-    from: "priv/static"
+    at: "/static",
+    from: {:my_app, "priv/static"}
 
   plug Plug.Parsers,
     parsers: [:urlencoded, :multipart, :json],
@@ -30,11 +30,13 @@ defmodule MyApp.Router do
     send_resp(conn, 200, html)
   end
 
-    forward "/home",     to: MyApp.Controllers.HomeController
-    forward "/login",    to: MyApp.Controllers.LoginController
-    forward "/register", to: MyApp.Controllers.RegisterController
-    forward "/user",     to: MyApp.Controllers.UserController
-    forward "/create",   to: MyApp.Controllers.CreateController
+  forward "/home",     to: MyApp.Controllers.HomeController
+  forward "/login",    to: MyApp.Controllers.LoginController
+  forward "/register", to: MyApp.Controllers.RegisterController
+
+  forward "/dashboard", to: MyApp.Controllers.DashboardController
+  forward "/user/links", to: MyApp.Controllers.UserLinksController
+  forward "/user/settings", to: MyApp.Controllers.UserSettingsController
 
   match _ do
     send_resp(conn, 404, "Not Found")
