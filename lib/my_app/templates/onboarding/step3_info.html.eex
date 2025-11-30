@@ -1,0 +1,67 @@
+<!DOCTYPE html>
+<html lang="en">
+<head>
+    <meta charset="UTF-8">
+    <meta name="viewport" content="width=device-width, initial-scale=1.0">
+    <title>Document</title>
+
+    <script type="module" src="http://localhost:5173/main.js"></script>
+    <script src="https://cdn.tailwindcss.com"></script>
+</head>
+<body class="bg-gray-50 px-4">
+
+
+<section class="bg-white shadow-xl md:shadow-none flex flex-col md:flex-row items-center gap-2 max-w-5xl mx-auto">
+
+
+<section class="w-full md:w-1/2 py-4">
+    <div class=" flex flex-col items-center justify-center  px-6 mx-auto">
+        <div class="flex justify-center mx-auto">
+            <img class="w-auto h-7 sm:h-8" src="https://merakiui.com/images/logo.svg" alt="">
+        </div>
+
+        <h1 class="mt-4 text-2xl font-semibold tracking-wide text-center text-gray-800 capitalize md:text-3xl">
+            welcome Back
+        </h1>
+
+        <div class="flex items-center mt-6">
+            <p class="text-gray-500">continue as</p>
+
+            <div class="flex items-center mx-2">
+                <img class="object-cover w-8 h-8 mx-1 rounded-full" src="https://images.unsplash.com/photo-1628890923662-2cb23c2e0cfe?ixlib=rb-1.2.1&ixid=MnwxMjA3fDB8MHxwaG90by1wYWdlfHx8fGVufDB8fHx8&auto=format&fit=crop&w=1470&q=80" alt="">
+                <span class="mx-1 text-gray-800">Ana Williams...</span>
+            </div>
+
+            <button class="text-blue-500 focus:outline-none hover:underline">change</button>
+        </div>
+
+        <div class="w-full max-w-md mx-auto mt-6">
+            <form method="post" action="/onboarding/step3">
+                <div>
+                    <label class="block mb-2 text-sm text-gray-600">Nom public</label>
+                    <input type="password" placeholder="Enter your password" class="block w-full px-5 py-3 mt-2 text-gray-700 placeholder-gray-400 bg-white border border-gray-200 rounded-lg border-gray-700 focus:border-blue-400 focus:ring-blue-400 focus:outline-none focus:ring focus:ring-opacity-40" />
+                </div>
+
+
+
+                <button class="w-full px-6 py-3 mt-4 text-sm font-medium tracking-wide text-white capitalize transition-colors duration-300 transform bg-blue-500 rounded-lg hover:bg-blue-400 focus:outline-none focus:ring focus:ring-blue-300 focus:ring-opacity-50">
+                    “Continue”
+                </button>
+
+
+
+
+            </form>
+        </div>
+    </div>
+</section>
+
+<section class="shadow-md bg-gray-100 h-screen w-full md:w-1/2">
+
+</section>
+
+</section>
+
+
+</body>
+</html>

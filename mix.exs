@@ -14,7 +14,8 @@ defmodule MyApp.MixProject do
   # Run "mix help compile.app" to learn about applications.
   def application do
     [
-      extra_applications: [:logger]
+      extra_applications: [:logger],
+      mod: {MyApp.Application, []}  # ← AJOUTER CETTE LIGNE
     ]
   end
 
@@ -24,9 +25,9 @@ defmodule MyApp.MixProject do
       {:plug, "~> 1.14"},
       {:plug_cowboy, "~> 2.6"},
       {:jason, "~> 1.4"},
-      {:uuid, "~> 1.1"}  # Ajoute cette ligne
-
+      {:uuid, "~> 1.1"},
+      {:ecto_sql, "~> 3.11"},
+      {:myxql, "~> 0.6.0"}
     ]
   end
-
 end

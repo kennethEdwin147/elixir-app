@@ -9,110 +9,103 @@
     <title>Document</title>
 
     <script type="module" src="http://localhost:5173/main.js"></script>
-
+    <script src="https://cdn.tailwindcss.com"></script>
 </head>
-<body>
-
-   <div class="min-h-screen px-4  bg-yellow-50/30 flex flex-col items-center pt-8">
-  <%!-- Logo/Icône --%>
-  <div class="mb-4">
-   <a href="/">
-    <img width="60"  class="img--sized colorize-ink push_quarter--bottom" aria-hidden="true" src="https://bc3-production-assets-cdn.basecamp-static.com/assets/logos/paperclip-logo-8b4a8489c6697e42de5c8410f32b4944f2e96d7061a378d2858862b135037ae0.svg">
-  </a>
-  </div>
-
-   <h2 class="text-xl font-bold text-gray-800 mb-4">
-      Sign up for Basecamp Free
-    </h2>
-
-     <%= if @error_msg do %>
-      <p style="color:red; " class="my-2"><%= @error_msg %></p>
-    <% end %>
-
-  <%!-- Conteneur principal (La carte centrée) --%>
-  <div class="w-full max-w-xl bg-white p-6 sm:p-8  shadow-2xl border border-gray-100">
+<body class="bg-gray-50">
 
 
+<section class="flex flex-col md:flex-row items-center px-4 gap-2 max-w-5xl mx-auto">
 
 
-
-    <%!-- Séparateur "Or, use my email address" --%>
-
-
-    <%!-- Formulaire HTML pur --%>
-    <form class="space-y-4" action="/register" method="POST">
-
-      <%!-- Champ Email ou Username --%>
-      <div>
-        <label for="email" class="block text-sm font-bold text-gray-700">Email or username</label>
-        <div class="mt-1">
-          <input
-            id="email"
-            name="email"
-            type="email"
-            placeholder="e.g. julie.young@hey.com"
-            required
-            value="<%= @email_value %>"
-            class="appearance-none bg-gray-100 block w-full px-4 py-3 text-black rounded-lg shadow-sm placeholder-gray-400 focus:outline-none focus:ring-blue-500 focus:border-blue-500 sm:text-sm"
-          >
+<section class="bg-white shadow-md">
+    <div class="py-4 flex flex-col items-center justify-center min-h-screen px-6 mx-auto">
+        <div class="flex justify-center mx-auto">
+            <img class="w-auto h-7 sm:h-8" src="https://merakiui.com/images/logo.svg" alt="">
         </div>
-      </div>
 
-       <%!-- Champ Password --%>
-      <div>
-        <label for="password" class="block text-sm font-bold text-gray-700">Mot de passe</label>
-        <div class="mt-1">
-          <input
-            id="password"
-            name="password"
-            type="password"
-            placeholder="************"
-            required
-            class="appearance-none bg-gray-100 block w-full px-4 py-3 text-black rounded-lg shadow-sm placeholder-gray-400 focus:outline-none focus:ring-blue-500 focus:border-blue-500 sm:text-sm"
-          >
+        <h1 class="mt-4 text-2xl font-semibold tracking-wide text-center text-gray-800 capitalize md:text-3xl">
+            welcome Back
+        </h1>
+
+        <div class="flex items-center mt-6">
+            <p class="text-gray-500">continue as</p>
+
+            <div class="flex items-center mx-2">
+                <img class="object-cover w-8 h-8 mx-1 rounded-full" src="https://images.unsplash.com/photo-1628890923662-2cb23c2e0cfe?ixlib=rb-1.2.1&ixid=MnwxMjA3fDB8MHxwaG90by1wYWdlfHx8fGVufDB8fHx8&auto=format&fit=crop&w=1470&q=80" alt="">
+                <span class="mx-1 text-gray-800">Ana Williams...</span>
+            </div>
+
+            <button class="text-blue-500 focus:outline-none hover:underline">change</button>
         </div>
-      </div>
+
+        <div class="w-full max-w-md mx-auto mt-6">
+            <form   action="/register" method="post">
+
+                <div>
+                    <label class="block mb-2 text-sm text-gray-600">Email</label>
+                    <input
+                       id="email"
+                            name="email"
+                            type="email"
+                            placeholder="e.g. julie.young@hey.com"
+                            required
+                            value="<%= @email_value %>"
+                      class="block w-full px-5 py-3 mt-2 text-gray-700 placeholder-gray-400 bg-white border border-gray-200 rounded-lg border-gray-700 focus:border-blue-400 focus:ring-blue-400 focus:outline-none focus:ring focus:ring-opacity-40" />
+                </div>
+
+                <div>
+                    <label class="block mb-2 text-sm text-gray-600">Password</label>
+                    <input
+                      id="password"
+                           name="password"
+                           type="password"
+                           placeholder="************"
+                           required
+                      class="block w-full px-5 py-3 mt-2 text-gray-700 placeholder-gray-400 bg-white border border-gray-200 rounded-lg border-gray-700 focus:border-blue-400 focus:ring-blue-400 focus:outline-none focus:ring focus:ring-opacity-40" />
+                </div>
+
+                <div>
+                    <label class="block mb-2 text-sm text-gray-600">Password</label>
+                    <input
+                       id="password_confirm"
+                           name="password_confirm"
+                           type="password_confirm"
+                           placeholder="************"
+                           required
+                      class="block w-full px-5 py-3 mt-2 text-gray-700 placeholder-gray-400 bg-white border border-gray-200 rounded-lg border-gray-700 focus:border-blue-400 focus:ring-blue-400 focus:outline-none focus:ring focus:ring-opacity-40" />
+                </div>
 
 
-       <%!-- Champ Confirm Password --%>
-      <div>
-        <label for="password_confirm" class="block text-sm font-bold text-gray-700">Confirmation: Mot de passe</label>
-        <div class="mt-1">
-          <input
-            id="password_confirm"
-            name="password_confirm"
-            type="password_confirm"
-            placeholder="************"
-            required
-            class="appearance-none bg-gray-100 block w-full px-4 py-3 text-black rounded-lg shadow-sm placeholder-gray-400 focus:outline-none focus:ring-blue-500 focus:border-blue-500 sm:text-sm"
-          >
+                     <%= if @error_msg do %>
+      <p style="color:red; " class=""><%= @error_msg %></p>
+    <% end %>
+
+                <a href="#" class="inline-block mt-4 text-blue-500 capitalize hover:underline">
+                    reset password?
+                </a>
+
+                <button class="w-full px-6 py-3 mt-4 text-sm font-medium tracking-wide text-white capitalize transition-colors duration-300 transform bg-blue-500 rounded-lg hover:bg-blue-400 focus:outline-none focus:ring focus:ring-blue-300 focus:ring-opacity-50">
+                    “Continue”
+                </button>
+
+                <div class="mt-6 text-center">
+                    <a href="/login" class="text-sm text-blue-500 hover:underline">
+                        Don’t have an account yet? Sign up
+                    </a>
+                </div>
+
+                <p class="mt-6 text-gray-500">
+                    By clicking “Continue” above, you acknowledge that you have read and
+                    understood, and agree to Our <a href="#" class="text-gray-700">Term & Conditions</a>
+                    and<a href="#" class="text-gray-700"> Privacy Policy.</a>
+                </p>
+            </form>
         </div>
-      </div>
+    </div>
+</section>
 
-      <%!-- Bouton Next --%>
-      <div>
-        <button type="submit" class="w-full flex justify-center py-3 px-4 border border-transparent rounded-lg shadow-sm text-sm font-bold text-white bg-black hover:bg-gray-900 focus:outline-none focus:ring-2 focus:ring-offset-2 focus:ring-gray-700 transition duration-150 ease-in-out">
-          Next
-        </button>
-      </div>
+</section>
 
-    </form>
-
-  </div>
-
-
-  <%!-- Liens bas de page --%>
-  <div class=" text-center text-xs mt-4">
-    <a href="#" class="font-bold text-black hover:text-gray-900 transition duration-150 ease-in-out">
-      Forgot your password?
-    </a>
-
-    <p class="mt-4 text-gray-500 text-xs">
-      New to Basecamp?
-      <a href="/login" class="font-bold text-black hover:text-gray-900 transition duration-150 ease-in-out">Sign up for free</a>
-    </p>
-  </div>
-</div>
 
 </body>
 </html>

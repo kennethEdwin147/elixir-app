@@ -5,7 +5,7 @@ defmodule MyApp.Controllers.HomeController do
   plug :dispatch
 
   get "/" do
-    html = EEx.eval_file("lib/my_app/templates/index.html.eex", assigns: [name: "Kenneth"])
+    html = EEx.eval_file("lib/my_app/templates/home.html.eex", assigns: [name: "Kenneth"])
     send_resp(conn, 200, html)
   end
 end

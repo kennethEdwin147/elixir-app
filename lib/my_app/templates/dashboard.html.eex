@@ -4,76 +4,97 @@
     <meta charset="UTF-8">
     <meta name="viewport" content="width=device-width, initial-scale=1.0">
     <title>Dashboard - Link in Bio</title>
+
+       <script type="module" src="http://localhost:5173/main.js"></script>
+    <script src="https://cdn.tailwindcss.com"></script>
+
 </head>
 <body>
-    <nav>
-        <a href="/dashboard">Dashboard</a> |
-        <a href="/user/settings">Paramètres</a> |
-        <form method="post" action="/login/logout" style="display: inline;">
-            <button type="submit">Déconnexion</button>
-        </form>
-    </nav>
 
-    <hr>
-
-    <h1>Dashboard</h1>
-
-    <p>Connecté en tant que: <strong><%= @user_email %></strong></p>
-
-    <section>
-        <h2>Votre profil public</h2>
-        <%= if @profile_url do %>
-            <p>Votre page: <a href="<%= @profile_url %>" target="_blank"><%= @profile_url %></a></p>
-        <% else %>
-            <p>⚠️ Configurez votre nom d'utilisateur dans <a href="/user/settings">Paramètres</a> pour activer votre page publique.</p>
-        <% end %>
-
-        <p>Bio: <%= if @bio != "", do: @bio, else: "Aucune bio" %></p>
-    </section>
-
-    <hr>
-
-    <section>
-        <h2>Vos liens (<%= @total_links %>)</h2>
-        <p>Clics totaux: <%= @total_clicks %></p>
-
-        <%= if length(@links) > 0 do %>
-            <ul>
-                <%= for link <- @links do %>
-                    <li>
-                        <strong><%= link.title %></strong> -
-                        <a href="<%= link.url %>" target="_blank"><%= link.url %></a>
-                        <br>
-                        <small>Clics: <%= link.clicks %> | Position: <%= link.position %> | Actif: <%= link.active %></small>
-                    </li>
-                <% end %>
-            </ul>
-        <% else %>
-            <p>Aucun lien pour le moment.</p>
-        <% end %>
-
-        <h3>Ajouter un lien</h3>
-        <form method="post" action="/user/links">
-            <div>
-                <label>Titre:</label>
-                <input type="text" name="title" required>
+<nav class="bg-white py-2 px-4 shadow-md">
+    <div class="max-w-7xl mx-auto px-4">
+        <div class="flex justify-between h-16">
+            <div class="flex">
+                <div class="flex-shrink-0 flex items-center">
+            <a href="#" class="block px-3 py-2 rounded-md text-base font-medium text-gray-900 hover:bg-gray-50">Accueil</a>
+                </div>
             </div>
-            <div>
-                <label>URL:</label>
-                <input type="url" name="url" placeholder="https://..." required>
-            </div>
-            <div>
-                <label>Icône (optionnel):</label>
-                <input type="text" name="icon" placeholder="🔗">
-            </div>
-            <button type="submit">Ajouter</button>
-        </form>
-    </section>
 
-    <hr>
+            <div class="hidden sm:ml-6 sm:flex sm:space-x-8 sm:items-center">
+                <a href="#" class="text-gray-900 hover:text-blue-600 px-3 py-2 rounded-md text-sm font-medium transition duration-150 ease-in-out">Accueil</a>
+                <a href="#" class="text-gray-500 hover:text-blue-600 px-3 py-2 rounded-md text-sm font-medium transition duration-150 ease-in-out">Applications</a>
+                <a href="#" class="text-gray-500 hover:text-blue-600 px-3 py-2 rounded-md text-sm font-medium transition duration-150 ease-in-out">Mon Compte</a>
+            </div>
 
+            <div class="flex items-center sm:hidden">
+                <button type="button" class="inline-flex items-center justify-center p-2 rounded-md text-black hover:text-gray-500 hover:bg-gray-100 focus:outline-none focus:ring-2 focus:ring-inset focus:ring-blue-500" aria-controls="mobile-menu" aria-expanded="false">
+                    <svg class="block h-6 w-6" xmlns="http://www.w3.org/2000/svg" fill="none" viewBox="0 0 24 24" stroke="currentColor" aria-hidden="true">
+                        <path stroke-linecap="round" stroke-linejoin="round" stroke-width="2" d="M4 6h16M4 12h16M4 18h16" />
+                    </svg>
+                </button>
+            </div>
+        </div>
+    </div>
+
+    <div class="hidden sm:hidden" id="mobile-menu">
+        <div class="px-2 pt-2 pb-3 space-y-1">
+            <a href="#" class="block px-3 py-2 rounded-md text-base font-medium text-gray-900 hover:bg-gray-50">Accueil</a>
+            <a href="#" class="block px-3 py-2 rounded-md text-base font-medium text-gray-500 hover:bg-gray-50">Applications</a>
+            <a href="#" class="block px-3 py-2 rounded-md text-base font-medium text-gray-500 hover:bg-gray-50">Mon Compte</a>
+        </div>
+    </div>
+</nav>
+
+<section class=" bg-gray-100 p-4 screen">
+
+  <article class="px-4 flex items-center justify-between">
+    <header>
+    <h1 class="font-semibold text-xl">Mes Pages</h1>
+    </header>
     <footer>
-        <p><a href="/user/settings">Modifier votre profil et apparence</a></p>
+        <a href="/dashboard" class="text-blue-500 hover:underline">Nouveau +</a>
     </footer>
+  </article>
+
+  <main class="grid gap-4 lg:gap-6 grid-cols-2 md:grid-cols-3 lg:grid-cols-4 py-4 md:px-4">
+
+
+    <article class="gainsboro rounded-3xl p-8 shadow-xl text-center w-full h-card">
+
+    <header class="flex items-center justify-center mt-4">
+      <img class="rounded-full w-14 h-14 object-cover" src="https://images.unsplash.com/photo-1628890923662-2cb23c2e0cfe?ixlib=rb-1.2.1&ixid=MnwxMjA3fDB8MHxwaG90by1wYWdlfHx8fGVufDB8fHx8&auto=format&fit=crop&w=1470&q=80" alt="">
+    </header>
+
+    <header class="mt-4">
+       <h1 class="text-sm text-[#4b3d3d] font-normal mb-5">
+            kenneth_sgg
+        </h1>
+    <header>
+
+
+
+        <article class="p-4 py-1 rounded-lg bg-white shadow-md">
+          <main class="flex justify-between items-center">
+           <h1 class="text-xs">Mitarbeiterportraits, Gruppenfotos</h1>
+        </article>
+    </article>
+
+
+  </main>
+
+</section>
+
+<style>
+    .screen {
+        min-height: calc(100vh);
+    }
+    .h-card {
+        min-height: 30rem;
+    }
+    .gainsboro {
+        background-color: gainsboro;
+    }
+</style>
+
 </body>
 </html>

@@ -29,7 +29,7 @@ defmodule MyApp.Controllers.RegisterController do
       conn
       |> put_session(:user_id, user.id)
       |> put_session(:user_email, user.email)
-      |> put_resp_header("location", "/dashboard")
+      |> put_resp_header("location", "/onboarding")
       |> send_resp(302, "")
 
     else
