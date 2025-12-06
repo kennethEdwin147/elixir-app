@@ -1,0 +1,104 @@
+<!DOCTYPE html>
+<html lang="fr">
+<head>
+  <meta charset="UTF-8">
+  <meta name="viewport" content="width=device-width, initial-scale=1.0">
+  <title>Annonces LFG</title>
+</head>
+<body>
+
+  <h1>Trouver des teammates</h1>
+
+  <!-- BARRE DE RECHERCHE -->
+  <form method="GET" action="/">
+    <input type="text"
+           name="q"
+           placeholder="Rechercher (ex: valorant gold chill)"
+           value="<%= @search_query %>">
+    <button type="submit">Rechercher</button>
+  </form>
+
+  <!-- TAGS POPULAIRES -->
+  <%= if length(@popular_tags) > 0 do %>
+    <div>
+      <p>Tags populaires :</p>
+      <%= for tag_info <- @popular_tags do %>
+        <a href="/?tags[]=<%= URI.encode(tag_info.tag) %>"><%= tag_info.tag %></a>
+      <% end %>
+    </div>
+  <% end %>
+
+  <!-- TAGS ACTIFS (FILTRES) -->
+  <%= if length(@selected_tags) > 0 do %>
+    <div>
+      <p>Filtres actifs :</p>
+      <%= for tag <- @selected_tags do %>
+        <span><%= tag %> <a href="/">×</a></span>
+      <% end %>
+    </div>
+  <% end %>
+
+  <hr>
+
+  <!-- BOUTON CRÉER -->
+  <%= if @user_id do %>
+    <a href="/announcements/new">+ Créer une annonce</a>
+  <% else %>
+    <a href="/login">Se connecter pour publier</a>
+  <% end %>
+
+  <hr>
+
+  <!-- LISTE DES ANNONCES -->
+  <%= if length(@announcements) == 0 do %>
+    <p>Aucune annonce pour le moment. Soyez le premier à publier !</p>
+  <% else %>
+    <%= for announcement <- @announcements do %>
+      <div style="border: 1px solid #ccc; padding: 10px; margin: 10px 0;">
+
+        <!-- HEADER -->
+        <p>
+          <strong><%= announcement.game %></strong>
+          <%= if announcement.rank do %>
+            • <%= announcement.rank %>
+          <% end %>
+        </p>
+
+        <!-- DESCRIPTION -->
+        <p><%= announcement.description %></p>
+
+        <!-- TAGS -->
+        <%= if length(announcement.tags) > 0 do %>
+          <p>
+            <%= for tag <- announcement.tags do %>
+              <span style="background: #eee; padding: 2px 6px; margin: 2px;"><%= tag %></span>
+            <% end %>
+          </p>
+        <% end %>
+
+        <!-- FOOTER -->
+        <p style="font-size: 0.9em; color: #666;">
+          Posté il y a <%= announcement.time_ago %>
+
+          <%= if announcement.user do %>
+            par <%= announcement.user.username %>
+          <% end %>
+        </p>
+
+        <!-- ACTIONS (si c'est ton annonce) -->
+        <%= if @user_id == announcement.user_id do %>
+          <form method="POST" action="/announcements/<%= announcement.id %>/complete" style="display: inline;">
+            <button type="submit">Marquer terminé</button>
+          </form>
+
+          <form method="POST" action="/announcements/<%= announcement.id %>/delete" style="display: inline;">
+            <button type="submit">Supprimer</button>
+          </form>
+        <% end %>
+
+      </div>
+    <% end %>
+  <% end %>
+
+</body>
+</html>

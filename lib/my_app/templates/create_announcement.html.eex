@@ -1,0 +1,80 @@
+<!DOCTYPE html>
+<html lang="fr">
+<head>
+  <meta charset="UTF-8">
+  <meta name="viewport" content="width=device-width, initial-scale=1.0">
+  <title>Nouvelle annonce</title>
+
+
+</head>
+<body>
+
+  <%= if @error_msg do %>
+    <p style="color: red;"><%= @error_msg %></p>
+  <% end %>
+
+  <form
+    method="POST"
+    action="/announcements/new"
+    class="max-w-md mx-auto mt-6 bg-white shadow-xl rounded-2xl px-8 pt-6 pb-8 mb-4"
+    >
+
+    <!-- JEU -->
+    <div class="mb-2">
+    <select
+        name="game"
+        class="py-2 px-3 sm:py-3 sm:px-4 block w-full bg-gray-100 border-transparent rounded-lg sm:text-sm focus:border-blue-500 focus:ring-blue-500 disabled:opacity-50 disabled:pointer-events-none"
+     required>
+      <option value="">Jeu</option>
+      <%= for game <- @games do %>
+        <option value="<%= game %>" <%= if @form_data["game"] == game, do: "selected" %>>
+          <%= game %>
+        </option>
+      <% end %>
+    </select>
+</div>
+
+<div class="mb-2">
+    <!-- RANG -->
+    <select
+    class="py-2 px-3 sm:py-3 sm:px-4 block w-full bg-gray-100 border-transparent rounded-lg sm:text-sm focus:border-blue-500 focus:ring-blue-500 disabled:opacity-50 disabled:pointer-events-none"
+    name="rank">
+      <option value="">Rang (optionnel)</option>
+      <%= for rank <- @ranks do %>
+        <option value="<%= rank %>" <%= if @form_data["rank"] == rank, do: "selected" %>>
+          <%= rank %>
+        </option>
+      <% end %>
+    </select>
+</div>
+    <!-- DESCRIPTION -->
+    <textarea class="py-2 px-3 sm:py-3 sm:px-4 block w-full bg-gray-100 border-transparent rounded-lg sm:text-sm focus:border-blue-500 focus:ring-blue-500 disabled:opacity-50 disabled:pointer-events-none"
+            rows="3"
+            name="description" rows="6"
+            placeholder="Décris ce que tu cherches..."
+            required><%= @form_data["description"] || "" %></textarea>
+
+    <!-- TAGS -->
+    <input type="text" name="tags_input"
+        class="mt-4 py-2 px-3 sm:py-3 sm:px-4 block w-full bg-gray-100 border-transparent rounded-lg sm:text-sm focus:border-blue-500 focus:ring-blue-500 disabled:opacity-50 disabled:pointer-events-none"
+           placeholder="#ajouter des tags"
+           value="<%= @form_data["tags_input"] || "" %>">
+
+    <!-- VIBE (RADIO HORIZONTAL) -->
+    <div>
+      <%= for {value, label} <- [{"chill", "Chill"}, {"competitive", "Compétitif"}, {"fun", "Fun"}, {"learning", "Apprentissage"}] do %>
+        <label>
+          <input type="radio" name="vibe" value="<%= value %>"
+                 <%= if @form_data["vibe"] == value, do: "checked" %>>
+          <%= label %>
+        </label>
+      <% end %>
+    </div>
+
+    <!-- BOUTONS -->
+    <button type="submit">Publier</button>
+    <a href="/">Fermer</a>
+  </form>
+
+</body>
+</html>

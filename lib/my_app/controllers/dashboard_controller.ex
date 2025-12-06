@@ -31,7 +31,7 @@ defmodule MyApp.Controllers.DashboardController do
         acc + (link.clicks || 0)
       end)
 
-      html = EEx.eval_file("lib/my_app/templates/dashboard.html.eex",
+      html = EEx.eval_file("lib/my_app/templates/dashboard/dashboard.html.eex",
         assigns: %{
           user_email: user_email,
           username: user_settings.username,

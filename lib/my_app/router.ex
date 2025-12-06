@@ -28,42 +28,27 @@ defmodule MyApp.Router do
   # Routes publiques (home, auth)
   # ============================================
 
-  # Route racine "/"
-  get "/" do
-    html = EEx.eval_file("lib/my_app/templates/home.html.eex", assigns: [name: "Kenneth"])
-    send_resp(conn, 200, html)
-  end
+
 
   forward "/home",     to: MyApp.Controllers.HomeController
   forward "/login",    to: MyApp.Controllers.LoginController
   forward "/register", to: MyApp.Controllers.RegisterController
   forward "/onboarding", to: MyApp.Controllers.OnboardingController
 
+  forward "/listing", to: MyApp.Controllers.ListingController
+
+  forward "/announcements", to: MyApp.Controllers.AnnouncementController
+  forward "/search", to: MyApp.Controllers.SearchController
+
   # ============================================
   # Routes Dashboard (privées)
   # ============================================
-
-  # Dashboard principal
-  forward "/dashboard", to: MyApp.Controllers.DashboardController
-
-  # Gestion des pages (CRUD)
-  forward "/dashboard/pages", to: MyApp.Controllers.UserPageController
-
-  # Gestion des liens d'une page (CRUD)
-  # Note: Les routes avec :page_id sont gérées dans UserLinkController
-  forward "/dashboard/pages/:page_id/links", to: MyApp.Controllers.UserLinkController
-
+\
   # Settings utilisateur (optionnel, si vous gardez ce controller)
   forward "/user/settings", to: MyApp.Controllers.UserSettingsController
 
-  # ============================================
-  # Routes publiques - Affichage des pages
-  # (DOIT être en dernier pour éviter les conflits)
-  # ============================================
-
-  # Affichage public des pages utilisateur
-  # /:username ou /:username/:page_slug
-  forward "/", to: MyApp.Controllers.PageViewController
+    # Route racine "/"
+  forward "/", to: MyApp.Controllers.ListingController
 
   # ============================================
   # 404

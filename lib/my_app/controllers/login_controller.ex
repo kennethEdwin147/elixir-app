@@ -1,7 +1,7 @@
 defmodule MyApp.Controllers.LoginController do
   use Plug.Router
   alias MyApp.Services.Validation
-  alias MyApp.Services.UserStorage
+  alias MyApp.Services.UserService  # ⬅️ CHANGÉ
 
   plug :match
   plug :dispatch
@@ -24,8 +24,8 @@ defmodule MyApp.Controllers.LoginController do
 
     with {:ok, _} <- Validation.validate_required(params, ["email", "password"]),
          {:ok, _} <- Validation.validate_email(params["email"]),
-         user when not is_nil(user) <- UserStorage.find_by_email(params["email"]),
-         true <- UserStorage.verify_password(user, params["password"]) do
+         user when not is_nil(user) <- UserService.find_by_email(params["email"]),  # ⬅️ CHANGÉ
+         true <- UserService.verify_password(user, params["password"]) do  # ⬅️ CHANGÉ
 
       conn
       |> put_session(:user_id, user.id)
@@ -52,6 +52,13 @@ defmodule MyApp.Controllers.LoginController do
     conn
     |> configure_session(drop: true)
     |> put_resp_header("location", "/")
+    |> send_resp(302, "")
+  end
+
+  get "/logout" do
+    conn
+    |> configure_session(drop: true)
+    |> put_resp_header("location", "/login")
     |> send_resp(302, "")
   end
 end
