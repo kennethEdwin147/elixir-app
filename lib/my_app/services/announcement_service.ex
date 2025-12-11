@@ -8,11 +8,12 @@ defmodule MyApp.Services.AnnouncementService do
   - La recherche et le filtrage par tags/mots-clés
   - La complétion et suppression d'annonces
   - Le cleanup automatique des annonces expirées
+  - L'engagement (upvotes, interested)
   """
 
   import Ecto.Query
   alias MyApp.Repo
-  alias MyApp.Schemas.Announcement
+  alias MyApp.Schemas.{Announcement, Upvote, Interested}
 
   # ============================================================================
   # CRÉATION D'ANNONCES
@@ -164,6 +165,114 @@ defmodule MyApp.Services.AnnouncementService do
           Repo.delete(announcement)
         else
           {:error, :unauthorized}
+        end
+    end
+  end
+
+  # ============================================================================
+  # ENGAGEMENT (UPVOTE / INTERESTED)
+  # ============================================================================
+
+  @doc """
+  Toggle upvote : ajoute si pas encore upvoté, enlève si déjà upvoté.
+
+  ## Paramètres
+    - announcement_id : ID de l'annonce
+    - user_id : ID de l'utilisateur
+
+  ## Retour
+    - {:ok, :added} si upvote ajouté
+    - {:ok, :removed} si upvote enlevé
+    - {:error, :not_found} si annonce inexistante
+  """
+  def toggle_upvote(announcement_id, user_id) do
+    case get(announcement_id) do
+      nil ->
+        {:error, :not_found}
+
+      announcement ->
+        # Cherche si upvote existe déjà
+        existing_upvote = Repo.get_by(Upvote,
+          user_id: user_id,
+          announcement_id: announcement_id
+        )
+
+        case existing_upvote do
+          nil ->
+            # Pas encore upvoté → Ajouter
+            %Upvote{}
+            |> Upvote.changeset(%{user_id: user_id, announcement_id: announcement_id})
+            |> Repo.insert()
+
+            # Incrémenter le count
+            announcement
+            |> Ecto.Changeset.change(%{upvotes_count: announcement.upvotes_count + 1})
+            |> Repo.update()
+
+            {:ok, :added}
+
+          upvote ->
+            # Déjà upvoté → Enlever
+            Repo.delete(upvote)
+
+            # Décrémenter le count
+            announcement
+            |> Ecto.Changeset.change(%{upvotes_count: max(0, announcement.upvotes_count - 1)})
+            |> Repo.update()
+
+            {:ok, :removed}
+        end
+    end
+  end
+
+  @doc """
+  Toggle interested : ajoute si pas encore interested, enlève si déjà interested.
+
+  ## Paramètres
+    - announcement_id : ID de l'annonce
+    - user_id : ID de l'utilisateur
+
+  ## Retour
+    - {:ok, :added} si interested ajouté
+    - {:ok, :removed} si interested enlevé
+    - {:error, :not_found} si annonce inexistante
+  """
+  def toggle_interested(announcement_id, user_id) do
+    case get(announcement_id) do
+      nil ->
+        {:error, :not_found}
+
+      announcement ->
+        # Cherche si interested existe déjà
+        existing_interested = Repo.get_by(Interested,
+          user_id: user_id,
+          announcement_id: announcement_id
+        )
+
+        case existing_interested do
+          nil ->
+            # Pas encore interested → Ajouter
+            %Interested{}
+            |> Interested.changeset(%{user_id: user_id, announcement_id: announcement_id})
+            |> Repo.insert()
+
+            # Incrémenter le count
+            announcement
+            |> Ecto.Changeset.change(%{interested_count: announcement.interested_count + 1})
+            |> Repo.update()
+
+            {:ok, :added}
+
+          interested ->
+            # Déjà interested → Enlever
+            Repo.delete(interested)
+
+            # Décrémenter le count
+            announcement
+            |> Ecto.Changeset.change(%{interested_count: max(0, announcement.interested_count - 1)})
+            |> Repo.update()
+
+            {:ok, :removed}
         end
     end
   end

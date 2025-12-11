@@ -1,80 +1,141 @@
 <!DOCTYPE html>
 <html lang="fr">
 <head>
-  <meta charset="UTF-8">
-  <meta name="viewport" content="width=device-width, initial-scale=1.0">
-  <title>Nouvelle annonce</title>
+    <meta charset="UTF-8">
+    <meta name="viewport" content="width=device-width, initial-scale=1.0">
+    <title>Document</title>
 
+    <script src="https://cdn.tailwindcss.com"></script>
 
+    <script type="module" src="/static/js/components/tags-select.js"></script>
+    <script type="module" src="/static/js/components/game-select.js"></script>
 </head>
-<body>
+<body class="">
 
-  <%= if @error_msg do %>
-    <p style="color: red;"><%= @error_msg %></p>
-  <% end %>
+<div class="min-h-screen ">
 
-  <form
-    method="POST"
-    action="/announcements/new"
-    class="max-w-md mx-auto mt-6 bg-white shadow-xl rounded-2xl px-8 pt-6 pb-8 mb-4"
-    >
+  <header class="fixed top-0 left-0 right-0 h-16 bg-white border-b-2 border-gray-200 z-20">
+      <div>
 
-    <!-- JEU -->
-    <div class="mb-2">
-    <select
-        name="game"
-        class="py-2 px-3 sm:py-3 sm:px-4 block w-full bg-gray-100 border-transparent rounded-lg sm:text-sm focus:border-blue-500 focus:ring-blue-500 disabled:opacity-50 disabled:pointer-events-none"
-     required>
-      <option value="">Jeu</option>
-      <%= for game <- @games do %>
-        <option value="<%= game %>" <%= if @form_data["game"] == game, do: "selected" %>>
-          <%= game %>
-        </option>
-      <% end %>
-    </select>
-</div>
+      </div>
+      <div class="flex gap-x-4 items-center justify-between h-full px-4 lg:ml-64">
 
-<div class="mb-2">
-    <!-- RANG -->
-    <select
-    class="py-2 px-3 sm:py-3 sm:px-4 block w-full bg-gray-100 border-transparent rounded-lg sm:text-sm focus:border-blue-500 focus:ring-blue-500 disabled:opacity-50 disabled:pointer-events-none"
-    name="rank">
-      <option value="">Rang (optionnel)</option>
-      <%= for rank <- @ranks do %>
-        <option value="<%= rank %>" <%= if @form_data["rank"] == rank, do: "selected" %>>
-          <%= rank %>
-        </option>
-      <% end %>
-    </select>
-</div>
-    <!-- DESCRIPTION -->
-    <textarea class="py-2 px-3 sm:py-3 sm:px-4 block w-full bg-gray-100 border-transparent rounded-lg sm:text-sm focus:border-blue-500 focus:ring-blue-500 disabled:opacity-50 disabled:pointer-events-none"
-            rows="3"
-            name="description" rows="6"
-            placeholder="Décris ce que tu cherches..."
-            required><%= @form_data["description"] || "" %></textarea>
+          <div
+            id="search-input"
+            class="flex-1  flex items-center space-x-4">
+              <input
+                type="text"
+                placeholder="Search (ctrl + k)"
+                class="p-2  bg-gray-200 rounded-full w-full max-w-sm focus:outline-none">
+          </div>
 
-    <!-- TAGS -->
-    <input type="text" name="tags_input"
-        class="mt-4 py-2 px-3 sm:py-3 sm:px-4 block w-full bg-gray-100 border-transparent rounded-lg sm:text-sm focus:border-blue-500 focus:ring-blue-500 disabled:opacity-50 disabled:pointer-events-none"
-           placeholder="#ajouter des tags"
-           value="<%= @form_data["tags_input"] || "" %>">
+          <div class="flex items-center space-x-4">
+              <button class="bg-orange-600  text-xs font-semibold text-white px-4 py-2 rounded-full">Sign in</button>
+          </div>
+      </div>
+  </header>
 
-    <!-- VIBE (RADIO HORIZONTAL) -->
+  <aside class="hidden   lg:flex fixed top-16 left-0 w-72  border-gray-200 p-4 z-10
+                h-[calc(100vh-4rem)] overflow-y-auto px-4">
+    <nav class="space-y-1 w-full text-gray-800 pt-2">
+
+    <article class="flex items-center gap-4 block p-2 rounded-lg bg-gray-200 ">
+
+<svg xmlns="http://www.w3.org/2000/svg" width="20" height="20" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2" stroke-linecap="round" stroke-linejoin="round" class="lucide lucide-birdhouse-icon lucide-birdhouse"><path d="M12 18v4"/><path d="m17 18 1.956-11.468"/><path d="m3 8 7.82-5.615a2 2 0 0 1 2.36 0L21 8"/><path d="M4 18h16"/><path d="M7 18 5.044 6.532"/><circle cx="12" cy="10" r="2"/></svg>          <a href="#" class="">Home</a>
+
+    </article>
+      <a href="#" class="block p-2 rounded-lg hover:bg-gray-50">Recent comments</a>
+      </nav>
+  </aside>
+
+  <main class="flex-1 lg:ml-72 mt-16 p-4 pt-4">
+      <section class=" mx-auto space-y-1">
+
+<!-- Start: main-form -->
+<form
+    action="/announcements/new" method="POST"
+    class=" max-w-md p-4  bg-white rounded-lg space-y-4"
+>
+
+    <h1 class="text-2xl font-semibold text-gray-900 mb-6">
+        Create post
+    </h1>
+
+    <!-- Game Field -->
     <div>
-      <%= for {value, label} <- [{"chill", "Chill"}, {"competitive", "Compétitif"}, {"fun", "Fun"}, {"learning", "Apprentissage"}] do %>
-        <label>
-          <input type="radio" name="vibe" value="<%= value %>"
-                 <%= if @form_data["vibe"] == value, do: "checked" %>>
-          <%= label %>
-        </label>
-      <% end %>
+        <game-select id="gameSelect"></game-select>
+        <input type="hidden" name="game" id="gameInput">
+    </div>
+    <!-- End: game field -->
+
+
+
+    <!-- Tags Field -->
+    <p class="text-gray-600 text-sm">
+        Share and discuss tech, products, business, startups, or product recommendations.
+    </p>
+
+    <div>
+        <label for="thread-title" class="sr-only">Tags*</label>
+        <tags-select id="tags"></tags-select>
+        <input type="hidden" name="tags" id="tagsInput">
     </div>
 
-    <!-- BOUTONS -->
-    <button type="submit">Publier</button>
-    <a href="/">Fermer</a>
-  </form>
+    <!-- End: tags field -->
+
+    <!-- Description Field -->
+    <p class="text-gray-600 text-sm">
+        Share and discuss tech, products, business, startups, or product recommendations.
+    </p>
+    <div>
+        <label for="thread-title" class="sr-only">Title*</label>
+        <textarea
+            name="description"
+            rows="5"
+            type="text"
+            id="thread-title"
+            placeholder="Title*"
+            required
+            class="w-full focus:outline-none px-5 py-2 text-sm  rounded-2xl text-gray-900 placeholder-gray-500
+                   focus:ring-indigo-500 focus:border-indigo-500 transition-shadow duration-150 shadow-sm
+                   bg-gray-100 text-black"
+        ></textarea>
+    </div>
+
+    <!-- End: description field -->
+
+<button class="px-6 py-2 text-md font-medium text-gray-700 bg-black text-white rounded-full transition duration-150 ease-in-out hover:bg-gray-50 focus:outline-none focus:ring focus:ring-blue-300 focus:ring-opacity-50">
+    Submit
+</button>
+
+    </form>
+
+<!-- End: main-form -->
+
+
+      </section>
+
+
+  </main>
+
+</div>
+
+
+
+<script type="module">
+  await customElements.whenDefined('game-select');
+  await customElements.whenDefined('tags-select');
+
+  document.querySelector('game-select').addEventListener('change', (e) => {
+    document.getElementById('gameInput').value = e.detail.value;
+    console.log('✅ Game:', e.detail.value);
+  });
+
+  document.querySelector('tags-select').addEventListener('change', (e) => {
+    document.getElementById('tagsInput').value = JSON.stringify(e.detail.values);
+    console.log('✅ Tags:', e.detail.values);
+  });
+</script>
 
 </body>
 </html>

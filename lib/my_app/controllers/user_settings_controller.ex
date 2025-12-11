@@ -78,32 +78,6 @@ defmodule MyApp.Controllers.UserSettingsController do
     end
   end
 
-  # Mettre à jour l'apparence (thème, couleurs, style)
-  post "/appearance" do
-    user_id = get_session(conn, :user_id)
-
-    if is_nil(user_id) do
-      conn
-      |> put_resp_header("location", "/login")
-      |> send_resp(302, "")
-    else
-      params = conn.params
-
-      case UserSettingsStorage.update_appearance(user_id, params) do
-        {:ok, _updated_settings} ->
-          conn
-          |> put_session(:success_msg, "Apparence mise à jour avec succès")
-          |> put_resp_header("location", "/user/settings")
-          |> send_resp(302, "")
-
-        {:error, msg} ->
-          conn
-          |> put_session(:error_msg, msg)
-          |> put_resp_header("location", "/user/settings")
-          |> send_resp(302, "")
-      end
-    end
-  end
 
   # Changer le mot de passe
   post "/password" do

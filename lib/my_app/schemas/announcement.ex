@@ -12,6 +12,10 @@ defmodule MyApp.Schemas.Announcement do
     field :active, :boolean, default: true
     field :expires_at, :utc_datetime
 
+    # NOUVEAUX CHAMPS ⬇️
+    field :upvotes_count, :integer, default: 0
+    field :interested_count, :integer, default: 0
+
     belongs_to :user, User
 
     timestamps()

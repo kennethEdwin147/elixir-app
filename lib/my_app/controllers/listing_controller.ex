@@ -11,28 +11,24 @@ defmodule MyApp.Controllers.ListingController do
   plug :dispatch
 
   get "/" do
-    # Récupère les paramètres de recherche/filtres
     search_query = conn.params["q"] || ""
     selected_tags = conn.params["tags"] || []
 
-    # Récupère les annonces actives avec filtres
     announcements = AnnouncementService.list_active(search_query, selected_tags)
-
-    # Tags populaires pour la page
     popular_tags = TagService.get_popular_tags()
 
-    # Ajoute time_ago à chaque annonce
     announcements_with_time = Enum.map(announcements, fn ann ->
       Map.put(ann, :time_ago, calculate_time_ago(ann.inserted_at))
     end)
 
-    html = EEx.eval_file("lib/my_app/templates/listing.html.eex",
+    html = EEx.eval_file("lib/my_app/templates/test_design.html.eex",
       assigns: %{
         announcements: announcements_with_time,
         popular_tags: popular_tags,
         search_query: search_query,
         selected_tags: selected_tags,
-        user_id: get_session(conn, :user_id)
+        user_id: get_session(conn, :user_id),
+        has_results: length(announcements_with_time) > 0  # ← Pour afficher "Aucune annonce"
       }
     )
 
@@ -47,16 +43,16 @@ defmodule MyApp.Controllers.ListingController do
 
   # Calcule le temps écoulé depuis la création
   defp calculate_time_ago(naive_datetime) do
-    # Convertir NaiveDateTime en DateTime (assume UTC)
     datetime = DateTime.from_naive!(naive_datetime, "Etc/UTC")
-
     diff = DateTime.diff(DateTime.utc_now(), datetime, :second)
 
     cond do
-      diff < 60 -> "#{diff} secondes"
-      diff < 3600 -> "#{div(diff, 60)} minutes"
-      diff < 86400 -> "#{div(diff, 3600)} heures"
-      true -> "#{div(diff, 86400)} jours"
+      diff < 10 -> "à l'instant"
+      diff < 60 -> "#{diff}s"
+      diff < 3600 -> "#{div(diff, 60)}min"
+      diff < 86400 -> "#{div(diff, 3600)}h"
+      diff < 2592000 -> "#{div(diff, 86400)}j"  # < 30 jours
+      true -> "#{div(diff, 2592000)}mois"
     end
   end
 end

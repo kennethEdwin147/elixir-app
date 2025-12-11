@@ -12,6 +12,10 @@ defmodule MyApp.Repo.Migrations.CreateAnnouncements do
       add :expires_at, :utc_datetime
       add :user_id, references(:users, on_delete: :delete_all), null: false
 
+      # NOUVELLES COLONNES ⬇️
+      add :upvotes_count, :integer, default: 0
+      add :interested_count, :integer, default: 0
+
       timestamps()
     end
 
@@ -19,5 +23,9 @@ defmodule MyApp.Repo.Migrations.CreateAnnouncements do
     create index(:announcements, [:game])
     create index(:announcements, [:active])
     create index(:announcements, [:expires_at])
+
+    # NOUVEAUX INDEX ⬇️
+    create index(:announcements, [:upvotes_count])
+    create index(:announcements, [:interested_count])
   end
 end
