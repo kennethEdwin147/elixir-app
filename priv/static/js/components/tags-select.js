@@ -69,14 +69,14 @@ class TagsSelect extends LitElement {
       <div class="relative w-full">
         <div 
           @click=${() => this.open = true}
-          class="w-full min-h-[42px] px-3 py-2 text-black rounded-2xl font-bold bg-gray-100 cursor-text
-                 focus-within:ring-indigo-500 focus-within:border-indigo-500 transition-shadow shadow-sm
+          class="w-full min-h-[42px] px-3 py-4 text-black rounded-lg  bg-gray-100 cursor-text
+                 focus-within:ring-indigo-500 focus-within:border-indigo-500 transition-shadow 
                  flex flex-wrap gap-2 items-center"
         >
           ${this.selected.map(value => {
             const option = this.options.find(o => o.value === value);
             return html`
-              <span class="inline-flex items-center gap-1 px-3 py-1 bg-indigo-100 text-indigo-700 rounded-full text-sm">
+              <span class="inline-flex items-center gap-1 px-3 py-1 bg-indigo-100 text-indigo-700 rounded-full">
                 ${option?.label}
                 <button 
                   type="button"
@@ -94,16 +94,16 @@ class TagsSelect extends LitElement {
             @input=${this._handleSearch}
             @focus=${() => this.open = true}
             @click=${e => e.stopPropagation()}
-            class="flex-1 min-w-[120px] placeholder-black text-black outline-none bg-transparent text-xs"
+            class="flex-1 min-w-[120px] placeholder-black text-black outline-none bg-transparent"
           >
         </div>
 
         ${this.open && filteredOptions.length > 0 ? html`
-          <div class="absolute top-full left-0 right-0 mt-1 bg-white border-2 border-gray-200 rounded-2xl shadow-lg z-50 max-h-60 overflow-y-auto">
+          <div class="absolute top-full left-0 right-0 mt-1 max-w-sm bg-white rounded-lg shadow-lg z-50 max-h-60 overflow-y-auto">
             ${filteredOptions.map((option, index) => html`
               <div 
                 @click=${() => this._add(option.value)}
-                class="px-5 py-3 cursor-pointer hover:bg-gray-50 text-sm text-gray-900 ${index === 0 ? 'bg-gray-50' : ''}"
+                class="px-5 py-3 cursor-pointer hover:bg-gray-50  text-gray-900 ${index === 0 ? 'bg-gray-50' : ''}"
               >
                 ${option.label}
               </div>
@@ -131,18 +131,30 @@ class TagsSelect extends LitElement {
     this.dispatchEvent(new CustomEvent('change', {detail: {values: this.selected}}));
   }
 
-  connectedCallback() {
-    super.connectedCallback();
-    this._clickOutside = (e) => {
-      if (!this.contains(e.target)) this.open = false;
-    };
-    document.addEventListener('click', this._clickOutside);
-  }
+ connectedCallback() {
+  super.connectedCallback();
+  
+  this._clickOutside = (e) => {
+    // Vérifier si le click est en dehors du composant
+    if (!this.contains(e.target)) {
+      this.open = false;
+    }
+  };
+  
+  // Écouter sur le parent modal OU sur document
+  const modal = this.closest('modal-dialog');
+  const listener = modal || document;
+  listener.addEventListener('click', this._clickOutside, true);  // ← true = capture phase
+}
 
-  disconnectedCallback() {
-    super.disconnectedCallback();
-    document.removeEventListener('click', this._clickOutside);
-  }
+disconnectedCallback() {
+  super.disconnectedCallback();
+  const modal = this.closest('modal-dialog');
+  const listener = modal || document;
+  listener.removeEventListener('click', this._clickOutside, true);
+}
+
+  
 }
 
 customElements.define('tags-select', TagsSelect);

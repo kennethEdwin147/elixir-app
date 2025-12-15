@@ -5,88 +5,274 @@
     <meta name="viewport" content="width=device-width, initial-scale=1.0">
     <title>Document</title>
 
-    <script type="module" src="http://localhost:5173/main.js"></script>
     <script src="https://cdn.tailwindcss.com"></script>
+
+
+<script type="module" src="/static/js/components/game-select.js"></script>
+<script type="module" src="/static/js/components/tags-select.js"></script>
+<script type="module" src="/static/js/components/modal-dialog.js"></script>
+
 </head>
 <body class="">
 
-<div class="min-h-screen ">
+<style>
+  @keyframes fadeIn {
+  from { opacity: 0; }
+  to { opacity: 1; }
+}
 
-  <header class="fixed top-0  left-0 right-0 h-16 bg-white border-b-2 border-gray-200 z-20">
-      <div>
+@keyframes slideUp {
+  from {
+    opacity: 0;
+    transform: translateY(20px);
+  }
+  to {
+    opacity: 1;
+    transform: translateY(0);
+  }
+}
 
+.animate-fadeIn {
+  animation: fadeIn 0.2s ease-out;
+}
+
+.animate-slideUp {
+  animation: slideUp 0.3s ease-out;
+}
+</style>
+
+<div class="min-h-screen bg-gray-100/30">
+
+
+
+  <aside class="hidden  h-full lg:flex fixed left-0 w-72  border-gray-200 z-10
+                h-[calc(100vh-4rem)] overflow-y-auto ">
+
+<div class=" h-screen  flex flex-col px-2">
+  <!-- Header with profile -->
+  <div class="p-4 flex items-center gap-3 border-gray-300">
+    <img src="https://images.pexels.com/photos/5537585/pexels-photo-5537585.jpeg?_gl=1*k01isf*_ga*NTgwMTIwMTcyLjE3NjMyNTI2Mzg.*_ga_8JE65Q40S6*czE3NjU3MzIyNjgkbzEwJGcxJHQxNzY1NzMyNjU5JGo1MCRsMCRoMA.."
+      alt="Profile" class="w-10 h-10 rounded-lg object-cover">
+    <h2 class="text-sm font-medium text-gray-900">Kenneth Edwin </h2>
+  </div>
+
+  <!-- Create Note button -->
+  <div class="p-4 py-2">
+    <button
+      onclick="document.getElementById('createModal').open = true"
+
+    class="hidden w-full bg-gray-100 font-extrabold flex items-center gap-3 p-3 py-1 hover:bg-gray-200 rounded-lg text-gray-700 font-medium">
+      <svg class="w-5 h-5" fill="none" stroke="currentColor" viewBox="0 0 24 24">
+        <path stroke-linecap="round" stroke-linejoin="round" stroke-width="2" d="M11 5H6a2 2 0 00-2 2v11a2 2 0 002 2h11a2 2 0 002-2v-5m-1.414-9.414a2 2 0 112.828 2.828L11.828 15H9v-2.828l8.586-8.586z"></path>
+      </svg>
+      <p class="font-sm text-gray-900">Create Post</p>
+    </button>
+
+    <button
+      onclick="window.location.href='/announcements/new'"
+
+    class="w-full bg-gray-100 font-extrabold flex items-center gap-3 p-3 py-1 hover:bg-gray-200 rounded-lg text-gray-700 font-medium">
+      <svg class="w-5 h-5" fill="none" stroke="currentColor" viewBox="0 0 24 24">
+        <path stroke-linecap="round" stroke-linejoin="round" stroke-width="2" d="M11 5H6a2 2 0 00-2 2v11a2 2 0 002 2h11a2 2 0 002-2v-5m-1.414-9.414a2 2 0 112.828 2.828L11.828 15H9v-2.828l8.586-8.586z"></path>
+      </svg>
+      <p class="font-sm text-gray-900">Create Post</p>
+    </button>
+
+          <!-- Bouton pour ouvrir -->
+
+  </div>
+
+  <!-- Scrollable content -->
+  <div class="flex-1 overflow-y-auto">
+    <!-- Pinned section -->
+    <div class="px-4 py-2">
+      <button class="flex items-center gap-2 text-gray-600 font-medium mb-2">
+        <svg class="w-4 h-4" fill="currentColor" viewBox="0 0 20 20">
+          <path fill-rule="evenodd" d="M5.293 7.293a1 1 0 011.414 0L10 10.586l3.293-3.293a1 1 0 111.414 1.414l-4 4a1 1 0 01-1.414 0l-4-4a1 1 0 010-1.414z" clip-rule="evenodd"></path>
+        </svg>
+        Pinned
+      </button>
+      <p class="text-sm text-gray-400 ml-6">Your pinned notes and collections appear here</p>
+    </div>
+
+    <!-- Notes section -->
+    <div class="px-4 py-2 mt-4">
+      <button class="flex items-center gap-2 text-gray-600 font-medium mb-3">
+        <svg class="w-4 h-4" fill="currentColor" viewBox="0 0 20 20">
+          <path fill-rule="evenodd" d="M5.293 7.293a1 1 0 011.414 0L10 10.586l3.293-3.293a1 1 0 111.414 1.414l-4 4a1 1 0 01-1.414 0l-4-4a1 1 0 010-1.414z" clip-rule="evenodd"></path>
+        </svg>
+        Notes
+      </button>
+
+
+
+      <!-- Notes list -->
+      <div class="ml-6 space-y-2">
+        <div class="flex items-center gap-2 p-2 hover:bg-gray-200 rounded cursor-pointer">
+          <svg class="w-4 h-4 text-gray-500" fill="none" stroke="currentColor" viewBox="0 0 24 24">
+            <path stroke-linecap="round" stroke-linejoin="round" stroke-width="2" d="M9 12h6m-6 4h6m2 5H7a2 2 0 01-2-2V5a2 2 0 012-2h5.586a1 1 0 01.707.293l5.414 5.414a1 1 0 01.293.707V19a2 2 0 01-2 2z"></path>
+          </svg>
+          <span class="text-gray-700">Bienvenue Marc</span>
+        </div>
+
+        <div class="flex items-center gap-2 p-2 hover:bg-gray-200 rounded cursor-pointer">
+          <svg class="w-4 h-4 text-gray-500" fill="none" stroke="currentColor" viewBox="0 0 24 24">
+            <path stroke-linecap="round" stroke-linejoin="round" stroke-width="2" d="M9 12h6m-6 4h6m2 5H7a2 2 0 01-2-2V5a2 2 0 012-2h5.586a1 1 0 01.707.293l5.414 5.414a1 1 0 01.293.707V19a2 2 0 01-2 2z"></path>
+          </svg>
+          <span class="text-gray-700">nouvelle note</span>
+        </div>
       </div>
-      <div class="flex gap-x-4 items-center justify-between h-full px-4 lg:ml-64">
+    </div>
 
-          <div
-            id="search-input"
-            class="flex-1  flex items-center space-x-4">
-              <input
-                type="text"
-                placeholder="Search (ctrl + k)"
-                class="p-2  bg-gray-200 rounded-full w-full max-w-sm focus:outline-none">
-          </div>
-
-          <div class="flex items-center space-x-4">
-              <button class="bg-black text-xs font-semibold text-white px-4 py-3 rounded-full">Sign in</button>
-          </div>
+    <!-- Getting started section -->
+    <div class="px-4 py-4 mt-4">
+      <div class="flex items-center justify-between mb-3">
+        <h3 class="text-gray-700 font-medium">Getting started (1 of 4)</h3>
+        <svg class="w-5 h-5 text-gray-500" fill="currentColor" viewBox="0 0 20 20">
+          <path fill-rule="evenodd" d="M5.293 7.293a1 1 0 011.414 0L10 10.586l3.293-3.293a1 1 0 111.414 1.414l-4 4a1 1 0 01-1.414 0l-4-4a1 1 0 010-1.414z" clip-rule="evenodd"></path>
+        </svg>
       </div>
-  </header>
 
-  <aside class="hidden   lg:flex fixed top-16 left-0 w-80  border-gray-200 p-4 z-10
-                h-[calc(100vh-4rem)] overflow-y-auto px-4">
-    <nav class="space-y-1 w-full text-gray-800 pt-2">
+      <!-- Progress bar -->
+      <div class="w-full h-1.5 bg-gray-300 rounded-full mb-4">
+        <div class="h-full w-1/4 bg-blue-500 rounded-full"></div>
+      </div>
 
-    <article class="flex items-center gap-4 block p-2 rounded-lg bg-gray-100 ">
+    </div>
+  </div>
 
-<svg xmlns="http://www.w3.org/2000/svg" width="20" height="20" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2" stroke-linecap="round" stroke-linejoin="round" class="lucide lucide-birdhouse-icon lucide-birdhouse"><path d="M12 18v4"/><path d="m17 18 1.956-11.468"/><path d="m3 8 7.82-5.615a2 2 0 0 1 2.36 0L21 8"/><path d="M4 18h16"/><path d="M7 18 5.044 6.532"/><circle cx="12" cy="10" r="2"/></svg>          <a href="#" class="">Home</a>
+  <!-- Collapse button at bottom -->
 
-    </article>
-      <a href="#" class="block p-2 rounded-lg hover:bg-gray-50">Recent comments</a>
-      </nav>
+
+
+
   </aside>
 
-  <main class="flex-1 lg:ml-80 mt-16 p-4 pt-4">
-      <section class="bg-white max-w-2xl space-y-1">
+  <main class="flex-1 lg:ml-72 pt-1 rounded-t-lg">
 
-
-<!-- Start: main-article -->
-<hr>
-<article class=" p-2 rounded-lg hover:bg-gray-50 transition-colors duration-300">
-    <div class="flex items-start justify-between">
-
-        <header class="flex-1 pr-4 space-y-2">
-
-            <div class="flex items-center text-sm mb-1 gap-x-2">
-                            <img class="hidden object-cover w-8 h-8 rounded-lg" src="https://i.pinimg.com/736x/b7/00/99/b70099c2f7ca070396e75bc4f3ba59d9.jpg" alt="">
-
-                <p class="font-bold text-gray-700">
-                    Valorant
-                </p>
-                <span class="text-gray-500">by @Sammy Xf · 3d ago</span>
-
-            </div>
-
-            <h2 class="text-sm  leading-snug hover:text-red-600 cursor-pointer">
-Need Sage/Cypher. Chill vibes, trying to push Plat.
-</h2>
-
-        </header>
-
-            <div class="flex gap-2">
-
-   <!-- Card 2 -->
-  <div class="bg-white rounded-2xl flex flex-col items-center justify-center h-16 w-16 shadow-sm">
-    <svg xmlns="http://www.w3.org/2000/svg" width="16" height="16" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2" stroke-linecap="round" stroke-linejoin="round" class="lucide lucide-arrow-big-up-dash-icon lucide-arrow-big-up-dash"><path d="M9 13a1 1 0 0 0-1-1H5.061a1 1 0 0 1-.75-1.811l6.836-6.835a1.207 1.207 0 0 1 1.707 0l6.835 6.835a1 1 0 0 1-.75 1.811H16a1 1 0 0 0-1 1v2a1 1 0 0 1-1 1h-4a1 1 0 0 1-1-1z"/><path d="M9 20h6"/></svg>
-    <p class="text-sm font-semibold text-gray-900">180</p>
-  </div>
-    <!-- Card 1 -->
-
-  <div class="bg-white rounded-2xl hidden lg:flex flex-col items-center justify-center h-16 w-16 shadow-sm">
-    <svg class="w-4 h-4 mb-2 text-gray-700" fill="none" stroke="currentColor" viewBox="0 0 24 24">
-      <path stroke-linecap="round" stroke-linejoin="round" stroke-width="2" d="M8 12h.01M12 12h.01M16 12h.01M21 12c0 4.418-4.03 8-9 8a9.863 9.863 0 01-4.255-.949L3 20l1.395-3.72C3.512 15.042 3 13.574 3 12c0-4.418 4.03-8 9-8s9 3.582 9 8z"></path>
+<section class="my-1">
+  <div class="relative w-full max-w-2xl">
+  <div class="absolute inset-y-0 left-0 flex items-center pl-4 pointer-events-none">
+    <svg class="w-5 h-5 text-gray-400" fill="none" stroke="currentColor" viewBox="0 0 24 24">
+      <path stroke-linecap="round" stroke-linejoin="round" stroke-width="2" d="M21 21l-6-6m2-5a7 7 0 11-14 0 7 7 0 0114 0z"></path>
     </svg>
-    <p class="text-sm font-semibold text-gray-900">24</p>
+  </div>
+  <input
+    type="text"
+    placeholder="Search or ask your Mem"
+    class="w-full pl-12 pr-4 py-1 bg-gray-100 border-0 rounded-full text-gray-700 placeholder-gray-400 focus:outline-none focus:ring-2 focus:ring-gray-300 hover:bg-gray-100 transition-colors"
+  />
+</div>
+</section>
+
+  <!-- Nouvelle section -->
+
+  <div class="min-h-screen   max-w-2xl">
+
+  <section class="p-6 pb-4 bg-gray-100 rounded-t-2xl">
+  <!-- Home link -->
+  <div class="mb-4">
+    <a href="#" class="text-gray-600 text-sm flex items-center gap-2 hover:text-gray-800">
+      <svg class="w-4 h-4" fill="none" stroke="currentColor" viewBox="0 0 24 24">
+        <path stroke-linecap="round" stroke-linejoin="round" stroke-width="2" d="M3 12l2-2m0 0l7-7 7 7M5 10v10a1 1 0 001 1h3m10-11l2 2m-2-2v10a1 1 0 01-1 1h-3m-6 0a1 1 0 001-1v-4a1 1 0 011-1h2a1 1 0 011 1v4a1 1 0 001 1m-6 0h6"></path>
+      </svg>
+      Home
+    </a>
+  </div>
+
+  <!-- Header with title and filter icon -->
+  <div class="flex justify-between items-center mb-6">
+    <h1 class="text-4xl font-bold text-gray-900">Apex Legends</h1>
+    <button class="p-2 hover:bg-gray-200 rounded-lg">
+      <svg class="w-6 h-6 text-gray-600" fill="none" stroke="currentColor" viewBox="0 0 24 24">
+        <path stroke-linecap="round" stroke-linejoin="round" stroke-width="2" d="M3 4h13M3 8h9m-9 4h6m4 0l4-4m0 0l4 4m-4-4v12"></path>
+      </svg>
+    </button>
+  </div>
+
+  <!-- Tabs -->
+  <div class="flex gap-6 ">
+    <button class="pb-3 text-gray-900 font-medium border-b-2 border-blue-500">
+      All
+    </button>
+    <button class="pb-3 text-gray-400 font-medium hover:text-gray-600">
+      Created by me
+    </button>
+    <button class="pb-3 text-gray-400 font-medium hover:text-gray-600">
+      Shared with me
+    </button>
+  </div>
+</section>
+  <!-- Today section -->
+  <div class="mb-4 p-6 min-h-screen bg-white">
+    <h2 class="text-sm font-semibold text-gray-600 mb-4">TODAY</h2>
+
+    <!-- Notes list -->
+    <div class="space-y-1">
+      <!-- Note 1 -->
+      <div class="flex hidden items-center justify-between p-4 hover:bg-white rounded-lg cursor-pointer group">
+        <div class="flex items-center gap-3">
+          <svg class="w-5 h-5 text-gray-400" fill="none" stroke="currentColor" viewBox="0 0 24 24">
+            <path stroke-linecap="round" stroke-linejoin="round" stroke-width="2" d="M9 12h6m-6 4h6m2 5H7a2 2 0 01-2-2V5a2 2 0 012-2h5.586a1 1 0 01.707.293l5.414 5.414a1 1 0 01.293.707V19a2 2 0 01-2 2z"></path>
+          </svg>
+          <div>
+            <h3 class="font-medium text-gray-900">nouvelle note</h3>
+            <p class="text-sm text-gray-500">No additional text</p>
+          </div>
+        </div>
+        <span class="text-sm text-gray-500">11:51 AM</span>
+      </div>
+
+
+      <!-- Note 2 -->
+      <div class="flex hidden items-center justify-between p-4 hover:bg-white rounded-lg cursor-pointer group">
+        <div class="flex items-center gap-3">
+          <svg class="w-5 h-5 text-gray-400" fill="none" stroke="currentColor" viewBox="0 0 24 24">
+            <path stroke-linecap="round" stroke-linejoin="round" stroke-width="2" d="M9 12h6m-6 4h6m2 5H7a2 2 0 01-2-2V5a2 2 0 012-2h5.586a1 1 0 01.707.293l5.414 5.414a1 1 0 01.293.707V19a2 2 0 01-2 2z"></path>
+          </svg>
+          <div>
+            <h3 class="font-medium text-gray-900">Bienvenue Marc</h3>
+            <p class="text-sm text-gray-500">function</p>
+          </div>
+        </div>
+        <span class="text-sm text-gray-500">11:50 AM</span>
+      </div>
+
+
+      <hr>
+
+          <%= for announcement <- @announcements do %>
+
+      <div class="flex items-center justify-between p-4 py-2 hover:bg-white rounded-lg cursor-pointer group">
+        <div class="flex items-center gap-3">
+          <svg class="w-5 h-5 text-gray-400" fill="none" stroke="currentColor" viewBox="0 0 24 24">
+            <path stroke-linecap="round" stroke-linejoin="round" stroke-width="2" d="M9 12h6m-6 4h6m2 5H7a2 2 0 01-2-2V5a2 2 0 012-2h5.586a1 1 0 01.707.293l5.414 5.414a1 1 0 01.293.707V19a2 2 0 01-2 2z"></path>
+          </svg>
+          <div>
+            <header class="flex items-center gap-2">
+                <h3 class="font-extrabold text-gray-900">/<%= announcement.game %></h3>
+                <span class="text-sm  text-gray-500"><%= announcement.time_ago %> ago</span>
+            <span class="text-sm  text-gray-500">by @<%= announcement.user.username %></span>
+            </header>
+            <p class="text-base mt-2 text-gray-800"><%= announcement.description %></p>
+
+
+          </div>
+
+        </div>
+          <footer class="mt-2 lg:mt-2 flex items-center gap-2 flex-wrap max-w-sm">
+        <span class="font-medium text-gray-500 rounded-full">Comm</span>
+        <span class="font-medium text-gray-500 rounded-full">Like</span>
+        <span class="font-medium text-gray-500  rounded-full">interesse</span>
+
+      </footer>
+      </div>
+
+
+      <hr>
+    <% end %>
+
+    </div>
   </div>
 
 
@@ -94,20 +280,17 @@ Need Sage/Cypher. Chill vibes, trying to push Plat.
 
 
 
-    </div>
+  <!-- Fin nouvelle section -->
 
-<footer class="mt-2 lg:mt-0 flex items-center gap-2 flex-wrap max-w-sm">
-        <span class="text-xs font-semibold text-white p-2 rounded-full bg-purple-600">#Fil de discussion principal</span>
-</footer>
-<footer class="mt-2 lg:mt-0 flex items-center gap-2 flex-wrap max-w-sm">
-<span class="text-xs p-2 rounded-full ">Commentaires</span>
-<span class="text-xs p-2 rounded-full ">contact</span>
-<span class="text-xs p-2 rounded-full ">interesse</span>
 
-</footer>
 
-</article>
-<!-- End: main-article -->
+      <section class="bg-white min-h-[calc(100vh-4rem)] px-4 py-2 space-y-1">
+
+<!-- Start: main-article -->
+
+    <!-- Card 1 -->
+
+
 
 
 <! -- Dynamic content -->
@@ -115,9 +298,9 @@ Need Sage/Cypher. Chill vibes, trying to push Plat.
  <!-- LISTE DES ANNONCES -->
 
     <%= for announcement <- @announcements do %>
-    <hr>
+    <hr class="hidden">
   <!-- Start: main-article -->
-  <article class="p-2 rounded-lg hover:bg-gray-50  transition-colors duration-300">
+  <article class=" p-2 rounded-lg hover:bg-gray-50  transition-colors duration-300">
     <div class="flex items-start justify-between">
 
       <header class="flex-1 pr-4 space-y-2">
@@ -176,9 +359,64 @@ Need Sage/Cypher. Chill vibes, trying to push Plat.
 <hr class="hidden">
       </section>
 
+<!-- Modal avec le formulaire -->
+<modal-dialog
+  id="createModal"
+  title="Créer une annonce"
+  >
+  <div slot="content" class="h-full">
+    <form action="/announcements/new" method="POST" class="space-y-4 h-full">
+      <game-select id="gameSelect"></game-select>
+      <input type="hidden" name="game" id="gameInput">
+
+      <div class="space-y-4 mt-4">
+      <tags-select id="tags"></tags-select>
+      <input type="hidden" name="tags" id="tagsInput">
+      </div>
+
+      <textarea
+        name="description"
+        rows="5"
+        placeholder="Je cherche 2 teammates..."
+        required
+        class="w-full flex-1 px-5 py-2 rounded-2xl bg-gray-100 focus:outline-none"
+      ></textarea>
+
+      <button type="submit" class="w-full px-6 py-2 bg-black text-white rounded-full">
+        Publier
+      </button>
+    </form>
+  </div>
+</modal-dialog>
+
 
   </main>
 
+
+
+
+
+
+
+
+
 </div>
+
+
+<script type="module">
+  await customElements.whenDefined('game-select');
+  await customElements.whenDefined('tags-select');
+
+  document.querySelector('game-select').addEventListener('change', (e) => {
+    document.getElementById('gameInput').value = e.detail.value;
+    console.log('✅ Game:', e.detail.value);
+  });
+
+  document.querySelector('tags-select').addEventListener('change', (e) => {
+    document.getElementById('tagsInput').value = JSON.stringify(e.detail.values);
+    console.log('✅ Tags:', e.detail.values);
+  });
+</script>
+
 </body>
 </html>

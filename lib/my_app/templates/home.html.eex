@@ -10,6 +10,12 @@
 </head>
 <body class="bg-gray-50">
 
+<style>
+ body {
+    font-family: "system-ui" !important;
+ }
+</style>
+
 
 <section class="flex flex-col md:flex-row items-center px-4 gap-2 max-w-5xl mx-auto">
 

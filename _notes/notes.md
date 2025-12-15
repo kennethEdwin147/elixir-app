@@ -1,6 +1,14 @@
 Bonne question ! Voici ce que je recommande **par ordre de priorité** :
 
 ---
+ALTERNATIVE (si vraiment multi-région) :
+Option cross-language :
+
+Ajouter un tag [ENGLISH OK] pour joueurs FR qui acceptent de jouer avec EN
+Filtres : "Afficher aussi annonces anglaises" (opt-in)
+
+Mais je recommande feeds séparés pour MVP = plus simple et plus clair ! 💯
+
 
 ## **🎨 1. AJOUTER DU CSS (PRIORITÉ #1)**
 

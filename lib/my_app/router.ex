@@ -36,6 +36,14 @@ defmodule MyApp.Router do
       |> send_resp(200, html)
     end
 
+    get "/create-announcement" do
+      html = EEx.eval_file("lib/my_app/templates/test_modal.html.eex", assigns: %{})
+
+      conn
+      |> put_resp_content_type("text/html", "utf-8")
+      |> send_resp(200, html)
+    end
+
   forward "/home",     to: MyApp.Controllers.HomeController
   forward "/login",    to: MyApp.Controllers.LoginController
   forward "/register", to: MyApp.Controllers.RegisterController

@@ -41,8 +41,8 @@ class GameSelect extends LitElement {
             @input=${this._handleSearch}
             @focus=${() => this.open = true}
             @click=${e => e.stopPropagation()}
-            class="px-5 w-full font-bold focus:outline-none py-2 text-xs rounded-2xl text-black placeholder-black
-                    focus:ring-indigo-500 focus:bg-gray-50 transition-shadow duration-150 shadow-sm bg-gray-100"
+            class="px-5 w-full font-extrbold focus:outline-none py-4  rounded-lg text-black placeholder-black
+                    focus:ring-indigo-500 focus:bg-gray-50 transition-shadow duration-150 bg-gray-100"
             >
 
             <!-- Dropdown options -->
@@ -76,17 +76,27 @@ class GameSelect extends LitElement {
         this.dispatchEvent(new CustomEvent('change', {detail: {value: option.value}}));
     }
 
-    connectedCallback() {
-        super.connectedCallback();
-        this._clickOutside = (e) => {
-        if (!this.contains(e.target)) this.open = false;
-        };
-        document.addEventListener('click', this._clickOutside);
+   connectedCallback() {
+    super.connectedCallback();
+    
+    this._clickOutside = (e) => {
+        // Vérifier si le click est en dehors du composant
+        if (!this.contains(e.target)) {
+        this.open = false;
+        }
+    };
+  
+        // Écouter sur le parent modal OU sur document
+        const modal = this.closest('modal-dialog');
+        const listener = modal || document;
+        listener.addEventListener('click', this._clickOutside, true);  // ← true = capture phase
     }
 
     disconnectedCallback() {
         super.disconnectedCallback();
-        document.removeEventListener('click', this._clickOutside);
+        const modal = this.closest('modal-dialog');
+        const listener = modal || document;
+        listener.removeEventListener('click', this._clickOutside, true);
     }
 }
 
