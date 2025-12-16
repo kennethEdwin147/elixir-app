@@ -45,7 +45,7 @@
 
 
 
-  <aside class="hidden  h-full lg:flex fixed left-0 w-64  border-gray-200 z-10
+  <aside class="hidden text-black  h-full lg:flex fixed left-0 w-72  border-gray-200 z-10
                 h-[calc(100vh-4rem)] overflow-y-auto ">
 
 <div class=" h-screen  flex flex-col px-2">
@@ -53,7 +53,7 @@
   <div class="p-4 flex items-center gap-3 border-gray-300">
     <img src="https://images.pexels.com/photos/5537585/pexels-photo-5537585.jpeg?_gl=1*k01isf*_ga*NTgwMTIwMTcyLjE3NjMyNTI2Mzg.*_ga_8JE65Q40S6*czE3NjU3MzIyNjgkbzEwJGcxJHQxNzY1NzMyNjU5JGo1MCRsMCRoMA.."
       alt="Profile" class="w-10 h-10 rounded-lg object-cover">
-    <h2 class="text-sm font-medium text-gray-900">Kenneth Edwin </h2>
+    <h2 class="text-base font-extrabold text-gray-900">Kenneth Edwin </h2>
   </div>
 
   <!-- Create Note button -->
@@ -86,18 +86,18 @@
   <div class="flex-1 overflow-y-auto">
     <!-- Pinned section -->
     <div class="px-4 py-2">
-      <button class="flex items-center gap-2 text-gray-600 font-medium mb-2">
+      <button class="flex items-center gap-2 text-black font-medium mb-2">
         <svg class="w-4 h-4" fill="currentColor" viewBox="0 0 20 20">
           <path fill-rule="evenodd" d="M5.293 7.293a1 1 0 011.414 0L10 10.586l3.293-3.293a1 1 0 111.414 1.414l-4 4a1 1 0 01-1.414 0l-4-4a1 1 0 010-1.414z" clip-rule="evenodd"></path>
         </svg>
         Pinned
       </button>
-      <p class="text-sm text-gray-400 ml-6">Your pinned notes and collections appear here</p>
+      <p class="text-sm text-gray-700 ml-6">Your pinned notes and collections appear here</p>
     </div>
 
     <!-- Notes section -->
     <div class="px-4 py-2 mt-4">
-      <button class="flex items-center gap-2 text-gray-600 font-medium mb-3">
+      <button class="flex items-center gap-2 text-black font-medium mb-3">
         <svg class="w-4 h-4" fill="currentColor" viewBox="0 0 20 20">
           <path fill-rule="evenodd" d="M5.293 7.293a1 1 0 011.414 0L10 10.586l3.293-3.293a1 1 0 111.414 1.414l-4 4a1 1 0 01-1.414 0l-4-4a1 1 0 010-1.414z" clip-rule="evenodd"></path>
         </svg>
@@ -127,7 +127,7 @@
     <!-- Getting started section -->
     <div class="px-4 py-4 mt-4">
       <div class="flex items-center justify-between mb-3">
-        <h3 class="text-gray-700 font-medium">Getting started (1 of 4)</h3>
+        <h3 class="text-gray-900 font-medium">Getting started (1 of 4)</h3>
         <svg class="w-5 h-5 text-gray-500" fill="currentColor" viewBox="0 0 20 20">
           <path fill-rule="evenodd" d="M5.293 7.293a1 1 0 011.414 0L10 10.586l3.293-3.293a1 1 0 111.414 1.414l-4 4a1 1 0 01-1.414 0l-4-4a1 1 0 010-1.414z" clip-rule="evenodd"></path>
         </svg>
@@ -148,7 +148,7 @@
 
   </aside>
 
-  <main class="flex-1 lg:ml-64 pt-1 rounded-t-lg">
+  <main class="flex-1 lg:ml-72 pt-1 rounded-t-lg">
 
 <section class="my-1">
   <div class="relative w-full max-w-2xl">
@@ -160,29 +160,18 @@
   <input
     type="text"
     placeholder="Search or ask your Mem"
-    class="w-full pl-12 pr-4 py-1 bg-gray-100 border-0 rounded-full text-gray-700 placeholder-gray-400 focus:outline-none focus:ring-2 focus:ring-gray-300 hover:bg-gray-100 transition-colors"
+    class="w-full pl-12 pr-4 py-1 bg-gray-100 shadow-sm-- border-0 rounded-full text-gray-700 placeholder-gray-700 focus:outline-none focus:ring-2 focus:ring-gray-300 hover:bg-gray-100 transition-colors"
   />
 </div>
 </section>
 
   <!-- Nouvelle section -->
 
-  <div class="min-h-screen   max-w-2xl">
+  <div class="min-h-screen  max-w-3xl">
 
-  <section class="p-6 pb-4 bg-gray-100 rounded-t-2xl">
-  <!-- Home link -->
-  <div class="mb-4">
-    <a href="#" class="text-gray-600 text-sm flex items-center gap-2 hover:text-gray-800">
-      <svg class="w-4 h-4" fill="none" stroke="currentColor" viewBox="0 0 24 24">
-        <path stroke-linecap="round" stroke-linejoin="round" stroke-width="2" d="M3 12l2-2m0 0l7-7 7 7M5 10v10a1 1 0 001 1h3m10-11l2 2m-2-2v10a1 1 0 01-1 1h-3m-6 0a1 1 0 001-1v-4a1 1 0 011-1h2a1 1 0 011 1v4a1 1 0 001 1m-6 0h6"></path>
-      </svg>
-      Home
-    </a>
-  </div>
-
-  <!-- Header with title and filter icon -->
-  <div class="flex justify-between items-center mb-6">
-    <h1 class="text-4xl font-bold text-gray-900">Apex Legends</h1>
+   <!-- Header with title and filter icon -->
+  <div class="flex justify-between items-center px-4 my-10 mb-4">
+    <h1 class="text-4xl font-extrabold text-gray-900">Apex Legends</h1>
     <button class="p-2 hover:bg-gray-200 rounded-lg">
       <svg class="w-6 h-6 text-gray-600" fill="none" stroke="currentColor" viewBox="0 0 24 24">
         <path stroke-linecap="round" stroke-linejoin="round" stroke-width="2" d="M3 4h13M3 8h9m-9 4h6m4 0l4-4m0 0l4 4m-4-4v12"></path>
@@ -190,60 +179,20 @@
     </button>
   </div>
 
-  <!-- Tabs -->
-  <div class="flex gap-6 ">
-    <button class="pb-3 text-gray-900 font-medium border-b-2 border-blue-500">
-      All
-    </button>
-    <button class="pb-3 text-gray-400 font-medium hover:text-gray-600">
-      Created by me
-    </button>
-    <button class="pb-3 text-gray-400 font-medium hover:text-gray-600">
-      Shared with me
-    </button>
-  </div>
-</section>
+
   <!-- Today section -->
-  <div class="mb-4 p-6 min-h-screen bg-white">
-    <h2 class="text-sm font-semibold text-gray-600 mb-4">TODAY</h2>
+  <div class="mb-4 p-6 pt-2 min-h-screen ">
 
     <!-- Notes list -->
     <div class="space-y-1">
-      <!-- Note 1 -->
-      <div class="flex hidden items-center justify-between p-4 hover:bg-white rounded-lg cursor-pointer group">
-        <div class="flex items-center gap-3">
-          <svg class="w-5 h-5 text-gray-400" fill="none" stroke="currentColor" viewBox="0 0 24 24">
-            <path stroke-linecap="round" stroke-linejoin="round" stroke-width="2" d="M9 12h6m-6 4h6m2 5H7a2 2 0 01-2-2V5a2 2 0 012-2h5.586a1 1 0 01.707.293l5.414 5.414a1 1 0 01.293.707V19a2 2 0 01-2 2z"></path>
-          </svg>
-          <div>
-            <h3 class="font-medium text-gray-900">nouvelle note</h3>
-            <p class="text-sm text-gray-500">No additional text</p>
-          </div>
-        </div>
-        <span class="text-sm text-gray-500">11:51 AM</span>
-      </div>
 
 
-      <!-- Note 2 -->
-      <div class="flex hidden items-center justify-between p-4 hover:bg-white rounded-lg cursor-pointer group">
-        <div class="flex items-center gap-3">
-          <svg class="w-5 h-5 text-gray-400" fill="none" stroke="currentColor" viewBox="0 0 24 24">
-            <path stroke-linecap="round" stroke-linejoin="round" stroke-width="2" d="M9 12h6m-6 4h6m2 5H7a2 2 0 01-2-2V5a2 2 0 012-2h5.586a1 1 0 01.707.293l5.414 5.414a1 1 0 01.293.707V19a2 2 0 01-2 2z"></path>
-          </svg>
-          <div>
-            <h3 class="font-medium text-gray-900">Bienvenue Marc</h3>
-            <p class="text-sm text-gray-500">function</p>
-          </div>
-        </div>
-        <span class="text-sm text-gray-500">11:50 AM</span>
-      </div>
 
 
-      <hr>
 
           <%= for announcement <- @announcements do %>
 
-      <div class="flex items-center justify-between p-4 py-2 hover:bg-white rounded-lg cursor-pointer group">
+      <div class="flex items-center justify-between p-4 py-2 hover:text-red-500 hover:bg-yellow-100 bg-white shadow-sm rounded-lg cursor-pointer group">
         <div class="flex items-center gap-3">
           <svg class="w-5 h-5 text-gray-400" fill="none" stroke="currentColor" viewBox="0 0 24 24">
             <path stroke-linecap="round" stroke-linejoin="round" stroke-width="2" d="M9 12h6m-6 4h6m2 5H7a2 2 0 01-2-2V5a2 2 0 012-2h5.586a1 1 0 01.707.293l5.414 5.414a1 1 0 01.293.707V19a2 2 0 01-2 2z"></path>
@@ -269,7 +218,6 @@
       </div>
 
 
-      <hr>
     <% end %>
 
     </div>

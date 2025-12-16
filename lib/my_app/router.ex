@@ -64,6 +64,13 @@ defmodule MyApp.Router do
     # Route racine "/"
   forward "/", to: MyApp.Controllers.ListingController
 
+  # ==========================================
+  # GAME FEEDS (namespace /g/)
+  # ==========================================
+
+    forward "/g", to: MyApp.Controllers.GameFeedController
+
+
   # ============================================
   # 404
   # ============================================

@@ -1,0 +1,135 @@
+<!-- lib/my_app/templates/game_feed.html.eex -->
+
+<!DOCTYPE html>
+<html>
+<head>
+  <meta charset="UTF-8">
+  <meta name="viewport" content="width=device-width, initial-scale=1.0">
+  <title><%= @game.name %> - LFG</title>
+  <script src="https://cdn.tailwindcss.com"></script>
+</head>
+<body class="bg-gray-50">
+
+  <!-- Sidebar -->
+  <aside class="fixed left-0 top-0 w-64 h-screen bg-white border-r overflow-y-auto">
+    <div class="p-4">
+      <h1 class="text-2xl font-bold mb-6">LFG</h1>
+
+      <nav class="space-y-1">
+        <a href="/" class="block py-2 px-3 rounded hover:bg-gray-100 text-gray-700">
+          🏠 Home
+        </a>
+
+        <div class="mt-6">
+          <p class="px-3 text-xs text-gray-500 uppercase font-semibold mb-2">
+            Games
+          </p>
+
+          <%= for game <- @all_games do %>
+            <a href="/g/<%= game.slug %>"
+               class="block py-2 px-3 rounded transition-colors <%= if game.slug == @game.slug do %>bg-blue-50 text-blue-600 font-medium<% else %>text-gray-700 hover:bg-gray-100<% end %>">
+              <span class="mr-2"><%= game.icon %></span>
+              <%= game.name %>
+            </a>
+          <% end %>
+        </div>
+
+        <div class="mt-6">
+          <button class="w-full py-2 px-3 bg-blue-600 text-white rounded hover:bg-blue-700 transition-colors">
+            ➕ Create Post
+          </button>
+        </div>
+      </nav>
+    </div>
+  </aside>
+
+  <!-- Main content -->
+  <main class="ml-64 p-8">
+
+    <!-- Header jeu -->
+    <header class="mb-8 pb-6 border-b">
+      <div class="flex items-center gap-4 mb-4">
+        <span class="text-6xl"><%= @game.icon %></span>
+        <div>
+          <h1 class="text-4xl font-bold text-gray-900">
+            <%= @game.name %>
+          </h1>
+          <div class="text-gray-600 mt-1">
+            <span class="font-medium text-blue-600">/g/<%= @game.slug %></span>
+            <span class="mx-2">·</span>
+            <%= @stats.active_players %> active players
+            <span class="mx-2">·</span>
+            <%= @stats.active_announcements %> posts
+          </div>
+        </div>
+      </div>
+    </header>
+
+    <!-- Feed annonces -->
+    <div class="max-w-2xl space-y-4">
+      <%= if Enum.empty?(@announcements) do %>
+        <div class="text-center py-12 bg-white rounded-lg shadow-sm">
+          <span class="text-6xl mb-4 block"><%= @game.icon %></span>
+          <p class="text-xl text-gray-700 mb-2">
+            No posts yet in /g/<%= @game.slug %>
+          </p>
+          <p class="text-gray-500 mb-6">
+            Be the first to create one!
+          </p>
+          <button class="px-6 py-2 bg-blue-600 text-white rounded hover:bg-blue-700">
+            Create First Post
+          </button>
+        </div>
+      <% else %>
+        <%= for announcement <- @announcements do %>
+          <article class="p-4 rounded-lg bg-white border hover:shadow-md transition-shadow">
+
+            <!-- Header -->
+            <div class="flex items-center gap-2 text-sm text-gray-600 mb-2">
+              <a href="/g/<%= announcement.game %>" class="font-medium text-blue-600 hover:underline">
+                /g/<%= announcement.game %>
+              </a>
+              <span>·</span>
+              <span class="hover:underline cursor-pointer">@<%= announcement.user.username %></span>
+              <span>·</span>
+              <span><%= announcement.time_ago %></span>
+            </div>
+
+            <!-- Description -->
+            <h2 class="text-base leading-relaxed text-gray-900 mb-3">
+              <%= announcement.description %>
+            </h2>
+
+            <!-- Tags -->
+            <%= if announcement.tags && announcement.tags != [] do %>
+              <div class="flex flex-wrap gap-2 mb-3">
+                <%= for tag <- announcement.tags do %>
+                  <span class="px-2 py-1 bg-indigo-100 text-indigo-700 rounded-full text-xs font-medium">
+                    #<%= tag %>
+                  </span>
+                <% end %>
+              </div>
+            <% end %>
+
+            <!-- Actions -->
+            <div class="flex gap-6 text-sm">
+              <button class="text-gray-600 hover:text-blue-600 transition-colors">
+                💬 Comm
+              </button>
+              <button class="text-gray-600 hover:text-red-600 transition-colors">
+                ❤️ Like
+              </button>
+              <button class="text-gray-600 hover:text-green-600 transition-colors">
+                ⭐ interesse
+              </button>
+            </div>
+
+          </article>
+        <% end %>
+      <% end %>
+    </div>
+
+  </main>
+
+</body>
+</html>

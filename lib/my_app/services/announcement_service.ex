@@ -324,4 +324,38 @@ defmodule MyApp.Services.AnnouncementService do
       where(q, [a], fragment("JSON_CONTAINS(?, ?)", a.tags, ^Jason.encode!(tag)))
     end)
   end
+
+
+  # ==========================================
+  # NOUVELLE FONCTION: Liste par jeu
+  # ==========================================
+
+  def list_by_game(slug) do
+    Repo.all(
+      from a in Announcement,
+      where: a.game == ^slug and a.active == true,
+      order_by: [desc: a.inserted_at],
+      preload: :user
+    )
+    |> Enum.map(&add_time_ago/1)
+  end
+
+
+   # Helper pour ajouter time_ago
+  defp add_time_ago(announcement) do
+    Map.put(announcement, :time_ago, calculate_time_ago(announcement.inserted_at))
+  end
+
+  defp calculate_time_ago(datetime) do
+    diff = DateTime.diff(DateTime.utc_now(), datetime, :second)
+
+    cond do
+      diff < 60 -> "#{diff}s ago"
+      diff < 3600 -> "#{div(diff, 60)}min ago"
+      diff < 86400 -> "#{div(diff, 3600)}h ago"
+      true -> "#{div(diff, 86400)}d ago"
+    end
+  end
+
+
 end
