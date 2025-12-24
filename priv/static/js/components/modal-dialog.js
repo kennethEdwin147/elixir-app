@@ -51,7 +51,7 @@ class ModalDialog extends LitElement {
       >
         <div 
           @click=${e => e.stopPropagation()}
-          class="bg-white bottom-4 absolute py-2 shadow-2xl max-w-3xl w-full h-full max-h-[85vh] overflow-hidden animate-slideUp"
+          class="bg-white bottom-4 absolute rounded-t-xl py-2 shadow-2xl max-w-sm w-full h-full max-h-[85vh] overflow-hidden animate-slideUp"
         >
           <div class="flex items-center justify-between px-6 py-2 ">
             <h2 class="text-3xl font-extrabold text-gray-900">${this.title}</h2>

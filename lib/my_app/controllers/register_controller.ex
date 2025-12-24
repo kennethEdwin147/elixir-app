@@ -7,7 +7,7 @@ defmodule MyApp.Controllers.RegisterController do
   plug :dispatch
 
   get "/" do
-    html = EEx.eval_file("lib/my_app/templates/register.html.eex",
+    html = EEx.eval_file("lib/my_app/templates/auth/register.html.eex",
       assigns: %{
         email_value: "",
         error_msg: nil
@@ -79,7 +79,7 @@ defmodule MyApp.Controllers.RegisterController do
   end
 
   defp render_error(conn, email_value, error_msg) do
-    html = EEx.eval_file("lib/my_app/templates/register.html.eex",
+    html = EEx.eval_file("lib/my_app/templates/auth/register.html.eex",
       assigns: %{
         email_value: email_value || "",
         error_msg: error_msg

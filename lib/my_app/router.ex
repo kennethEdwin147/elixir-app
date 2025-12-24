@@ -61,15 +61,16 @@ defmodule MyApp.Router do
   # Settings utilisateur (optionnel, si vous gardez ce controller)
   forward "/user/settings", to: MyApp.Controllers.UserSettingsController
 
-    # Route racine "/"
-  forward "/", to: MyApp.Controllers.ListingController
+
 
   # ==========================================
   # GAME FEEDS (namespace /g/)
   # ==========================================
 
-    forward "/g", to: MyApp.Controllers.GameFeedController
+  forward "/g", to: MyApp.Controllers.GameFeedController
 
+     # Route racine "/"
+  forward "/", to: MyApp.Controllers.ListingController
 
   # ============================================
   # 404

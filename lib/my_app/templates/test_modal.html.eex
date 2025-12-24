@@ -3,236 +3,117 @@
 <head>
     <meta charset="UTF-8">
     <meta name="viewport" content="width=device-width, initial-scale=1.0">
-    <title>Document</title>
-
+    <title>Miro - Utilisateurs</title>
     <script src="https://cdn.tailwindcss.com"></script>
-
-
-<script type="module" src="/static/js/components/game-select.js"></script>
-<script type="module" src="/static/js/components/tags-select.js"></script>
-<script type="module" src="/static/js/components/modal-dialog.js"></script>
-
 </head>
-<body class="">
-
-<style>
-  @keyframes fadeIn {
-  from { opacity: 0; }
-  to { opacity: 1; }
-}
-
-@keyframes slideUp {
-  from {
-    opacity: 0;
-    transform: translateY(20px);
-  }
-  to {
-    opacity: 1;
-    transform: translateY(0);
-  }
-}
-
-.animate-fadeIn {
-  animation: fadeIn 0.2s ease-out;
-}
-
-.animate-slideUp {
-  animation: slideUp 0.3s ease-out;
-}
-</style>
-
-<div class="min-h-screen bg-gray-100/30">
-
-
-
-  <aside class="hidden  h-full lg:flex fixed left-0 w-72  border-gray-200 z-10
-                h-[calc(100vh-4rem)] overflow-y-auto ">
-
-<div class=" h-screen  flex flex-col px-2">
-  <!-- Header with profile -->
-  <div class="p-4 flex items-center gap-3 border-gray-300">
-    <img src="https://images.pexels.com/photos/5537585/pexels-photo-5537585.jpeg?_gl=1*k01isf*_ga*NTgwMTIwMTcyLjE3NjMyNTI2Mzg.*_ga_8JE65Q40S6*czE3NjU3MzIyNjgkbzEwJGcxJHQxNzY1NzMyNjU5JGo1MCRsMCRoMA.."
-      alt="Profile" class="w-10 h-10 rounded-lg object-cover">
-    <h2 class="text-sm font-medium text-gray-900">Kenneth Edwin </h2>
-  </div>
-
-  <!-- Create Note button -->
-  <div class="p-4 py-2">
-    <button
-      onclick="document.getElementById('createModal').open = true"
-
-    class="w-full bg-gray-100 font-extrabold flex items-center gap-3 p-3 hover:bg-gray-200 rounded-lg text-gray-700 font-medium">
-      <svg class="w-5 h-5" fill="none" stroke="currentColor" viewBox="0 0 24 24">
-        <path stroke-linecap="round" stroke-linejoin="round" stroke-width="2" d="M11 5H6a2 2 0 00-2 2v11a2 2 0 002 2h11a2 2 0 002-2v-5m-1.414-9.414a2 2 0 112.828 2.828L11.828 15H9v-2.828l8.586-8.586z"></path>
-      </svg>
-      <p class="font-sm text-gray-900">Create Post</p>
-    </button>
-
-          <!-- Bouton pour ouvrir -->
-
-  </div>
-
-  <!-- Scrollable content -->
-  <div class="flex-1 overflow-y-auto">
-    <!-- Pinned section -->
-    <div class="px-4 py-2">
-      <button class="flex items-center gap-2 text-gray-600 font-medium mb-2">
-        <svg class="w-4 h-4" fill="currentColor" viewBox="0 0 20 20">
-          <path fill-rule="evenodd" d="M5.293 7.293a1 1 0 011.414 0L10 10.586l3.293-3.293a1 1 0 111.414 1.414l-4 4a1 1 0 01-1.414 0l-4-4a1 1 0 010-1.414z" clip-rule="evenodd"></path>
-        </svg>
-        Pinned
-      </button>
-      <p class="text-sm text-gray-400 ml-6">Your pinned notes and collections appear here</p>
+<body class="bg-gray-50">
+<!-- component -->
+<div class="bg-gray-900 min-h-screen flex items-center justify-center">
+  <div class="bg-gray-800 flex-1 flex flex-col space-y-5 lg:space-y-0 lg:flex-row lg:space-x-10 max-w-6xl sm:p-6 sm:my-2 sm:mx-4 sm:rounded-2xl">
+    <!-- Navigation -->
+    <div class="bg-gray-900 px-2 lg:px-4 py-2 lg:py-10 sm:rounded-xl flex lg:flex-col justify-between">
+      <nav class="flex items-center flex-row space-x-2 lg:space-x-0 lg:flex-col lg:space-y-2">
+        <a class="text-white/50 p-4 inline-flex justify-center rounded-md hover:bg-gray-800 hover:text-white smooth-hover" href="#">
+          <svg xmlns="http://www.w3.org/2000/svg" class="h-5 w-5 sm:h-6 sm:w-6" viewBox="0 0 20 20" fill="currentColor">
+            <path d="M10.707 2.293a1 1 0 00-1.414 0l-7 7a1 1 0 001.414 1.414L4 10.414V17a1 1 0 001 1h2a1 1 0 001-1v-2a1 1 0 011-1h2a1 1 0 011 1v2a1 1 0 001 1h2a1 1 0 001-1v-6.586l.293.293a1 1 0 001.414-1.414l-7-7z" />
+          </svg>
+        </a>
+        <!-- Active: bg-gray-800 text-white, Not active: text-white/50 -->
+        <a class="bg-gray-800 text-white p-4 inline-flex justify-center rounded-md" href="#">
+          <svg xmlns="http://www.w3.org/2000/svg" class="h-5 w-5 sm:h-6 sm:w-6" viewBox="0 0 20 20" fill="currentColor">
+            <path d="M9 6a3 3 0 11-6 0 3 3 0 016 0zM17 6a3 3 0 11-6 0 3 3 0 016 0zM12.93 17c.046-.327.07-.66.07-1a6.97 6.97 0 00-1.5-4.33A5 5 0 0119 16v1h-6.07zM6 11a5 5 0 015 5v1H1v-1a5 5 0 015-5z" />
+          </svg>
+        </a>
+        <a class="text-white/50 p-4 inline-flex justify-center rounded-md hover:bg-gray-800 hover:text-white smooth-hover" href="#">
+          <svg xmlns="http://www.w3.org/2000/svg" class="h-5 w-5 sm:h-6 sm:w-6" viewBox="0 0 20 20" fill="currentColor">
+            <path fill-rule="evenodd" d="M3.172 5.172a4 4 0 015.656 0L10 6.343l1.172-1.171a4 4 0 115.656 5.656L10 17.657l-6.828-6.829a4 4 0 010-5.656z" clip-rule="evenodd" />
+          </svg>
+        </a>
+      </nav>
+      <div class="flex items-center flex-row space-x-2 lg:space-x-0 lg:flex-col lg:space-y-2">
+        <a class="text-white/50 p-4 inline-flex justify-center rounded-md hover:bg-gray-800 hover:text-white smooth-hover" href="#">
+          <svg xmlns="http://www.w3.org/2000/svg" class="h-5 w-5 sm:h-6 sm:w-6" viewBox="0 0 20 20" fill="currentColor">
+            <path fill-rule="evenodd" d="M11.49 3.17c-.38-1.56-2.6-1.56-2.98 0a1.532 1.532 0 01-2.286.948c-1.372-.836-2.942.734-2.106 2.106.54.886.061 2.042-.947 2.287-1.561.379-1.561 2.6 0 2.978a1.532 1.532 0 01.947 2.287c-.836 1.372.734 2.942 2.106 2.106a1.532 1.532 0 012.287.947c.379 1.561 2.6 1.561 2.978 0a1.533 1.533 0 012.287-.947c1.372.836 2.942-.734 2.106-2.106a1.533 1.533 0 01.947-2.287c1.561-.379 1.561-2.6 0-2.978a1.532 1.532 0 01-.947-2.287c.836-1.372-.734-2.942-2.106-2.106a1.532 1.532 0 01-2.287-.947zM10 13a3 3 0 100-6 3 3 0 000 6z" clip-rule="evenodd" />
+          </svg>
+        </a>
+        <a class="text-white/50 p-4 inline-flex justify-center rounded-md hover:bg-gray-800 hover:text-white smooth-hover" href="#">
+          <svg xmlns="http://www.w3.org/2000/svg" class="h-5 w-5 sm:h-6 sm:w-6" viewBox="0 0 20 20" fill="currentColor">
+            <path fill-rule="evenodd" d="M3 3a1 1 0 011 1v12a1 1 0 11-2 0V4a1 1 0 011-1zm7.707 3.293a1 1 0 010 1.414L9.414 9H17a1 1 0 110 2H9.414l1.293 1.293a1 1 0 01-1.414 1.414l-3-3a1 1 0 010-1.414l3-3a1 1 0 011.414 0z" clip-rule="evenodd" />
+          </svg>
+        </a>
+      </div>
     </div>
-
-    <!-- Notes section -->
-    <div class="px-4 py-2 mt-4">
-      <button class="flex items-center gap-2 text-gray-600 font-medium mb-3">
-        <svg class="w-4 h-4" fill="currentColor" viewBox="0 0 20 20">
-          <path fill-rule="evenodd" d="M5.293 7.293a1 1 0 011.414 0L10 10.586l3.293-3.293a1 1 0 111.414 1.414l-4 4a1 1 0 01-1.414 0l-4-4a1 1 0 010-1.414z" clip-rule="evenodd"></path>
-        </svg>
-        Notes
-      </button>
-
-
-
-      <!-- Notes list -->
-      <div class="ml-6 space-y-2">
-        <div class="flex items-center gap-2 p-2 hover:bg-gray-200 rounded cursor-pointer">
-          <svg class="w-4 h-4 text-gray-500" fill="none" stroke="currentColor" viewBox="0 0 24 24">
-            <path stroke-linecap="round" stroke-linejoin="round" stroke-width="2" d="M9 12h6m-6 4h6m2 5H7a2 2 0 01-2-2V5a2 2 0 012-2h5.586a1 1 0 01.707.293l5.414 5.414a1 1 0 01.293.707V19a2 2 0 01-2 2z"></path>
-          </svg>
-          <span class="text-gray-700">Bienvenue Marc</span>
-        </div>
-
-        <div class="flex items-center gap-2 p-2 hover:bg-gray-200 rounded cursor-pointer">
-          <svg class="w-4 h-4 text-gray-500" fill="none" stroke="currentColor" viewBox="0 0 24 24">
-            <path stroke-linecap="round" stroke-linejoin="round" stroke-width="2" d="M9 12h6m-6 4h6m2 5H7a2 2 0 01-2-2V5a2 2 0 012-2h5.586a1 1 0 01.707.293l5.414 5.414a1 1 0 01.293.707V19a2 2 0 01-2 2z"></path>
-          </svg>
-          <span class="text-gray-700">nouvelle note</span>
+    <!-- Content -->
+    <div class="flex-1 px-2 sm:px-0">
+      <div class="flex justify-between items-center">
+        <h3 class="text-3xl font-extralight text-white/50">Groups</h3>
+        <div class="inline-flex items-center space-x-2">
+          <a class="bg-gray-900 text-white/50 p-2 rounded-md hover:text-white smooth-hover" href="#">
+            <svg xmlns="http://www.w3.org/2000/svg" class="h-6 w-6" fill="none" viewBox="0 0 24 24" stroke="currentColor">
+              <path stroke-linecap="round" stroke-linejoin="round" stroke-width="2" d="M4 6a2 2 0 012-2h2a2 2 0 012 2v2a2 2 0 01-2 2H6a2 2 0 01-2-2V6zM14 6a2 2 0 012-2h2a2 2 0 012 2v2a2 2 0 01-2 2h-2a2 2 0 01-2-2V6zM4 16a2 2 0 012-2h2a2 2 0 012 2v2a2 2 0 01-2 2H6a2 2 0 01-2-2v-2zM14 16a2 2 0 012-2h2a2 2 0 012 2v2a2 2 0 01-2 2h-2a2 2 0 01-2-2v-2z" />
+            </svg>
+          </a>
+          <a class="bg-gray-900 text-white/50 p-2 rounded-md hover:text-white smooth-hover" href="#">
+            <svg xmlns="http://www.w3.org/2000/svg" class="h-6 w-6" fill="none" viewBox="0 0 24 24" stroke="currentColor">
+              <path stroke-linecap="round" stroke-linejoin="round" stroke-width="2" d="M4 6h16M4 10h16M4 14h16M4 18h16" />
+            </svg>
+          </a>
         </div>
       </div>
-    </div>
-
-    <!-- Getting started section -->
-    <div class="px-4 py-4 mt-4">
-      <div class="flex items-center justify-between mb-3">
-        <h3 class="text-gray-700 font-medium">Getting started (1 of 4)</h3>
-        <svg class="w-5 h-5 text-gray-500" fill="currentColor" viewBox="0 0 20 20">
-          <path fill-rule="evenodd" d="M5.293 7.293a1 1 0 011.414 0L10 10.586l3.293-3.293a1 1 0 111.414 1.414l-4 4a1 1 0 01-1.414 0l-4-4a1 1 0 010-1.414z" clip-rule="evenodd"></path>
-        </svg>
+      <div class="mb-10 sm:mb-0 mt-10 grid gap-4 grid-cols-1 sm:grid-cols-2 md:grid-cols-3 lg:grid-cols-4">
+        <div class="group bg-gray-900/30 py-20 px-4 flex flex-col space-y-2 items-center cursor-pointer rounded-md hover:bg-gray-900/40 hover:smooth-hover">
+          <a class="bg-gray-900/70 text-white/50 group-hover:text-white group-hover:smooth-hover flex w-20 h-20 rounded-full items-center justify-center" href="#">
+            <svg xmlns="http://www.w3.org/2000/svg" class="h-10 w-10" fill="none" viewBox="0 0 24 24" stroke="currentColor">
+              <path stroke-linecap="round" stroke-linejoin="round" stroke-width="1" d="M12 6v6m0 0v6m0-6h6m-6 0H6" />
+            </svg>
+          </a>
+          <a class="text-white/50 group-hover:text-white group-hover:smooth-hover text-center" href="#">Create group</a>
+        </div>
+        <div class="relative group bg-gray-900 py-10 sm:py-20 px-4 flex flex-col space-y-2 items-center cursor-pointer rounded-md hover:bg-gray-900/80 hover:smooth-hover">
+          <img class="w-20 h-20 object-cover object-center rounded-full" src="https://images.unsplash.com/photo-1547592180-85f173990554?ixid=MnwxMjA3fDB8MHxwaG90by1wYWdlfHx8fGVufDB8fHx8&ixlib=rb-1.2.1&auto=format&fit=crop&w=1170&q=80" alt="cuisine" />
+          <h4 class="text-white text-2xl font-bold capitalize text-center">Cuisine</h4>
+          <p class="text-white/50">55 members</p>
+          <p class="absolute top-2 text-white/20 inline-flex items-center text-xs">22 Online <span class="ml-2 w-2 h-2 block bg-green-500 rounded-full group-hover:animate-pulse"></span></p>
+        </div>
+        <div class="relative group bg-gray-900 py-10 sm:py-20 px-4 flex flex-col space-y-2 items-center cursor-pointer rounded-md hover:bg-gray-900/80 hover:smooth-hover">
+          <img class="w-20 h-20 object-cover object-center rounded-full" src="https://images.unsplash.com/photo-1513364776144-60967b0f800f?ixid=MnwxMjA3fDB8MHxwaG90by1wYWdlfHx8fGVufDB8fHx8&ixlib=rb-1.2.1&auto=format&fit=crop&w=1171&q=80" alt="art" />
+          <h4 class="text-white text-2xl font-bold capitalize text-center">Art</h4>
+          <p class="text-white/50">132 members</p>
+          <p class="absolute top-2 text-white/20 inline-flex items-center text-xs">4 Online <span class="ml-2 w-2 h-2 block bg-green-500 rounded-full group-hover:animate-pulse"></span></p>
+        </div>
+        <div class="relative group bg-gray-900 py-10 sm:py-20 px-4 flex flex-col space-y-2 items-center cursor-pointer rounded-md hover:bg-gray-900/80 hover:smooth-hover">
+          <img class="w-20 h-20 object-cover object-center rounded-full" src="https://images.unsplash.com/photo-1560419015-7c427e8ae5ba?ixlib=rb-1.2.1&ixid=MnwxMjA3fDB8MHxwaG90by1wYWdlfHx8fGVufDB8fHx8&auto=format&fit=crop&w=1170&q=80" alt="gaming" />
+          <h4 class="text-white text-2xl font-bold capitalize text-center">Gaming</h4>
+          <p class="text-white/50">207 members</p>
+          <p class="absolute top-2 text-white/20 inline-flex items-center text-xs">0 Online <span class="ml-2 w-2 h-2 block bg-red-400 rounded-full group-hover:animate-pulse"></span></p>
+        </div>
+        <div class="relative group bg-gray-900 py-10 sm:py-20 px-4 flex flex-col space-y-2 items-center cursor-pointer rounded-md hover:bg-gray-900/80 hover:smooth-hover">
+          <img class="w-20 h-20 object-cover object-center rounded-full" src="https://images.unsplash.com/photo-1485846234645-a62644f84728?ixlib=rb-1.2.1&ixid=MnwxMjA3fDB8MHxwaG90by1wYWdlfHx8fGVufDB8fHx8&auto=format&fit=crop&w=1159&q=80" alt="cinema" />
+          <h4 class="text-white text-2xl font-bold capitalize text-center">cinema</h4>
+          <p class="text-white/50">105 members</p>
+          <p class="absolute top-2 text-white/20 inline-flex items-center text-xs">12 Online <span class="ml-2 w-2 h-2 block bg-green-500 rounded-full group-hover:animate-pulse"></span></p>
+        </div>
+        <div class="relative group bg-gray-900 py-10 sm:py-20 px-4 flex flex-col space-y-2 items-center cursor-pointer rounded-md hover:bg-gray-900/80 hover:smooth-hover">
+          <img class="w-20 h-20 object-cover object-center rounded-full" src="https://images.unsplash.com/photo-1484704849700-f032a568e944?ixid=MnwxMjA3fDB8MHxwaG90by1wYWdlfHx8fGVufDB8fHx8&ixlib=rb-1.2.1&auto=format&fit=crop&w=1170&q=80" alt="song" />
+          <h4 class="text-white text-2xl font-bold capitalize text-center">Song</h4>
+          <p class="text-white/50">67 members</p>
+          <p class="absolute top-2 text-white/20 inline-flex items-center text-xs">3 Online <span class="ml-2 w-2 h-2 block bg-green-500 rounded-full group-hover:animate-pulse"></span></p>
+        </div>
+        <div class="relative group bg-gray-900 py-10 sm:py-20 px-4 flex flex-col space-y-2 items-center cursor-pointer rounded-md hover:bg-gray-900/80 hover:smooth-hover">
+          <img class="w-20 h-20 object-cover object-center rounded-full" src="https://images.unsplash.com/photo-1542831371-29b0f74f9713?ixid=MnwxMjA3fDB8MHxwaG90by1wYWdlfHx8fGVufDB8fHx8&ixlib=rb-1.2.1&auto=format&fit=crop&w=1170&q=80" alt="code" />
+          <h4 class="text-white text-2xl font-bold capitalize text-center">Code</h4>
+          <p class="text-white/50">83 members</p>
+          <p class="absolute top-2 text-white/20 inline-flex items-center text-xs">43 Online <span class="ml-2 w-2 h-2 block bg-green-500 rounded-full group-hover:animate-pulse"></span></p>
+        </div>
+        <div class="relative group bg-gray-900 py-10 sm:py-20 px-4 flex flex-col space-y-2 items-center cursor-pointer rounded-md hover:bg-gray-900/80 hover:smooth-hover">
+          <img class="w-20 h-20 object-cover object-center rounded-full" src="https://images.unsplash.com/photo-1533147670608-2a2f9775d3a4?ixid=MnwxMjA3fDB8MHxwaG90by1wYWdlfHx8fGVufDB8fHx8&ixlib=rb-1.2.1&auto=format&fit=crop&w=1170&q=80" alt="dancing" />
+          <h4 class="text-white text-2xl font-bold capitalize text-center">Dancing</h4>
+          <p class="text-white/50">108 members</p>
+          <p class="absolute top-2 text-white/20 inline-flex items-center text-xs">86 Online <span class="ml-2 w-2 h-2 block bg-green-500 rounded-full group-hover:animate-pulse"></span></p>
+        </div>
       </div>
-
-      <!-- Progress bar -->
-      <div class="w-full h-1.5 bg-gray-300 rounded-full mb-4">
-        <div class="h-full w-1/4 bg-blue-500 rounded-full"></div>
-      </div>
-
     </div>
   </div>
-
-  <!-- Collapse button at bottom -->
-
-
-
-
-  </aside>
-
-  <main class="flex-1 lg:ml-72 pt-1 rounded-t-lg bg-gray-50">
-
-<section class="my-1">
-  <div class="relative w-full max-w-2xl">
-  <div class="absolute inset-y-0 left-0 flex items-center pl-4 pointer-events-none">
-    <svg class="w-5 h-5 text-gray-400" fill="none" stroke="currentColor" viewBox="0 0 24 24">
-      <path stroke-linecap="round" stroke-linejoin="round" stroke-width="2" d="M21 21l-6-6m2-5a7 7 0 11-14 0 7 7 0 0114 0z"></path>
-    </svg>
-  </div>
-  <input
-    type="text"
-    placeholder="Search or ask your Mem"
-    class="w-full pl-12 pr-4 py-1 bg-gray-100 border-0 rounded-full text-gray-700 placeholder-gray-400 focus:outline-none focus:ring-2 focus:ring-gray-300 hover:bg-gray-100 transition-colors"
-  />
 </div>
-</section>
-
-  <!-- Nouvelle section -->
-
-  <div class="min-h-screen max-w-2xl px-4 md:px-8">
-
-<form action="/announcements/new" method="POST" class="mt-8 space-y-4 h-full">
-      <header class="my-4 ">
-      <h2 class="text-3xl font-extrabold "><!--?lit$645743541$-->Créer une annonce</h2>
-      </header>
-      <game-select id="gameSelect"></game-select>
-      <input type="hidden" name="game" id="gameInput">
-
-      <div class="space-y-4 mt-4">
-      <tags-select id="tags"></tags-select>
-      <input type="hidden" name="tags" id="tagsInput">
-      </div>
-
-      <textarea
-        name="description"
-        rows="5"
-        placeholder="Je cherche 2 teammates..."
-        required
-        class="w-full flex-1 px-5 py-2 rounded-2xl bg-gray-100 focus:outline-none"
-      ></textarea>
-
-      <button type="submit" class="w-full px-6 py-2 bg-black text-white rounded-xl">
-        Publier
-      </button>
-    </form>
-</div>
-
-
-
-
-
-  <!-- Fin nouvelle section -->
-
-
-
-
-<!-- Start: main-article -->
-
-    <!-- Card 1 -->
-
-
-
-
-<! -- Dynamic content -->
-
-
-
-
-  </main>
-
-
-
-
-
-
-
-
-
-</div>
-
-
-<script type="module">
-  await customElements.whenDefined('game-select');
-  await customElements.whenDefined('tags-select');
-
-  document.querySelector('game-select').addEventListener('change', (e) => {
-    document.getElementById('gameInput').value = e.detail.value;
-    console.log('✅ Game:', e.detail.value);
-  });
-
-  document.querySelector('tags-select').addEventListener('change', (e) => {
-    document.getElementById('tagsInput').value = JSON.stringify(e.detail.values);
-    console.log('✅ Tags:', e.detail.values);
-  });
-</script>
-
 </body>
 </html>

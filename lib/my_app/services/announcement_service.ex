@@ -54,8 +54,9 @@ defmodule MyApp.Services.AnnouncementService do
   Liste toutes les annonces actives avec filtres optionnels.
 
   ## Paramètres
-    - search_query : Texte de recherche (optionnel, recherche dans game/description)
+    - search_query : Texte de recherche (optionnel, recherche dans description)
     - selected_tags : Liste de tags pour filtrer (optionnel)
+    - selected_game : Slug du jeu pour filtrer (optionnel, ex: "valorant")
 
   ## Retour
     - Liste d'annonces triées par date (plus récentes en premier)
@@ -65,20 +66,82 @@ defmodule MyApp.Services.AnnouncementService do
       iex> list_active()
       [%Announcement{}, %Announcement{}, ...]
 
-      iex> list_active("valorant", ["#Gold", "#Chill"])
-      [%Announcement{game: "Valorant", tags: ["#Gold", "#Chill"]}, ...]
+      iex> list_active("duo", ["ranked"], "valorant")
+      [%Announcement{game: "valorant", description: "LF duo...", tags: ["ranked"]}, ...]
   """
-   def list_active(search_query \\ "", selected_tags \\ []) do
-    Announcement
-    |> where([a], a.active == true)
-    |> where([a], a.expires_at > ^DateTime.utc_now())
-    |> filter_by_search(search_query)
-    |> filter_by_tags(selected_tags)
-    |> order_by([a], desc: a.inserted_at)
-    |> preload(:user)
-    |> Repo.all()
-    |> Enum.map(&Announcement.decode_tags/1)  # Decode les tags après fetch
+  # lib/my_app/services/announcement_service.ex
+  # lib/my_app/services/announcement_service.ex
+
+def list_active(search_query \\ "", selected_tags \\ [], selected_game \\ nil) do
+  query = from a in Announcement,
+    where: a.active == true,
+    order_by: [desc: a.inserted_at],
+    preload: :user
+
+  # ========================================
+  # ENLEVER CE BLOC COMPLÈTEMENT
+  # ========================================
+  # query = if search_query != "" do
+  #   search_pattern = "%#{search_query}%"
+  #   from a in query,
+  #     where: like(a.description, ^search_pattern)
+  # else
+  #   query
+  # end
+
+  # ========================================
+  # GARDER SEULEMENT CE BLOC POUR RECHERCHE
+  # ========================================
+  query = if search_query != "" do
+    search_pattern = "%#{search_query}%"
+    from a in query,
+      where:
+        like(a.description, ^search_pattern) or
+        like(a.game, ^search_pattern) or
+        like(a.rank, ^search_pattern) or
+        like(a.vibe, ^search_pattern)
+  else
+    query
   end
+
+  # Filtre par tags
+  query = if selected_tags != [] && length(selected_tags) > 0 do
+    Enum.reduce(selected_tags, query, fn tag, q ->
+      search_pattern = "%\"#{tag}\"%"
+      from a in q,
+        where: like(a.tags, ^search_pattern)
+    end)
+  else
+    query
+  end
+
+  # Filtre par jeu (selected_game)
+  query = if selected_game do
+    from a in query,
+      where: a.game == ^selected_game
+  else
+    query
+  end
+
+  Repo.all(query)
+  |> Enum.map(&decode_tags/1)
+end
+
+
+  # Ajouter cette fonction à la fin du module
+  defp decode_tags(announcement) do
+    tags = case announcement.tags do
+      tags when is_binary(tags) ->
+        case Jason.decode(tags) do
+          {:ok, list} -> list
+          _ -> []
+        end
+      _ -> []
+    end
+
+    Map.put(announcement, :tags, tags)
+  end
+
 
   @doc """
   Récupère une annonce par son ID.
@@ -346,7 +409,9 @@ defmodule MyApp.Services.AnnouncementService do
     Map.put(announcement, :time_ago, calculate_time_ago(announcement.inserted_at))
   end
 
-  defp calculate_time_ago(datetime) do
+  defp calculate_time_ago(naive_datetime) do
+    datetime = DateTime.from_naive!(naive_datetime, "Etc/UTC")  # ← AJOUTER CETTE LIGNE
+
     diff = DateTime.diff(DateTime.utc_now(), datetime, :second)
 
     cond do

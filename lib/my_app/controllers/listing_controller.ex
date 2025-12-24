@@ -2,6 +2,7 @@ defmodule MyApp.Controllers.ListingController do
   use Plug.Router
   alias MyApp.Services.AnnouncementService
   alias MyApp.Services.TagService
+  alias MyApp.Services.GameCatalogService
 
   # Routes:
   # GET  /           → Page d'accueil avec feed d'annonces actives
@@ -10,12 +11,36 @@ defmodule MyApp.Controllers.ListingController do
   plug :match
   plug :dispatch
 
-  get "/" do
-    search_query = conn.params["q"] || ""
-    selected_tags = conn.params["tags"] || []
+   get "/favicon.ico" do
+    send_resp(conn, 204, "")
+  end
 
-    announcements = AnnouncementService.list_active(search_query, selected_tags)
+  get "/" do
+    search_query = trim_param(conn.params["q"])
+    selected_tags = conn.params["tags"] || []
+    selected_game = trim_param(conn.params["game"])
+
+    IO.inspect(conn.params, label: "🔍 PARAMS REÇUS")
+
+    # Passer game filter au service
+    announcements = AnnouncementService.list_active(
+      search_query,
+      selected_tags,
+      selected_game  # ← NOUVEAU
+    )
+
+     # ========================================
+    # DEBUG: Voir les valeurs extraites
+    # ========================================
+    IO.inspect(search_query, label: "🔍 SEARCH QUERY")
+    IO.inspect(selected_tags, label: "🔍 SELECTED TAGS")
+    IO.inspect(selected_game, label: "🔍 SELECTED GAME")
+
+        IO.inspect(length(announcements), label: "🔍 NOMBRE ANNONCES RETOURNÉES")
+
+
     popular_tags = TagService.get_popular_tags()
+    all_games = GameCatalogService.all()
 
     announcements_with_time = Enum.map(announcements, fn ann ->
       Map.put(ann, :time_ago, calculate_time_ago(ann.inserted_at))
@@ -25,8 +50,10 @@ defmodule MyApp.Controllers.ListingController do
       assigns: %{
         announcements: announcements_with_time,
         popular_tags: popular_tags,
+        all_games: all_games,
         search_query: search_query,
         selected_tags: selected_tags,
+        selected_game: selected_game,
         user_id: get_session(conn, :user_id),
         has_results: length(announcements_with_time) > 0  # ← Pour afficher "Aucune annonce"
       }
@@ -40,6 +67,16 @@ defmodule MyApp.Controllers.ListingController do
   # ============================================================================
   # FONCTIONS PRIVÉES
   # ============================================================================
+
+
+    # Trim string ou retourne nil si vide
+  defp trim_param(nil), do: nil
+  defp trim_param(value) when is_binary(value) do
+    case String.trim(value) do
+      "" -> nil
+      trimmed -> trimmed
+    end
+  end
 
   # Calcule le temps écoulé depuis la création
   defp calculate_time_ago(naive_datetime) do

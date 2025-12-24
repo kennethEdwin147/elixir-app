@@ -23,7 +23,7 @@ defmodule MyApp.Controllers.GameFeedController do
         announcements = AnnouncementService.list_by_game(slug)
 
         # Stats du jeu
-        stats = GameService.get_stats(slug)
+        stats = GameCatalogService.get_stats(slug)
 
         # Render template
         html = EEx.eval_file("lib/my_app/templates/game_feed.html.eex",
@@ -32,7 +32,7 @@ defmodule MyApp.Controllers.GameFeedController do
             announcements: announcements,
             stats: stats,
             user_id: get_session(conn, :user_id),
-            all_games: GameService.all()
+            all_games: GameCatalogService.all()
           }
         )
 

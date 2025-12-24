@@ -7,7 +7,7 @@ defmodule MyApp.Controllers.LoginController do
   plug :dispatch
 
   get "/" do
-    html = EEx.eval_file("lib/my_app/templates/login.html.eex",
+    html = EEx.eval_file("lib/my_app/templates/auth/login.html.eex",
       assigns: %{
         email_value: "",
         error_msg: nil
