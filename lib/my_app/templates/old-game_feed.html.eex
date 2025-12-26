@@ -59,7 +59,7 @@
             <span class="mx-2">·</span>
             <%= @stats.active_players %> active players
             <span class="mx-2">·</span>
-            <%= @stats.active_announcements %> posts
+            <%= @stats.active_post %> posts
           </div>
         </div>
       </div>
@@ -67,7 +67,7 @@
 
     <!-- Feed annonces -->
     <div class="max-w-2xl space-y-4">
-      <%= if Enum.empty?(@announcements) do %>
+      <%= if Enum.empty?(@post) do %>
         <div class="text-center py-12 bg-white rounded-lg shadow-sm">
           <span class="text-6xl mb-4 block"><%= @game.icon %></span>
           <p class="text-xl text-gray-700 mb-2">
@@ -81,7 +81,7 @@
           </button>
         </div>
       <% else %>
-        <%= for announcement <- @announcements do %>
+        <%= for announcement <- @post do %>
           <article class="p-4 rounded-lg bg-white border hover:shadow-md transition-shadow">
 
             <!-- Header -->

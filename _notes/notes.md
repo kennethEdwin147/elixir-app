@@ -71,6 +71,40 @@ Mais je recommande feeds séparés pour MVP = plus simple et plus clair ! 💯
 
 ---
 
+
+Stratégie expansion intelligente:
+Phase 1 (Semaine 1-4): Valorant MVP
+
+Prouve le concept
+100-200 posts organiques
+Vois si les gens upvotent vraiment
+
+Phase 2 (Mois 2): Monétisation + League
+
+Active les posts boostés sur Valorant
+Ajoute League of Legends
+2x le market
+
+Phase 3 (Mois 3-6): Scale
+
+Apex, CS2, Fortnite
+5 jeux = 5x le revenue potential
+
+Le move smart:
+
+Code multi-jeux maintenant (ton architecture le supporte déjà)
+Lance Valorant seulement (focus marketing)
+Expand rapido dès que Valorant marche
+
+Monétisation timing:
+
+Attends 500-1000 posts organiques/semaine
+PUIS active les posts boostés
+Stripe checkout = 2h à intégrer
+
+T'as la bonne mentalité: pense scale, ship lean.
+Continue comme ça! 🚀Claude is AI and can make mistakes. Please double-check responses.
+
 ## **🚀 6. DÉPLOIEMENT**
 
 **Pourquoi :** Avoir des vrais users qui testent.

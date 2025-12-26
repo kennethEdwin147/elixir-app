@@ -4,21 +4,184 @@
     <meta charset="UTF-8">
     <meta name="viewport" content="width=device-width, initial-scale=1.0">
     <title>ValoRank News - Login</title>
-
-    <style>
-
-    </style>
 </head>
 <body>
 
-<div class="container">
-    <form action="/login" method="post">
 
-        <div class="field">
-            <button type="button" style="background:none; color:blue; width:auto; padding:0; font-weight:normal; text-decoration: underline;">change</button>
-        </div>
 
-        <div class="field">
+
+<style>
+/* ==========================================================================
+   #RESET
+   ========================================================================== */
+*, *::before, *::after {
+  box-sizing: border-box;
+}
+
+* {
+  margin: 0;
+  padding: 0;
+}
+
+html {
+  font-size: 62.5%; /* 1rem = 10px */
+}
+
+body {
+  font-family: Verdana, Geneva, sans-serif;
+  font-size: 13px;
+  line-height: 1.4;
+  color: #000;
+}
+
+
+img, picture, video, canvas, svg {
+  display: block;
+  max-width: 100%;
+}
+
+input, button, textarea, select {
+  font: inherit;
+}
+
+a {
+  color: inherit;
+  text-decoration: none;
+}
+
+ul, ol {
+  list-style: none;
+}
+
+button {
+  border: none;
+  background: none;
+  cursor: pointer;
+}
+/* ==========================================================================
+   END #RESET
+========================================================================== */
+
+
+.header {
+  display: flex;
+  align-items: center;
+  justify-content: space-between;
+  padding: 0.5rem 0.5rem;
+  background-color: #9b46ff;
+  color: white;
+  width: 100%;
+
+  margin-top: 0.75rem;
+}
+
+.header-menu {
+    display: flex;
+    align-items: center;
+    justify-content: space-between;
+    gap: 1rem;
+    max-width: 500px;
+}
+
+.container {
+    max-width: 95vw;
+    margin-left: auto;
+    margin-right: auto;
+}
+
+.form-container {
+    max-width: 90vw;
+     margin-left: auto;
+    margin-right: auto;
+}
+
+.game-feed-layout {
+    padding-top: 0.5rem;
+    display: flex;
+    flex-direction: column;
+    gap: 1rem;
+}
+
+
+.form-header {
+  display: flex;
+  font-size: 0.75rem;
+  margin-bottom: 1rem;
+  margin-top: 1rem;
+  font-weight: 500;
+}
+
+.form-header h1 {
+    font-weight: 500;
+}
+
+.form-links {
+    margin-top: 1rem;
+}
+
+.form-margin {
+    margin-top: 0.6rem;
+}
+
+.links {
+    display: inline-block;
+    text-decoration: underline;
+    color: #9b46ff;
+}
+
+.links:hover {
+    color: #ff4655;
+}
+
+input:focus {
+  outline: none;
+}
+
+
+.form-field input {
+    width: 400px;
+}
+
+.form-login-button {
+    padding-inline: 2rem;
+    background-color: black;
+    color: white;
+    cursor: pointer;
+}
+
+@media screen and (max-width: 600px) {
+  /* CSS rules to apply when the viewport width is 600px or less */
+    .form-field input {
+        width: 80%;
+    }
+}
+
+</style>
+
+<section class="header container">
+    <header class="header-menu">
+        <span class="logo">ValoLFG</span>
+        <nav>nouveau | populaire | publier</nav>
+    </header>
+    <footer>
+        <span class="logo">Connexion</span>
+    </footer>
+</section>
+
+<section class="form-container">
+    <form action="/auth/login" method="post">
+
+    <%# ============================================================================
+    # CSRF TOKEN
+    # ============================================================================
+    %>
+    <input type="hidden" name="_csrf_token" value="<%= Plug.CSRFProtection.get_csrf_token() %>">
+
+       <header class="form-header">
+           <h1>Connexion</h1>
+       </header>
+
+        <div class="form-field">
             <label for="email">Email</label>
             <input
                 id="email"
@@ -29,7 +192,7 @@
                 value="<%= @email_value %>" />
         </div>
 
-        <div class="field">
+        <div class="form-field form-margin">
             <label for="password">Password</label>
             <input
                 id="password"
@@ -39,22 +202,30 @@
                 required />
         </div>
 
+        <div class="form-margin">
+            <input class="form-login-button" type="submit" value="login">
+        </div>
+
         <%= if @error_msg do %>
-            <p class="error"><%= @error_msg %></p>
+            <p class="error"><%= MyApp.Helpers.HtmlHelper.escape(@error_msg) %></p>
         <% end %>
 
-        <div class="links">
-            <a href="#">Reset password?</a>
+    <footer class="form-links">
+        <div >
+            <a href="/auth/forgot-password">Reset password?
+                <span class="links">Continue</span>
+            </a>
         </div>
 
-        <button type="submit">Continue</button>
 
-        <div class="links" style="text-align: center;">
-            <a href="/register">Don’t have an account yet? Sign up</a>
+        <div class="">
+            <a href="/auth/register">Don’t have an account yet?
+            <span class="links"> Sign up</span>
+            </a>
         </div>
-
+    </footer>
     </form>
-</div>
+</section>
 
 </body>
 </html>

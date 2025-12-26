@@ -1,0 +1,331 @@
+<!DOCTYPE html>
+<html lang="en">
+<head>
+    <meta charset="UTF-8">
+    <meta name="viewport" content="width=device-width, initial-scale=1.0">
+    <title>ValoRank News - Login</title>
+</head>
+<body>
+
+
+
+
+<style>
+/* ==========================================================================
+   #RESET
+   ========================================================================== */
+*, *::before, *::after {
+  box-sizing: border-box;
+}
+
+* {
+  margin: 0;
+  padding: 0;
+}
+
+html {
+  font-size: 62.5%; /* 1rem = 10px */
+}
+
+body {
+  font-family: Verdana, Geneva, sans-serif;
+  font-size: 13px;
+  line-height: 1.4;
+  color: #000;
+}
+
+
+img, picture, video, canvas, svg {
+  display: block;
+  max-width: 100%;
+}
+
+input, button, textarea, select {
+  font: inherit;
+}
+
+a {
+  color: inherit;
+  text-decoration: none;
+}
+
+ul, ol {
+  list-style: none;
+}
+
+button {
+  border: none;
+  background: none;
+  cursor: pointer;
+}
+/* ==========================================================================
+   END #RESET
+========================================================================== */
+
+
+.header {
+    display: flex;
+    align-items: center;
+    justify-content: space-between;
+    padding: 0.5rem 0.5rem;
+    background-color: #ff4655;
+    color: white;
+    width: 100%;
+    margin-top: 0.75rem;
+}
+
+.header-menu {
+    display: flex;
+    align-items: center;
+    justify-content: space-between;
+    gap: 1rem;
+    max-width: 500px;
+}
+
+.container {
+    max-width: 95vw;
+    margin-left: auto;
+    margin-right: auto;
+}
+
+.form-container {
+    max-width: 90vw;
+     margin-left: auto;
+    margin-right: auto;
+}
+
+.game-feed-layout {
+    padding-top: 0.5rem;
+    display: flex;
+    flex-direction: column;
+    gap: 1rem;
+}
+
+
+.form-header {
+  display: flex;
+  font-size: 0.75rem;
+  margin-bottom: 1rem;
+  margin-top: 1rem;
+  font-weight: 500;
+}
+
+.form-header h1 {
+    font-weight: 500;
+}
+
+.form-links {
+    margin-top: 1rem;
+}
+
+.form-margin {
+    margin-top: 0.6rem;
+}
+
+.links {
+    display: inline-block;
+    text-decoration: underline;
+    color: #9b46ff;
+}
+
+.links:hover {
+    color: #ff4655;
+}
+
+input:focus {
+  outline: none;
+}
+
+
+.form-field input{
+    width: 400px;
+}
+
+
+textarea {
+    padding: 4px;
+    width: 400px;
+    resize: none;
+}
+
+.form-select-type {
+    width: 300px;
+}
+
+.form-submit-button {
+    padding-inline: 2rem;
+    background-color: black;
+    color: white;
+    cursor: pointer;
+}
+
+form input[type="text"]:focus,
+form select:focus,
+form textarea:focus {
+   outline: none;
+}
+
+
+form textarea:focus,
+form select:focus {
+  outline: none;
+  border-color: #9b46ff;
+}
+
+@media screen and (max-width: 600px) {
+  /* CSS rules to apply when the viewport width is 600px or less */
+    .form-field input {
+        width: 80%;
+    }
+}
+
+.form-field-block {
+    display: flex;
+    flex-direction: column;
+    align-items: flex-start;
+}
+
+</style>
+
+<section class="header container">
+    <header class="header-menu">
+         <a href="/g/<%= @game.slug %>">
+        <span class="logo">ValoLFG</span>
+     </a>
+        <nav>nouveau | populaire | publier</nav>
+    </header>
+    <footer>
+        <span class="logo">Connexion</span>
+    </footer>
+</section>
+
+<section class="form-container">
+    <form action="/auth/login" method="post">
+
+    <%# ============================================================================
+    # CSRF TOKEN
+    # ============================================================================
+    %>
+        <input type="hidden" name="_csrf_token" value="<%= Plug.CSRFProtection.get_csrf_token() %>">
+    <%# ============================================================================
+    # GAME SLUG VALUE
+    # ============================================================================
+    %>
+        <input type="hidden" name="game" value="<%= @game.slug %>">
+
+       <header class="form-header">
+           <h1>Mon Post</h1>
+       </header>
+
+       <div class="form-field">
+            <label>Type de post</label>
+            <select
+                data-js-post-type
+                name="type"
+                class="form-select-type"
+                >
+                <option value="lfg">LFG - Cherche joueur/équipe</option>
+                <option value="strat">Strat - Partager stratégie</option>
+                <option value="clip">Clip - Partager clip</option>
+            </select>
+        </div>
+
+        <div
+            data-js-lfg-fields
+            class="form-field form-margin">
+                <label>Rang</label>
+                <select name="rank">
+                    <%= for rank <- @ranks do %>
+                    <option><%= rank %></option>
+                    <% end %>
+                </select>
+
+            <label>Région</label>
+            <select name="region">
+                <%= for region <- @regions do %>
+                <option><%= region %></option>
+                <% end %>
+            </select>
+
+                <article class="form-margin form-field-block">
+                    <label>Contact  (ex: Discord)</label>
+                    <input type="text" name="contact" placeholder=" username#1234">
+                </article>
+        </div>
+
+        <div class= "form-margin form-field-block">
+            <label for="password">Message</label>
+           <textarea name="description" maxlength="500" rows="4"></textarea>
+        </div>
+
+        <div
+        data-js-link-fields
+        class="form-field form-margin"
+         style="display:none"
+         >
+            <label>Lien (YouTube, Twitch, etc)</label>
+            <input type="url" name="url" placeholder="https://youtube.com/...">
+        </div>
+
+        <div class="form-margin">
+            <input class="form-submit-button" type="submit" value="Publier">
+        </div>
+
+        <%= if @error_msg do %>
+            <p class="error"><%= MyApp.Helpers.HtmlHelper.escape(@error_msg) %></p>
+        <% end %>
+
+    <footer class="form-links">
+        <div >
+           <a href="/g/<%= @game.slug %>">
+            <span class="links">Retour au feed</span>
+        </a>
+
+        </div>
+
+
+
+    </footer>
+    </form>
+</section>
+
+<script>
+(function() {
+  'use strict';
+
+  document.addEventListener('DOMContentLoaded', function() {
+
+    /* ==========================================================================
+     * Access Page Elements
+     * ========================================================================== */
+
+    const postTypeSelect = document.querySelector('[data-js-post-type]');
+    const lfgFields = document.querySelector('[data-js-lfg-fields]');
+    const linkFields = document.querySelector('[data-js-link-fields]');
+
+    /* ==========================================================================
+     * Event listener sur le select (changement de type de post)
+     * ========================================================================== */
+
+    if (postTypeSelect) {
+        postTypeSelect.addEventListener('change', function () {
+
+            const type = postTypeSelect.value;
+            if (lfgFields && linkFields) {
+
+                lfgFields.style.display = type === 'lfg' ? 'block' : 'none';
+                linkFields.style.display = type !== 'lfg' ? 'block' : 'none';
+
+            } else {
+                console.error('Éléments non trouvés!');
+
+            }
+        });
+    }
+
+  });
+})();
+</script>
+
+</body>
+</html>

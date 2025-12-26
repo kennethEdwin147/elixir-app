@@ -3,13 +3,6 @@ defmodule MyApp.Controllers.OnboardingController do
   alias MyApp.Repo
   alias MyApp.Schemas.User
 
-  # Routes:
-  # GET  /onboarding           → redirect to step1
-  # GET  /onboarding/step1     → step1 (username)
-  # POST /onboarding/step1     → process step1, redirect to step2
-  # GET  /onboarding/step2     → step2 (champ additionnel pour plus tard)
-  # POST /onboarding/step2     → process step2, finalize & redirect to listing
-
   plug Plug.Session,
     store: :cookie,
     key: "onboarding_session",
@@ -18,7 +11,6 @@ defmodule MyApp.Controllers.OnboardingController do
   plug :match
   plug :dispatch
 
-  # --- Route principale (Redirection vers la première étape) ---
   get "/" do
     conn
     |> put_resp_header("location", "/onboarding/step1")
@@ -33,23 +25,14 @@ defmodule MyApp.Controllers.OnboardingController do
     user_id = get_session(conn, :user_id)
     user_email = get_session(conn, :user_email)
 
-    # Si pas connecté, redirect vers register
-    unless user_id do
-      conn
-      |> put_resp_header("location", "/register")
-      |> send_resp(302, "")
+    if is_nil(user_id) do
+      conn |> put_resp_header("location", "/register") |> send_resp(302, "")
     else
       data = get_session(conn, :onboarding_data) || %{}
-
-      # Suggère un username depuis l'email
-      suggested_username = user_email |> String.split("@") |> List.first()
+      suggested_username = (user_email || "") |> String.split("@") |> List.first()
 
       html = EEx.eval_file("lib/my_app/templates/onboarding/step1_info.html.eex",
-        assigns: %{
-          data: data,
-          suggested_username: suggested_username,
-          error_msg: nil
-        }
+        assigns: %{data: data, suggested_username: suggested_username, error_msg: nil}
       )
 
       conn
@@ -60,21 +43,15 @@ defmodule MyApp.Controllers.OnboardingController do
 
   post "/step1" do
     user_id = get_session(conn, :user_id)
-    params = conn.params
 
-    unless user_id do
-      conn
-      |> put_resp_header("location", "/register")
-      |> send_resp(302, "")
+    if is_nil(user_id) do
+      conn |> put_resp_header("location", "/register") |> send_resp(302, "")
     else
+      # Trim direct du paramètre
+      username = String.trim(conn.params["username"] || "")
       data = get_session(conn, :onboarding_data) || %{}
+      new_data = Map.put(data, :username, username)
 
-      # Stockage des données
-      new_data = Map.merge(data, %{
-        username: params["username"]
-      })
-
-      # Passe à l'étape 2
       conn
       |> put_session(:onboarding_data, new_data)
       |> put_resp_header("location", "/onboarding/step2")
@@ -83,24 +60,18 @@ defmodule MyApp.Controllers.OnboardingController do
   end
 
   # ----------------------------------------------------------------
-  # ÉTAPE 2: Champ additionnel (pour plus tard) - FINALISATION
+  # ÉTAPE 2: Finalisation
   # ----------------------------------------------------------------
 
   get "/step2" do
     user_id = get_session(conn, :user_id)
 
-    unless user_id do
-      conn
-      |> put_resp_header("location", "/register")
-      |> send_resp(302, "")
+    if is_nil(user_id) do
+      conn |> put_resp_header("location", "/register") |> send_resp(302, "")
     else
       data = get_session(conn, :onboarding_data) || %{}
-
       html = EEx.eval_file("lib/my_app/templates/onboarding/step2_info.html.eex",
-        assigns: %{
-          data: data,
-          error_msg: nil
-        }
+        assigns: %{data: data, error_msg: nil}
       )
 
       conn
@@ -111,57 +82,36 @@ defmodule MyApp.Controllers.OnboardingController do
 
   post "/step2" do
     user_id = get_session(conn, :user_id)
-    params = conn.params
 
-    unless user_id do
-      conn
-      |> put_resp_header("location", "/register")
-      |> send_resp(302, "")
+    if is_nil(user_id) do
+      conn |> put_resp_header("location", "/auth/register") |> send_resp(302, "")
     else
       data = get_session(conn, :onboarding_data) || %{}
-
-      # Finalisation des données
-      final_data = Map.merge(data, %{
-        bio: params["bio"]  # Champ additionnel
-      })
-
-      # ============================================================================
-      # MISE À JOUR DU USER EXISTANT
-      # ============================================================================
+      username = data[:username]
 
       user = Repo.get(User, user_id)
 
       case user do
         nil ->
-          # User introuvable
           conn
           |> delete_session(:onboarding_data)
-          |> put_resp_header("location", "/register")
+          |> put_resp_header("location", "/auth/register")
           |> send_resp(302, "")
 
         user ->
-          # Mise à jour du username
-          changeset = User.changeset(user, %{
-            username: final_data.username
-          })
+          changeset = User.changeset(user, %{"username" => username})
 
           case Repo.update(changeset) do
             {:ok, _updated_user} ->
-              # Succès
               conn
               |> delete_session(:onboarding_data)
-              |> put_resp_header("location", "/")
+              |> put_resp_header("location", "/dashboard")
               |> send_resp(302, "")
 
-            {:error, changeset} ->
-              # Erreur (username déjà pris, etc.)
-              error_msg = extract_error_message(changeset)
-
+            {:error, err_changeset} -> # Renommé pour éviter le warning de variable
+              error_msg = extract_error_message(err_changeset)
               html = EEx.eval_file("lib/my_app/templates/onboarding/step2_info.html.eex",
-                assigns: %{
-                  data: final_data,
-                  error_msg: error_msg
-                }
+                assigns: %{data: data, error_msg: error_msg}
               )
 
               conn
@@ -172,14 +122,10 @@ defmodule MyApp.Controllers.OnboardingController do
     end
   end
 
-  # ============================================================================
-  # FONCTIONS PRIVÉES
-  # ============================================================================
-
   defp extract_error_message(changeset) do
     case changeset.errors do
-      [{field, {msg, _}} | _] -> "#{field}: #{msg}"
-      _ -> "Erreur lors de la mise à jour"
+      [{field, {msg, _}} | _] -> "#{field} #{msg}"
+      _ -> "Erreur de mise à jour"
     end
   end
 end

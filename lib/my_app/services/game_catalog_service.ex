@@ -1,4 +1,4 @@
-defmodule MyApp.Services.GameCatalogService  do
+defmodule MyApp.Services.GameCatalogService do
 
   # Liste hardcodée des jeux supportés
   @games [
@@ -45,31 +45,32 @@ defmodule MyApp.Services.GameCatalogService  do
   end
 
   # Stats pour un jeu
+  # Stats pour un jeu
   def get_stats(slug) do
     alias MyApp.Repo
-    alias MyApp.Schemas.Announcement
+    alias MyApp.Schemas.Post  # ← CHANGE ICI
     import Ecto.Query
 
-    # Compter annonces actives
+    # Compter posts actifs
     active_count = Repo.one(
-      from a in Announcement,
-      where: a.game == ^slug and a.active == true,
-      select: count(a.id)
+      from p in Post,  # ← CHANGE ICI
+      where: p.game == ^slug and p.active == true,
+      select: count(p.id)
     ) || 0
 
-    # Compter annonces cette semaine
+    # Compter posts cette semaine
     week_ago = DateTime.utc_now() |> DateTime.add(-7, :day)
 
     week_count = Repo.one(
-      from a in Announcement,
-      where: a.game == ^slug and a.inserted_at > ^week_ago,
-      select: count(a.id)
+      from p in Post,  # ← CHANGE ICI
+      where: p.game == ^slug and p.inserted_at > ^week_ago,
+      select: count(p.id)
     ) || 0
 
     %{
-      active_announcements: active_count,
-      week_announcements: week_count,
-      active_players: active_count * 2 # Estimation
+      active_posts: active_count,
+      week_posts: week_count,
+      active_players: active_count * 2
     }
-  end
+  end  # ← CHANGE ICI
 end

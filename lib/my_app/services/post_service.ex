@@ -1,0 +1,133 @@
+defmodule MyApp.Services.PostService do
+  @moduledoc """
+  Service pour gérer les posts LFG (MVP minimaliste).
+  """
+
+  import Ecto.Query
+  alias MyApp.Repo
+  alias MyApp.Schemas.Post
+
+  # ============================================================================
+  # CRÉATION DE POSTS
+  # ============================================================================
+
+  @doc """
+  Crée un nouveau post.
+  """
+  def create(attrs) do
+    %Post{}
+    |> Post.changeset(attrs)
+    |> Repo.insert()
+  end
+
+  # ============================================================================
+  # RÉCUPÉRATION DE POSTS
+  # ============================================================================
+
+  @doc """
+  Liste tous les posts actifs pour un jeu donné.
+  Triés par score (HN-style ranking).
+  """
+  def list_active(game \\ "valorant") do
+    query = from p in Post,
+      where: p.active == true and p.game == ^game,
+      order_by: [desc: p.score, desc: p.inserted_at],
+      preload: :user
+
+    Repo.all(query)
+    |> Enum.map(&decode_tags/1)
+    |> Enum.map(&add_time_ago/1)
+  end
+
+  @doc """
+  Récupère un post par ID.
+  """
+  def get(id) do
+    Repo.get(Post, id)
+    |> Repo.preload(:user)
+  end
+
+  @doc """
+  Liste les posts d'un utilisateur.
+  """
+  def list_by_user(user_id) do
+    Post
+    |> where([p], p.user_id == ^user_id)
+    |> order_by([p], desc: p.inserted_at)
+    |> Repo.all()
+    |> Enum.map(&decode_tags/1)
+  end
+
+  # ============================================================================
+  # VOTE
+  # ============================================================================
+
+  @doc """
+  Incrémente le score d'un post (upvote simple, pas de tracking pour MVP).
+  """
+  def upvote(post_id) do
+    case get(post_id) do
+      nil ->
+        {:error, :not_found}
+
+      post ->
+        post
+        |> Ecto.Changeset.change(%{score: post.score + 1})
+        |> Repo.update()
+    end
+  end
+
+  # ============================================================================
+  # SUPPRESSION
+  # ============================================================================
+
+  @doc """
+  Supprime un post (vérifie ownership).
+  """
+  def delete(post_id, user_id) do
+    case get(post_id) do
+      nil ->
+        {:error, :not_found}
+
+      post ->
+        if post.user_id == user_id do
+          Repo.delete(post)
+        else
+          {:error, :unauthorized}
+        end
+    end
+  end
+
+  # ============================================================================
+  # HELPERS PRIVÉS
+  # ============================================================================
+
+  def decode_tags(post) do
+    tags = case post.tags do
+      tags when is_binary(tags) ->
+        case Jason.decode(tags) do
+          {:ok, list} -> list
+          _ -> []
+        end
+      _ -> []
+    end
+
+    Map.put(post, :tags, tags)
+  end
+
+  def add_time_ago(post) do
+    Map.put(post, :time_ago, calculate_time_ago(post.inserted_at))
+  end
+
+  defp calculate_time_ago(naive_datetime) do
+    datetime = DateTime.from_naive!(naive_datetime, "Etc/UTC")
+    diff = DateTime.diff(DateTime.utc_now(), datetime, :second)
+
+    cond do
+      diff < 60 -> "il y a #{diff}s"
+      diff < 3600 -> "il y a #{div(diff, 60)}min"
+      diff < 86400 -> "il y a #{div(diff, 3600)}h"
+      true -> "il y a #{div(diff, 86400)}j"
+    end
+  end
+end
