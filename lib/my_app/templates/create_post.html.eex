@@ -195,7 +195,11 @@ form select:focus {
         <nav>nouveau | populaire | publier</nav>
     </header>
     <footer>
-        <span class="logo">Connexion</span>
+    <%= if @current_user do %>
+        <a href="/auth/logout" class="logo">Déconnexion</a>
+    <% else %>
+        <a href="/auth/login" class="logo">Connexion</a>
+    <% end %>
     </footer>
 </section>
 
@@ -260,15 +264,24 @@ form select:focus {
 
         <div
         data-js-link-fields
-        class="form-field form-margin"
+        class="form-margin form-field form-field-block"
          style="display:none"
          >
             <label>Lien (YouTube, Twitch, etc)</label>
             <input type="url" name="url" placeholder="https://youtube.com/...">
         </div>
 
+        <!-- Avant le bouton submit -->
         <div class="form-margin">
-            <input class="form-submit-button" type="submit" value="Publier">
+            <%= if @current_user do %>
+                <input class="form-submit-button" type="submit" value="Publier">
+            <% else %>
+                <input class="form-submit-button" type="submit" value="Publier" disabled style="opacity: 0.5; cursor: not-allowed;">
+                <p style="color: black; margin-top: 0.5rem;">
+                    <a href="/auth/login" class="links">Connectez-vous</a> ou
+                    <a href="/auth/register" class="links">créez un compte</a> pour publier
+                </p>
+            <% end %>
         </div>
 
         <%= if @error_msg do %>
@@ -313,8 +326,8 @@ form select:focus {
             const type = postTypeSelect.value;
             if (lfgFields && linkFields) {
 
-                lfgFields.style.display = type === 'lfg' ? 'block' : 'none';
-                linkFields.style.display = type !== 'lfg' ? 'block' : 'none';
+                lfgFields.style.display = type === 'lfg' ? 'flex' : 'none';
+                linkFields.style.display = type !== 'lfg' ? 'flex' : 'none';
 
             } else {
                 console.error('Éléments non trouvés!');

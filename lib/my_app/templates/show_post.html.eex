@@ -495,8 +495,12 @@ button {
         <a href="/g/<%= @game.slug %>/submit">publier</a>
         </nav>
     </header>
-     <footer>
-        <span class="logo">Connexion</span>
+    <footer>
+    <%= if @current_user do %>
+        <a href="/auth/logout" class="logo">Déconnexion</a>
+    <% else %>
+        <a href="/auth/login" class="logo">Connexion</a>
+    <% end %>
     </footer>
 </section>
 
@@ -560,7 +564,7 @@ button {
 
 <!-- Formulaire nouveau commentaire -->
 <section class="comment-form container">
-    <%= if @user_id do %>
+    <%= if @current_user  do %>
         <form action="/g/<%= @game.slug %>/posts/<%= @post.id %>/comments" method="post">
             <input type="hidden" name="_csrf_token" value="<%= Plug.CSRFProtection.get_csrf_token() %>">
 
@@ -568,6 +572,12 @@ button {
             <button type="submit">Commenter</button>
         </form>
     <% else %>
+     <form action="/g/<%= @game.slug %>/posts/<%= @post.id %>/comments" method="post">
+            <input type="hidden" name="_csrf_token" value="<%= Plug.CSRFProtection.get_csrf_token() %>">
+
+            <textarea name="body" rows="4" placeholder="Écrire un commentaire..." required></textarea>
+            <button type="submit" style="opacity: 0.5; cursor: not-allowed;" disabled>Commenter</button>
+        </form>
         <p><a href="/auth/login">Connectez-vous</a> pour commenter</p>
     <% end %>
 </section>
@@ -594,7 +604,7 @@ button {
                     <%= MyApp.Helpers.HtmlHelper.escape(comment.body) %>
                 </div>
 
-                <%= if @user_id do %>
+                <%= if @current_user  do %>
                     <button class="reply-button" data-js-reply-toggle data-comment-id="<%= comment.id %>">
                         répondre
                     </button>

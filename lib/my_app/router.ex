@@ -34,7 +34,6 @@ defmodule MyApp.Router do
 
   forward "/auth",         to: MyApp.Controllers.AuthController
   forward "/onboarding",   to: MyApp.Controllers.OnboardingController
-  forward "/announcements", to: MyApp.Controllers.PostController  # ou /posts si tu changes
   forward "/g",            to: MyApp.Controllers.GameFeedController
 
   # ============================================

@@ -1,23 +1,27 @@
-
 defmodule MyApp.Controllers.GameFeedController do
   use Plug.Router
   require EEx
 
-  alias MyApp.Services.{PostService, GameCatalogService, CommentService}
+  alias MyApp.Services.{PostService, GameCatalogService, Validator, CommentService, Policy}
 
   plug :match
   plug :dispatch
 
   # Routes:
-  # GET  /g/:slug              → Feed du jeu
-  # GET  /g/:slug/posts/:id    → Détail post + commentaires
+  # GET  /g/test/post              → Route de test (SUPPRIMER EN PROD)
+  # GET  /g/:slug                  → Feed du jeu
+  # GET  /g/:slug/submit           → Formulaire création post
+  # POST /g/:slug/posts            → Créer post
+  # GET  /g/:slug/posts/:id        → Détail post + commentaires
+  # POST /g/:slug/posts/:id/upvote → Upvote post
+  # POST /g/:slug/posts/:id/delete → Supprimer post (PROTÉGÉ + ownership)
   # POST /g/:slug/posts/:id/comments → Créer commentaire
+  # POST /g/:slug/posts/:id/comments/:cid/delete → Supprimer commentaire (PROTÉGÉ + ownership)
 
   # ============================================================================
-# ROUTE DE TEST (SUPPRIMER EN PROD)
-
-# http://localhost:4000/g/test/post
-# ============================================================================
+  # ROUTE DE TEST (SUPPRIMER EN PROD)
+  # http://localhost:4000/g/test/post
+  # ============================================================================
 
   get "/test/post" do
     # Fake game
@@ -75,7 +79,7 @@ defmodule MyApp.Controllers.GameFeedController do
         game: game,
         post: post,
         comments: comments,
-        user_id: 1,  # Connecté pour tester les formulaires
+        current_user: nil,
         all_games: []
       }
     )
@@ -86,9 +90,161 @@ defmodule MyApp.Controllers.GameFeedController do
   end
 
 
+# ============================================================================
+# FORMULAIRE CRÉATION POST (affiche toujours, disable si pas connecté)
+# ============================================================================
+
+get "/:slug/submit" do
+  current_user = conn.assigns[:current_user]
+  slug = conn.params["slug"]
+
+  case GameCatalogService.get_by_slug(slug) do
+    nil ->
+      conn
+      |> put_resp_content_type("text/html")
+      |> send_resp(404, "<h1>Game not found</h1>")
+
+    game ->
+      ranks = ["Fer", "Bronze", "Argent", "Or", "Platine", "Diamant", "Ascendant", "Immortel", "Radiant"]
+      regions = ["Any", "EU", "NA", "SA", "ASIA"]
+
+      html = EEx.eval_file("lib/my_app/templates/create_post.html.eex",
+        assigns: %{
+          game: game,
+          ranks: ranks,
+          regions: regions,
+          form_data: %{},
+          error_msg: nil,
+          current_user: current_user  # Peut être nil
+        }
+      )
+
+      conn
+      |> put_resp_content_type("text/html")
+      |> send_resp(200, html)
+  end
+end
 
   # ============================================================================
-  # PAGE DÉTAIL POST
+  # CRÉATION POST (PROTÉGÉ)
+  # ============================================================================
+
+  post "/:slug/posts" do
+    current_user = conn.assigns[:current_user]
+
+    unless current_user do
+      conn
+      |> put_resp_header("location", "/auth/login")
+      |> send_resp(302, "")
+    else
+      slug = conn.params["slug"]
+      params = conn.params
+
+      case Validator.validate(params, %{
+        type: ["required", "string"],
+        description: ["required", "string", {:min, 10}, {:max, 500}]
+      }) do
+        {:ok, _} ->
+          # Validation conditionnelle selon type
+          validated_params = case params["type"] do
+            "lfg" ->
+              %{
+                "type" => "lfg",
+                "game" => slug,
+                "rank" => params["rank"],
+                "region" => params["region"],
+                "contact" => params["contact"],
+                "description" => params["description"],
+                "user_id" => current_user.id
+              }
+
+            type when type in ["strat", "clip"] ->
+              %{
+                "type" => type,
+                "game" => slug,
+                "url" => params["url"],
+                "description" => params["description"],
+                "user_id" => current_user.id
+              }
+          end
+
+          case PostService.create(validated_params) do
+            {:ok, _post} ->
+              conn
+              |> put_resp_header("location", "/g/#{slug}")
+              |> send_resp(302, "")
+
+            {:error, changeset} ->
+              IO.inspect(changeset, label: "❌ POST CREATE ERROR")
+              conn
+              |> put_resp_header("location", "/g/#{slug}/submit")
+              |> send_resp(302, "")
+          end
+
+        {:error, _validation_errors} ->
+          conn
+          |> put_resp_header("location", "/g/#{slug}/submit")
+          |> send_resp(302, "")
+      end
+    end
+  end
+
+  # ============================================================================
+  # UPVOTE POST (PUBLIC pour MVP)
+  # ============================================================================
+
+  post "/:slug/posts/:id/upvote" do
+    _slug = conn.params["slug"]
+    post_id = String.to_integer(conn.params["id"])
+
+    case PostService.upvote(post_id) do
+      {:ok, post} ->
+        conn
+        |> put_resp_content_type("application/json")
+        |> send_resp(200, Jason.encode!(%{score: post.score}))
+
+      {:error, :not_found} ->
+        conn
+        |> send_resp(404, "Not found")
+    end
+  end
+
+  # ============================================================================
+  # SUPPRIMER POST (PROTÉGÉ + ownership)
+  # ============================================================================
+
+  post "/:slug/posts/:id/delete" do
+    current_user = conn.assigns[:current_user]
+
+    unless current_user do
+      conn
+      |> put_resp_header("location", "/auth/login")
+      |> send_resp(302, "")
+    else
+      slug = conn.params["slug"]
+      post_id = String.to_integer(conn.params["id"])
+      post = PostService.get(post_id)
+
+      if Policy.can_delete_post?(current_user, post) do
+        case PostService.delete(post_id, current_user.id) do
+          {:ok, _} ->
+            conn
+            |> put_resp_header("location", "/g/#{slug}")
+            |> send_resp(302, "")
+
+          {:error, _} ->
+            conn
+            |> send_resp(403, "Erreur lors de la suppression")
+        end
+      else
+        conn
+        |> send_resp(403, "Non autorisé - ce n'est pas votre post")
+      end
+    end
+  end
+
+  # ============================================================================
+  # PAGE DÉTAIL POST (PUBLIC)
   # ============================================================================
 
   get "/:slug/posts/:id" do
@@ -130,7 +286,7 @@ defmodule MyApp.Controllers.GameFeedController do
   end
 
   # ============================================================================
-  # CRÉER COMMENTAIRE
+  # CRÉER COMMENTAIRE (PROTÉGÉ)
   # ============================================================================
 
   post "/:slug/posts/:id/comments" do
@@ -166,6 +322,41 @@ defmodule MyApp.Controllers.GameFeedController do
     end
   end
 
+  # ============================================================================
+  # SUPPRIMER COMMENTAIRE (PROTÉGÉ + ownership)
+  # ============================================================================
+
+  post "/:slug/posts/:id/comments/:cid/delete" do
+    current_user = conn.assigns[:current_user]
+
+    unless current_user do
+      conn
+      |> put_resp_header("location", "/auth/login")
+      |> send_resp(302, "")
+    else
+      slug = conn.params["slug"]
+      post_id = conn.params["id"]
+      comment_id = String.to_integer(conn.params["cid"])
+
+      comment = CommentService.get(comment_id)
+
+      if Policy.can_delete_comment?(current_user, comment) do
+        case CommentService.delete(comment_id) do
+          {:ok, _} ->
+            conn
+            |> put_resp_header("location", "/g/#{slug}/posts/#{post_id}")
+            |> send_resp(302, "")
+
+          {:error, _} ->
+            conn
+            |> send_resp(403, "Erreur")
+        end
+      else
+        conn
+        |> send_resp(403, "Non autorisé")
+      end
+    end
+  end
 
   # ============================================================================
   # FEED DU JEU (EN DERNIER - route générique)
@@ -200,10 +391,4 @@ defmodule MyApp.Controllers.GameFeedController do
         |> send_resp(200, html)
     end
   end
-
-
-
-
-
-
 end

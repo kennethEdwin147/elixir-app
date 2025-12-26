@@ -210,8 +210,12 @@ button {
         <a href="/g/<%= @game.slug %>/submit">publier</a>
         </nav>
     </header>
-     <footer>
-        <span class="logo">Connexion</span>
+    <footer>
+    <%= if @current_user do %>
+        <a href="/auth/logout" class="logo">Déconnexion</a>
+    <% else %>
+        <a href="/auth/login" class="logo">Connexion</a>
+    <% end %>
     </footer>
 </section>
 
