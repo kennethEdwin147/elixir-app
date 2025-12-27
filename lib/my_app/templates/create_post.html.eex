@@ -258,7 +258,7 @@ form select:focus {
 
                 <article class="form-margin form-field-block">
                     <label>Contact  (ex: Discord)</label>
-                    <input type="text" name="contact" placeholder=" username#1234">
+                    <input type="text" name="contact" placeholder="ex: Discord: username#1234">
                 </article>
         </div>
 

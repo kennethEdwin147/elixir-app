@@ -188,7 +188,7 @@ button {
 }
 
 .post-contact strong {
-  font-weight: 600;
+  font-weight: 300;
 }
 
 .post-link {
@@ -591,11 +591,11 @@ button {
                 </div>
             <% end %>
 
-            <%= if @post.type == "lfg" do %>
-                <div class="post-contact">
-                    <strong>Contact:</strong> <%= MyApp.Helpers.HtmlHelper.escape(@post.contact) %>
-
-                </div>
+            <!-- APRÈS -->
+            <%= if @post.type == "lfg" && @post.contact && @post.contact != "" do %>
+              <div class="post-contact">
+                <strong>Contact:</strong> <%= MyApp.Helpers.HtmlHelper.escape(@post.contact) %>
+              </div>
             <% end %>
 
             <%= if @post.tags && length(@post.tags) > 0 do %>

@@ -346,9 +346,9 @@ button {
         </div>
 
         <!-- Contact (seulement pour LFG) -->
-        <%= if post.type == "lfg" do %>
+        <%= if post.type == "lfg" && post.contact && post.contact != "" do %>
           <div class="post-contact">
-            Discord: <%= MyApp.Helpers.HtmlHelper.escape(post.contact) %>
+            Contact: <%= MyApp.Helpers.HtmlHelper.escape(post.contact) %>
           </div>
         <% end %>
 
