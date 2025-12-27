@@ -20,3 +20,24 @@ Région: EU
 Message: Smoke main (Omen/Viper) cherche trio ranked sérieux, 
          vocal FR, disponible weekends. Objectif: Ascendant
 Contact: Discord: SmokeKing#4567
+
+
+
+<%= if @post.type == "lfg" %>
+  [LFG] [Plat 2] Jett main cherche duo
+<% else %>
+  [<%= @post.type %>] <%= @post.description %>
+  <a href="<%= @post.url %>">→ lien</a>
+<% end %>
+
+
+Type: [Radio: LFG / Strat / Clip]
+
+<!-- Si LFG -->
+Rang: [...]
+Région: [...]
+
+<!-- Si Strat/Clip -->
+Lien: [Input URL]
+
+Description: [Textarea]

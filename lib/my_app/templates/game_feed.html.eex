@@ -66,7 +66,7 @@ button {
   align-items: center;
   justify-content: space-between;
   padding: 0.5rem 0.5rem;
-  background-color: #ff4655;
+  background-color: black;
   color: white;
   width: 100%;
 
@@ -82,9 +82,11 @@ button {
 }
 
 .header-container {
-    max-width: 95vw;
+    max-width: 100vw;
     margin-left: auto;
     margin-right: auto;
+    padding-left: 2rem;
+    padding-right: 2rem;
 }
 
 .container {
@@ -121,6 +123,11 @@ button {
   cursor: pointer;
 }
 
+.arrow.voted {
+  color: #ff4655;
+  font-weight: bold;
+}
+
 .arrow {
   color: #828282;
 }
@@ -155,6 +162,16 @@ button {
 .badge.radiant { background-color: #ffffaa; color: black; }
 .badge.plat { background-color: #00d4aa; color: white; }      /* ← AJOUTE */
 
+/* Badges rangs - REMPLACE TOUT */
+.badge.fer { background-color: #4a4a4a; color: white; }
+.badge.bronze { background-color: #cd7f32; color: white; }
+.badge.argent { background-color: #c0c0c0; color: black; }
+.badge.or { background-color: #ffd700; color: black; }
+.badge.platine { background-color: #00d4aa; color: white; }
+.badge.diamant { background-color: #b9f2ff; color: black; }
+.badge.ascendant { background-color: #2f5d62; color: white; }
+.badge.immortel { background-color: #bb3d65; color: white; }
+.badge.radiant { background-color: #ffffaa; color: black; }
 
 .post-meta {
   font-size: 11px;
@@ -197,6 +214,21 @@ button {
     display: none;
 }
 
+
+.delete-link {
+  background: none;
+  border: none;
+  padding: 0;
+  color: #828282;
+  font-size: 11px;
+  cursor: pointer;
+  text-decoration: underline;
+}
+
+.delete-link:hover {
+  color: #ff4655;
+}
+
 </style>
 
 <section class="header header-container">
@@ -212,7 +244,10 @@ button {
     </header>
     <footer>
     <%= if @current_user do %>
-        <a href="/auth/logout" class="logo">Déconnexion</a>
+         <form action="/auth/logout" method="post" style="display: inline;">
+            <input type="hidden" name="_csrf_token" value="<%= Plug.CSRFProtection.get_csrf_token() %>">
+            <button type="submit" class="logo" style="background: none; border: none; cursor: pointer; color: inherit; font: inherit;">Déconnexion</button>
+        </form>
     <% else %>
         <a href="/auth/login" class="logo">Connexion</a>
     <% end %>
@@ -274,10 +309,11 @@ button {
       <span class="rank"><%= index %>.</span>
 
       <!-- Vote (formulaire) -->
+      <!-- Vote (formulaire) -->
       <div class="vote">
         <form action="/g/<%= @game.slug %>/posts/<%= post.id %>/upvote" method="post">
           <input type="hidden" name="_csrf_token" value="<%= Plug.CSRFProtection.get_csrf_token() %>">
-          <button type="submit" class="arrow">▲</button>
+          <button type="submit" class="arrow <%= if MyApp.Services.VoteService.has_voted?(@current_user, "post", post.id), do: "voted" %>">▲</button>
         </form>
       </div>
 
@@ -300,9 +336,13 @@ button {
           </a>
 
           <!-- Si Strat/Clip: affiche lien externe -->
-          <%= if post.url do %>
-            <a href="<%= post.url %>" target="_blank" style="color: #9b46ff; margin-left: 0.5rem;">→</a>
-          <% end %>
+         <%= if post.url do %>
+          <div style="margin-top: 0.25rem; font-size: 11px;">
+            <a href="<%= post.url %>" target="_blank" rel="noopener" style="color: #9b46ff;">
+              <%= post.url %>
+            </a>
+          </div>
+        <% end %>
         </div>
 
         <!-- Contact (seulement pour LFG) -->
@@ -319,6 +359,16 @@ button {
           <span class="author">par <%= post.user.username %></span>
           <span class="separator"> | </span>
           <span class="time"><%= post.time_ago %></span>
+
+          <!-- AJOUTE: Nombre de commentaires SEULEMENT si > 0 -->
+          <%= if post.comment_count > 0 do %>
+            <span class="separator"> | </span>
+            <a href="/g/<%= @game.slug %>/posts/<%= post.id %>" style="color: #828282;">
+              <%= post.comment_count %> commentaire<%= if post.comment_count > 1, do: "s", else: "" %>
+            </a>
+          <% end %>
+
+
         </div>
       </div>
     </article>

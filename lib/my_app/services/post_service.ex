@@ -28,15 +28,14 @@ defmodule MyApp.Services.PostService do
   Liste tous les posts actifs pour un jeu donné.
   Triés par score (HN-style ranking).
   """
-  def list_active(game \\ "valorant") do
-    query = from p in Post,
-      where: p.active == true and p.game == ^game,
-      order_by: [desc: p.score, desc: p.inserted_at],
-      preload: :user
-
-    Repo.all(query)
-    |> Enum.map(&decode_tags/1)
+  def list_active(game_slug) do
+    Post
+    |> where([p], p.game == ^game_slug and p.active == true)
+    |> order_by([p], desc: p.score)
+    |> preload(:user)
+    |> Repo.all()
     |> Enum.map(&add_time_ago/1)
+    |> Enum.map(&add_comment_count/1)  # ← AJOUTE
   end
 
   @doc """
@@ -130,4 +129,16 @@ defmodule MyApp.Services.PostService do
       true -> "il y a #{div(diff, 86400)}j"
     end
   end
+
+  # Ajoute cette fonction privée à la fin du fichier
+  defp add_comment_count(post) do
+    count = Repo.one(
+      from c in MyApp.Schemas.Comment,
+      where: c.post_id == ^post.id,
+      select: count(c.id)
+    )
+
+    Map.put(post, :comment_count, count)
+  end
+
 end

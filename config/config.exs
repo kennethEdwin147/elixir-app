@@ -1,12 +1,7 @@
 import Config
 
-# Configuration de la base de données
-config :my_app, MyApp.Repo,
-  database: "my_app_dev",
-  username: "root",
-  password: "kenneth",
-  hostname: "localhost",
-  port: 3306
-
-# Dire à Ecto quels Repos existent
-config :my_app, ecto_repos: [MyApp.Repo]
+# Import environment specific config
+# This will load:
+# - config/dev.exs in dev mode (default)
+# - config/test.exs in test mode
+import_config "#{config_env()}.exs"

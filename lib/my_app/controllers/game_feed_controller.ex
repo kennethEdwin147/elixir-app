@@ -2,8 +2,7 @@ defmodule MyApp.Controllers.GameFeedController do
   use Plug.Router
   require EEx
 
-  alias MyApp.Services.{PostService, GameCatalogService, Validator, CommentService, Policy}
-
+  alias MyApp.Services.{PostService, GameCatalogService, Validator, CommentService, Policy, VoteService}
   plug :match
   plug :dispatch
 
@@ -193,19 +192,70 @@ end
   # UPVOTE POST (PUBLIC pour MVP)
   # ============================================================================
 
-  post "/:slug/posts/:id/upvote" do
-    _slug = conn.params["slug"]
+  # Dans GameFeedController, remplace la route upvote:
+
+ post "/:slug/posts/:id/upvote" do
+  current_user = conn.assigns[:current_user]
+
+  unless current_user do
+    conn
+    |> put_resp_header("location", "/auth/login")
+    |> send_resp(302, "")
+  else
+    slug = conn.params["slug"]
     post_id = String.to_integer(conn.params["id"])
 
-    case PostService.upvote(post_id) do
-      {:ok, post} ->
-        conn
-        |> put_resp_content_type("application/json")
-        |> send_resp(200, Jason.encode!(%{score: post.score}))
+    # Détecte d'où vient la requête
+    redirect_to = conn.params["redirect_to"]
 
-      {:error, :not_found} ->
+    case MyApp.Services.VoteService.toggle_vote(current_user.id, "post", post_id) do
+      {:ok, _} ->
+        # Redirige selon la source
+        location = case redirect_to do
+          "post_detail" -> "/g/#{slug}/posts/#{post_id}"  # Reste sur le post
+          _ -> "/g/#{slug}"  # Retour au feed
+        end
+
         conn
-        |> send_resp(404, "Not found")
+        |> put_resp_header("location", location)
+        |> send_resp(302, "")
+
+      {:error, _} ->
+        conn
+        |> send_resp(500, "Error")
+    end
+  end
+end
+
+
+  # ============================================================================
+# UPVOTE COMMENTAIRE (PROTÉGÉ)
+# ============================================================================
+
+  post "/:slug/posts/:id/comments/:cid/upvote" do
+    current_user = conn.assigns[:current_user]
+
+    unless current_user do
+      conn
+      |> put_resp_header("location", "/auth/login")
+      |> send_resp(302, "")
+    else
+      slug = conn.params["slug"]
+      post_id = conn.params["id"]
+      comment_id = String.to_integer(conn.params["cid"])
+
+      # Toggle le vote
+      case MyApp.Services.VoteService.toggle_vote(current_user.id, "comment", comment_id) do
+        {:ok, _} ->
+          # Redirige vers le post
+          conn
+          |> put_resp_header("location", "/g/#{slug}/posts/#{post_id}")
+          |> send_resp(302, "")
+
+        {:error, _} ->
+          conn
+          |> send_resp(500, "Error")
+      end
     end
   end
 

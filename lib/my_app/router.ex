@@ -23,7 +23,10 @@ defmodule MyApp.Router do
   plug :fetch_session
   plug MyApp.Plugs.LoadUser  # ← AJOUTE CETTE LIGNE
 
-  plug Plug.CSRFProtection
+  if Application.get_env(:my_app, :csrf_protection, true) do
+    plug Plug.CSRFProtection
+  end
+
   plug :put_secure_browser_headers
   plug :match
   plug :dispatch

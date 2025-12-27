@@ -8,7 +8,6 @@ defmodule MyApp.Schemas.User do
     field :password_hash, :string
     field :password, :string, virtual: true
 
-    has_many :announcements, MyApp.Schemas.Announcement
     timestamps()
   end
 
