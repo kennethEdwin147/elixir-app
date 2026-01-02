@@ -26,12 +26,16 @@ html {
 }
 
 body {
-  font-family: Verdana, Geneva, sans-serif;
+  font-family: system-ui, sans-serif;
   font-size: 13px;
   line-height: 1.4;
   color: #000;
 }
 
+form label,
+form h1 {
+    font-family: monospace !important;
+}
 
 img, picture, video, canvas, svg {
   display: block;
@@ -65,7 +69,6 @@ button {
   display: flex;
   align-items: center;
   justify-content: space-between;
-  padding: 0.5rem 0.5rem;
   background-color: black;
   color: white;
   width: 100%;
@@ -185,6 +188,7 @@ button {
   margin-bottom: 0.75rem;
   font-size: 12px;
   color: #000;
+  font-weight: 600;
 }
 
 .post-contact strong {

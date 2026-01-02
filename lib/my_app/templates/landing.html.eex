@@ -3,8 +3,6 @@
 <head>
   <meta charset="UTF-8">
   <title>MyApp</title>
-  <link rel="stylesheet" href="/css/app.css">
-
   <style>
 /* ==========================================================================
    #RESET
@@ -34,7 +32,6 @@ body {
 img, picture, video, canvas, svg {
   display: block;
   max-width: 100%;
-  object-fit: cover;
 }
 
 input, button, textarea, select {
@@ -65,6 +62,7 @@ ul, ol {
     margin-right: auto;
     padding-left: 4rem;
     padding-right: 4rem;
+    background-color: #f6f6ef;
     padding-top: 1rem;
     padding-bottom: 1rem;
 
@@ -93,14 +91,6 @@ ul, ol {
     font-family: system-ui;
     vertical-align: middle;
 }
-.nav-button{
-    padding: 0rem 1rem;
-    font-size: 13px;
-    cursor: pointer;
-    transition: background-color 0.3s ease-in-out;
-    font-family: system-ui;
-    vertical-align: middle;
-}
 .launch-button {
     padding: 1rem 1rem;
     font-size: 16px;
@@ -112,14 +102,17 @@ ul, ol {
     vertical-align: middle;
 }
 
-.main-image {
+img {
     width: 100%;
 }
+.main-image {
+    width: 100% ;
+}
 
-@media screen and (min-width: 600px) {
+@media screen and (min-width: 850px) {
   /* CSS rules to apply when the viewport width is 600px or more */
     .main-image {
-        width: 100%;
+        width: 55% !important;
     }
 }
 
@@ -127,13 +120,9 @@ ul, ol {
     margin-top: 0.5rem;
 }
 
-.main-feed > * + * {
-    margin-top: 1rem;
-}
-
 .my-search-bar {
     width: 100%;
-    padding: 1.25rem 0.75rem;
+    padding: 1.15rem 0.75rem;
     font-family: system-ui;
     font-size: 12px;
     resize: vertical;
@@ -152,106 +141,95 @@ ul, ol {
     font-size: 14px;
 }
 
+@media screen and (min-width: 600px) {
+  /* CSS rules to apply when the viewport width is 600px or more */
+    .my-search-bar {
+        max-width: 45%;
+    }
+}
+input:focus {
+  outline: none;
+}
+
+@media screen and (max-width: 600px) {
+  /* CSS rules to apply when the viewport width is 600px or more */
+   .hidden-mobile {
+       display: none;
+   }
+}
+
+@media screen and (min-width: 600px) {
+  /* CSS rules to apply when the viewport width is 600px or more */
+    .hidden-desktop {
+        display: none;
+   }
+}
+
+
 </style>
 </head>
 <body>
-
-
-<main style="max-width:100vw; margin-left: auto; margin-right: auto;">
   <section
-    style="display: flex; align-items: center; justify-content: space-between; padding: 1rem;"
+    style="display: flex; align-items: center; justify-content: space-between; padding: 1rem;
+        column-gap: 2rem;"
     class="section-header"
     >
     <div class="header">
         <h2 style="font-size: 14px;">Welcome to Phoenix!</h2>
     </div>
-
+      <div style="flex:1; width:100%"
+        class="hidden-mobile">
+            <input type="text" class="my-search-bar"
+                placeholder="Rechercher">
+        </div>
     <div class="content">
      <button
        class="connexion-button"
-     >Compte</button>
+     >connexion</button>
     </div>
   </section>
 
 
   <section
-    style="padding-inline:2rem; padding-block:1rem;
-          background-color: #f6f6ef;
+    style="padding-inline:2rem; padding-block:1rem
+         background-color: #f6f6ef;
          min-height: calc(100vh - 4rem);"
-    class=""
+    class="section-feed"
     >
     <!-- ========================================================================
        POST
        ========================================================================== -->
-    <header style="display: flex; align-items: center; justify-content: space-between; padding: 1rem;">
-    <div>
-         <h1 style="font-size: 15px; margin-bottom: 0.5rem;">
+    <header class="header-gutter">
+        <h1 style="font-size: 30px; margin-bottom: 0.5rem;">
             Startup Directory
         </h1>
         <p style="font-size: 16px;  font-family: system-ui;">
             Since 2005, we have invested in over 5,000 companies that have a combined valuation of over $800B.
         </p>
-        <div style="display: none; gap: 1rem;">
-            <button class="launch-button">Lancer</button>
+        <div>
+            <button
+            class="launch-button"
+            onclick="window.location.href='/g/valorant'"
+            >
+            Explore le Feed Valorant
+            </button>
         </div>
-        <nav style="display: flex; gap: 1rem; padding: 1rem 2.5rem;">
-        <button class="nav-button">Trier et Afficher:</button>
-        <button class="nav-button">Lancer</button>
-        <button class="nav-button">Lancer</button>
 
-    </nav>
-    <div style="flex:1; width:80%;;"
-        class="hidden-mobile">
+        <div style="flex:1; width:100%"
+            class="hidden-desktop">
             <input type="text" class="my-search-bar"
                 placeholder="Rechercher">
         </div>
-    </div>
-    <div>
-    <img
-            style="margin-bottom: 1rem; max-height: 150px;"
+
+        <div>
+          <img
+            style="margin-bottom: 1rem;"
             class="main-image"
-            src="https://cdn.prod.website-files.com/5f9072399b2640f14d6a2bf4/6602021256195cd027a3f0b8_VLR_Blog_Header_Banner_1800x720px_V2.png"
-        >
-    </div>
-
-
+            src="https://images.pexels.com/photos/4132411/pexels-photo-4132411.jpeg?_gl=1*p7o1ub*_ga*NTgwMTIwMTcyLjE3NjMyNTI2Mzg.*_ga_8JE65Q40S6*czE3NjcyOTg5NjgkbzE3JGcxJHQxNzY3Mjk5MDkyJGo1OSRsMCRoMA.." alt="">
+        </div>
     </header>
 
-    <section class="">
-
-
-
-    <section
-    style="padding-inline:1rem"
-    class="main-feed ">
-        <article>
-            <div>
-                <h2>[ LF1 ] Cherche 2 joueurs</h2>
-            </div>
-            <div style="font-family:system-ui; font-size:13px;">
-                <p> every time you take down another player, you steal one of their hearts! But watch out – if you lose all your hearts, you’ll be jailed at the spawn point for a while. Fight, raid, trade, and survive. Every life counts!</p>
-            </div>
-            <div>
-                [ chill ] [ ranked ] [1 point | par edwingbeti14725 | il y a 1j]
-            </div>
-        </article>
-
-    </section>
-
-
-   <!-- ========================================================================
-       POST
-       ========================================================================== -->
-
-
-</section>
-
-
   </section>
-
-
-</main>
-
 
 
 

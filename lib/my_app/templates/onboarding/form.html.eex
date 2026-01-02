@@ -28,7 +28,7 @@ html {
 }
 
 body {
-  font-family: system-ui, sans-serif;
+  font-family: Verdana, Geneva, sans-serif;
   font-size: 13px;
   line-height: 1.4;
   color: #000;
@@ -67,6 +67,7 @@ button {
   display: flex;
   align-items: center;
   justify-content: space-between;
+  padding: 0.5rem 0.5rem;
   background-color: #9b46ff;
   color: white;
   width: 100%;
@@ -89,7 +90,7 @@ button {
 }
 
 .form-container {
-    max-width: 90.5vw;
+    max-width: 90vw;
      margin-left: auto;
     margin-right: auto;
 }
@@ -137,6 +138,23 @@ input:focus {
 }
 
 
+.form-field input {
+    width: 400px;
+}
+
+.form-login-button {
+    padding-inline: 2rem;
+    background-color: black;
+    color: white;
+    cursor: pointer;
+}
+
+
+input:focus {
+  outline: none;
+}
+
+
 .form-field-block {
     display: flex;
     flex-direction: column;
@@ -154,17 +172,6 @@ input:focus {
     }
 }
 
-.form-login-button {
-    padding-inline: 2rem;
-    background-color: black;
-    color: white;
-    cursor: pointer;
-}
-
-.hidden {
-    display: none;
-}
-
 
 </style>
 
@@ -179,74 +186,69 @@ input:focus {
 </section>
 
 <section class="form-container">
-    <form action="/auth/register" method="post">
+    <form action="/onboarding" method="post">
 
     <%# ============================================================================
     # CSRF TOKEN
     # ============================================================================
     %>
-        <input type="hidden" name="_csrf_token" value="<%= Plug.CSRFProtection.get_csrf_token() %>">
+    <input type="hidden" name="_csrf_token" value="<%= Plug.CSRFProtection.get_csrf_token() %>">
 
-       <header class="form-header">
-           <h1>Inscription</h1>
-       </header>
 
-       <img
-        class="hidden"
-        src="https://qz.com/cdn-cgi/image/width=1920,quality=85,format=auto/https://assets.qz.com/media/459f991f31568b02c3c4055ee1782cee.jpg" alt="logo" style="width: 200px; ">
+  <div class="form-header">
+    <h1 class="">Complète ton profil pour commencer</h1>
+  </div>
 
-        <div class="form-field form-field-block">
-            <label for="email">Email</label>
-            <input
-                id="email"
-                name="email"
-                type="email"
-                placeholder="e.g. julie.young@hey.com"
-                required
-                value="<%= @email_value %>" />
-        </div>
 
-        <div class="form-field form-margin form-field-block">
-            <label for="password">Password</label>
-            <input
-                id="password"
-                name="password"
-                type="password"
-                placeholder="Enter your password"
-                required />
-        </div>
+    <%= if @error_msg do %>
+        <p class="error"><%= MyApp.Helpers.HtmlHelper.escape(@error_msg) %></p>
+    <% end %>
 
-        <div class="form-field form-margin form-field-block">
-            <label for="password_confirm">Confirm Password</label>
-            <input
-                id="password_confirm"
-                name="password_confirm"
-                type="password_confirm"
-                placeholder="Enter your password"
-                required />
-        </div>
 
-  <div class="form-margin">
-            <input class="form-login-button" type="submit" value="register">
-        </div>
+    <form class="" method="POST" action="/onboarding">
 
-        <%= if @error_msg do %>
-            <p class="error"><%= MyApp.Helpers.HtmlHelper.escape(@error_msg) %></p>
-        <% end %>
+    <div class="form-field form-field-block form-margin">
+      <label>Username *</label>
+      <input type="text"
+             name="username"
+             pattern="[a-zA-Z0-9_-]{3,20}"
+             required
+             autofocus
+             value=""
+             placeholder="ex: <%= MyApp.Helpers.HtmlHelper.escape(@suggested_username) %>">
+      <small>3-20 caractères, lettres/chiffres/underscore seulement</small>
+    </div>
+
+    <div class="form-field form-field-block form-margin">
+
+      <label>Nom d'affichage *</label>
+      <input type="text"
+             name="display_name"
+             maxlength="50"
+             placeholder="ex: Ken | Jett Main"
+             required>
+      <small>Ton nom fancy avec, espaces, etc.</small>
+
+      </div>
+
+    <div class="form-margin">
+        <button class="form-login-button" type="submit">Continuer →</button>
+    </div>
+    </form>
+
 
     <footer class="form-links">
-        <div >
-            <a href="/auth/forgot-password">Reset password?
-                <span class="links">Continue</span>
-            </a>
-        </div>
-
-
-        <div class="">
-            <a href="/auth/login">Already have an account?
-            <span class="links"> Sign In</span>
-            </a>
-        </div>
+        <p></p>
+        <%= if @current_user do %>
+            <form action="/auth/logout" method="post" style="display: inline;">
+                <input type="hidden" name="_csrf_token" value="<%= Plug.CSRFProtection.get_csrf_token() %>">
+                <button type="submit" class="links" style="background: none; border: none; cursor: pointer; color: blue; font: inherit;">
+                    Se déconnecter
+                </button>
+            </form>
+        <% else %>
+            <a href="/auth/login" class="logo">Connexion</a>
+        <% end %>
     </footer>
     </form>
 </section>

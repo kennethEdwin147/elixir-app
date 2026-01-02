@@ -144,40 +144,54 @@ end
         description: ["required", "string", {:min, 10}, {:max, 500}]
       }) do
         {:ok, _} ->
-          # Validation conditionnelle selon type
           validated_params = case params["type"] do
-            "lfg" ->
+            # Types "Cherche Joueurs"
+            type when type in ["lf1", "lf2", "lf3", "lfg"] ->
               %{
-                "type" => "lfg",
+                "type" => type,
                 "game" => slug,
                 "rank" => params["rank"],
                 "region" => params["region"],
                 "contact" => params["contact"],
                 "description" => params["description"],
+                "tags" => params["tags"],           # ← AJOUTE ICI
                 "user_id" => current_user.id
               }
 
+            # Types "Autre"
             type when type in ["strat", "clip"] ->
               %{
                 "type" => type,
                 "game" => slug,
                 "url" => params["url"],
                 "description" => params["description"],
+                "tags" => params["tags"],           # ← AJOUTE ICI
                 "user_id" => current_user.id
               }
+
+            _unknown_type ->
+              nil
           end
 
-          case PostService.create(validated_params) do
-            {:ok, _post} ->
-              conn
-              |> put_resp_header("location", "/g/#{slug}")
-              |> send_resp(302, "")
-
-            {:error, changeset} ->
-              IO.inspect(changeset, label: "❌ POST CREATE ERROR")
+          cond do
+            is_nil(validated_params) ->
               conn
               |> put_resp_header("location", "/g/#{slug}/submit")
               |> send_resp(302, "")
+
+            true ->
+              case PostService.create(validated_params) do
+                {:ok, _post} ->
+                  conn
+                  |> put_resp_header("location", "/g/#{slug}")
+                  |> send_resp(302, "")
+
+                {:error, changeset} ->
+                  IO.inspect(changeset, label: "❌ POST CREATE ERROR (DB/Changeset)")
+                  conn
+                  |> put_resp_header("location", "/g/#{slug}/submit")
+                  |> send_resp(302, "")
+              end
           end
 
         {:error, _validation_errors} ->
@@ -187,7 +201,6 @@ end
       end
     end
   end
-
   # ============================================================================
   # UPVOTE POST (PUBLIC pour MVP)
   # ============================================================================
@@ -424,6 +437,8 @@ end
 
       game ->
         posts = PostService.list_active(slug)
+        |> Enum.map(&MyApp.Schemas.Post.decode_tags/1)  # ← AJOUTE CETTE LIGNE
+
         stats = GameCatalogService.get_stats(slug)
 
         html = EEx.eval_file("lib/my_app/templates/game_feed.html.eex",

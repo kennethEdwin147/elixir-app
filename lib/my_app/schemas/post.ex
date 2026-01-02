@@ -4,8 +4,8 @@ defmodule MyApp.Schemas.Post do
   alias MyApp.Schemas.User
 
   schema "posts" do
-    field :type, :string, default: "lfg"  # "lfg", "strat", "clip"
-    field :url, :string                    # Lien externe (strat/clip seulement)
+    field :type, :string, default: "lfg"
+    field :url, :string
     field :game, :string
     field :rank, :string
     field :region, :string
@@ -24,7 +24,7 @@ defmodule MyApp.Schemas.Post do
     post
     |> cast(attrs, [:type, :url, :game, :rank, :region, :contact, :description, :tags, :user_id])
     |> validate_required([:type, :game, :description, :user_id])
-    |> validate_inclusion(:type, ["lfg", "strat", "clip"])
+    |> validate_inclusion(:type, ["lf1", "lf2", "lf3", "lfg", "strat", "clip"])
     |> validate_length(:description, max: 500, min: 10)
     |> validate_by_type()
     |> encode_tags()
@@ -34,9 +34,9 @@ defmodule MyApp.Schemas.Post do
 
   defp validate_by_type(changeset) do
     case get_field(changeset, :type) do
-      "lfg" ->
+      type when type in ["lf1", "lf2", "lf3", "lfg"] ->
         changeset
-        |> validate_required([:rank, :region, :contact])
+        |> validate_required([:rank, :region])
 
       type when type in ["strat", "clip"] ->
         changeset
@@ -50,10 +50,28 @@ defmodule MyApp.Schemas.Post do
 
   defp encode_tags(changeset) do
     case get_change(changeset, :tags) do
-      nil -> changeset
+      nil ->
+        changeset
+
       tags when is_list(tags) ->
         put_change(changeset, :tags, Jason.encode!(tags))
-      _ -> changeset
+
+      "" ->
+        put_change(changeset, :tags, nil)
+
+      tags when is_binary(tags) ->
+        tag_list = tags
+        |> String.split(",")
+        |> Enum.map(&String.trim/1)
+        |> Enum.map(&String.downcase/1)
+        |> Enum.reject(&(&1 == ""))
+        |> Enum.uniq()
+
+        json = Jason.encode!(tag_list)
+        put_change(changeset, :tags, json)
+
+      _ ->
+        changeset
     end
   end
 

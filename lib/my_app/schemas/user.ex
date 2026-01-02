@@ -5,22 +5,37 @@ defmodule MyApp.Schemas.User do
   schema "users" do
     field :email, :string
     field :username, :string
+    field :display_name, :string  # ← NOUVEAU
     field :password_hash, :string
     field :password, :string, virtual: true
+    field :onboarding_completed, :boolean, default: false  # ← NOUVEAU
 
     timestamps()
   end
 
   @doc """
+  Utilisé pour l'onboarding - complete le profil après inscription.
+  """
+  def onboarding_changeset(user, attrs) do
+    user
+    |> cast(attrs, [:username, :display_name])
+    |> validate_required([:username, :display_name])
+    |> normalize_username()
+    |> validate_length(:username, min: 3, max: 20)
+    |> validate_format(:username, ~r/^[a-zA-Z0-9_-]+$/, message: "only letters, numbers, underscore and dash")  # ← Ajoute -
+    # PAS de unique_constraint sur username (duplicates OK)
+    |> put_change(:onboarding_completed, true)
+  end
+
+  @doc """
   Utilisé pour l'onboarding et les mises à jour de profil.
-  C'est cette fonction que OnboardingController appelle à la ligne 104.
   """
   def changeset(user, attrs) do
     user
-    |> cast(attrs, [:email, :username]) # On cast les champs modifiables
-    |> validate_required([:username])         # On force le username
+    |> cast(attrs, [:email, :username, :display_name])
+    |> validate_required([:username])
     |> normalize_username()
-    |> unique_constraint(:username)
+    # RETIRE unique_constraint sur username
     |> unique_constraint(:email)
   end
 
@@ -29,14 +44,14 @@ defmodule MyApp.Schemas.User do
   """
   def registration_changeset(user, attrs) do
     user
-    |> cast(attrs, [:email, :username, :password])
-    |> validate_required([:email, :username, :password])
+    |> cast(attrs, [:email, :password])
+    |> validate_required([:email, :password])
     |> normalize_email()
     |> normalize_username()
     |> validate_format(:email, ~r/^[^\s]+@[^\s]+$/)
     |> validate_length(:password, min: 6)
     |> unique_constraint(:email)
-    |> unique_constraint(:username)
+    # RETIRE unique_constraint sur username (duplicates OK)
     |> put_password_hash()
   end
 

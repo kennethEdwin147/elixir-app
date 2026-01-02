@@ -28,12 +28,11 @@ html {
 }
 
 body {
-  font-family: Verdana, Geneva, sans-serif;
+  font-family: system-ui, sans-serif;
   font-size: 13px;
   line-height: 1.4;
   color: #000;
 }
-
 
 img, picture, video, canvas, svg {
   display: block;
@@ -67,7 +66,6 @@ button {
     display: flex;
     align-items: center;
     justify-content: space-between;
-    padding: 0.5rem 0.5rem;
     background-color: black;
     color: white;
     width: 100%;
@@ -187,6 +185,37 @@ form select:focus {
     align-items: flex-start;
 }
 
+/* ============================================================================
+   TAG SELECTOR COMPONENT
+   ========================================================================== */
+
+.tag-selector .tag-input {
+    width: 400px;
+}
+
+.tag-chip {
+    display: inline;
+    padding: 0 4px;
+    color: #828282;
+    cursor: pointer;
+    font-size: 11px;
+}
+
+.tag-chip:hover {
+    text-decoration: underline;
+    color: #000;
+}
+
+.tag-chip::after {
+    content: ' ';
+}
+
+@media screen and (max-width: 600px) {
+    .tag-selector .tag-input {
+        width: 80%;
+    }
+}
+
 </style>
 
 <section class="header container">
@@ -233,9 +262,16 @@ form select:focus {
                 name="type"
                 class="form-select-type"
                 >
-                <option value="lfg">LFG - Cherche joueur/équipe</option>
-                <option value="strat">Strat - Partager stratégie</option>
-                <option value="clip">Clip - Partager clip</option>
+                <optgroup label="Cherche joueurs">
+                    <option value="lf1">LF1 - Cherche 1 joueur</option>
+                    <option value="lf2">LF2 - Cherche 2 joueurs</option>
+                    <option value="lf3">LF3 - Cherche 3 joueurs</option>
+                    <option value="lfg">LFG - Cherche groupe (général)</option>
+                </optgroup>
+                <optgroup label="Autre">
+                    <option value="strat">STRAT - Guide/Stratégie</option>
+                    <option value="clip">CLIP - Vidéo/Montage</option>
+                </optgroup>
             </select>
         </div>
 
@@ -262,19 +298,41 @@ form select:focus {
                 </article>
         </div>
 
-        <div class= "form-margin form-field-block">
-            <label for="description">Message</label>
-           <textarea name="description" maxlength="500" rows="4"></textarea>
-        </div>
 
-        <div
-        data-js-link-fields
-        class="form-margin form-field form-field-block"
-         style="display:none"
-         >
-            <label>Lien (YouTube, Twitch, etc)</label>
-            <input type="url" name="url" placeholder="https://youtube.com/...">
-        </div>
+
+    <div class= "form-margin form-field-block">
+        <label for="description">Message</label>
+        <textarea name="description" maxlength="500" rows="4"></textarea>
+    </div>
+
+
+
+    <div
+    data-js-link-fields
+    class="form-margin form-field form-field-block"
+        style="display:none"
+        >
+        <label>Lien (YouTube, Twitch, etc)</label>
+        <input type="url" name="url" placeholder="https://youtube.com/...">
+    </div>
+
+    <!-- AJOUTE CE BLOC TAGS ICI: -->
+<div class="form-margin form-field-block">
+    <div>
+        <label for="tags">Tags (optionnel)</label>
+        <small style="color: #666; font-size: 11px; margin-top: 4px; display: ;">
+            Sépare par virgule. Clique sur les suggestions.
+            </small>
+    </div>
+
+    <tag-selector name="tags" placeholder="Ex: ranked, mic, chill, duelist, fr"></tag-selector>
+</div>
+
+<!-- PUIS continue avec le reste (URL fields, submit button, etc.) -->
+
+
+
+
 
         <!-- Avant le bouton submit -->
         <div class="form-margin">
@@ -307,43 +365,48 @@ form select:focus {
     </form>
 </section>
 
+
 <script>
 (function() {
   'use strict';
 
-  document.addEventListener('DOMContentLoaded', function() {
+document.addEventListener('DOMContentLoaded', function() {
 
-    /* ==========================================================================
-     * Access Page Elements
-     * ========================================================================== */
+  /* ==========================================================================
+   * Access Page Elements
+   * ========================================================================== */
 
-    const postTypeSelect = document.querySelector('[data-js-post-type]');
-    const lfgFields = document.querySelector('[data-js-lfg-fields]');
-    const linkFields = document.querySelector('[data-js-link-fields]');
+  const postTypeSelect = document.querySelector('[data-js-post-type]');
+  const lfgFields = document.querySelector('[data-js-lfg-fields]');
+  const linkFields = document.querySelector('[data-js-link-fields]');
 
-    /* ==========================================================================
-     * Event listener sur le select (changement de type de post)
-     * ========================================================================== */
+  /* ==========================================================================
+   * Event listener sur le select (changement de type de post)
+   * ========================================================================== */
 
-    if (postTypeSelect) {
-        postTypeSelect.addEventListener('change', function () {
+  if (postTypeSelect) {
+    postTypeSelect.addEventListener('change', function () {
+      const type = postTypeSelect.value;
 
-            const type = postTypeSelect.value;
-            if (lfgFields && linkFields) {
+      if (lfgFields && linkFields) {
+        const isLFGType = ['lf1', 'lf2', 'lf3', 'lfg'].includes(type);
 
-                lfgFields.style.display = type === 'lfg' ? 'flex' : 'none';
-                linkFields.style.display = type !== 'lfg' ? 'flex' : 'none';
+        lfgFields.style.display = isLFGType ? 'block' : 'none';
+        linkFields.style.display = !isLFGType ? 'flex' : 'none';
 
-            } else {
-                console.error('Éléments non trouvés!');
+      } else {
+        console.error('Éléments non trouvés!');
+      }
+    });
 
-            }
-        });
-    }
+    postTypeSelect.dispatchEvent(new Event('change'));
+  }
 
-  });
+});
 })();
 </script>
+
+<script src="/static/js/tag-selector.js"></script>
 
 </body>
 </html>

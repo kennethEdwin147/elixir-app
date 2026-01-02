@@ -89,56 +89,55 @@ defmodule MyApp.Controllers.AuthController do
     |> send_resp(200, html)
   end
 
-  post "/register" do
-    # 1. Nettoyage des données
-    params = Map.new(conn.params, fn
-      {k, v} when is_binary(v) -> {k, String.trim(v)}
-      {k, v} -> {k, v}
-    end)
+ post "/register" do
+  # 1. Nettoyage des données
+  params = Map.new(conn.params, fn
+    {k, v} when is_binary(v) -> {k, String.trim(v)}
+    {k, v} -> {k, v}
+  end)
 
-    # 2. Validation
-    case Validator.validate(params, %{
-      "email" => ["required", "string", "email"],
-      "password" => ["required", "string", {:min, 6}, {:same_as, "password_confirm"}]
-    }) do
-      {:ok, _} ->
-        email = String.downcase(params["email"]) # Sécurité : email en minuscules
+  # 2. Validation
+  case Validator.validate(params, %{
+    "email" => ["required", "string", "email"],
+    "password" => ["required", "string", {:min, 6}, {:same_as, "password_confirm"}]
+  }) do
+    {:ok, _} ->
+      email = String.downcase(params["email"]) # Sécurité : email en minuscules
 
-        if UserService.user_exists?(email) do
-          render_error(conn, "register", email, "Cet email est déjà utilisé")
-        else
-          case create_user_with_username(params) do
-            {:ok, user} ->
-              conn
-              |> put_session(:user_id, user.id)
-              |> put_session(:user_email, user.email)
-              |> put_resp_header("location", "/g/valorant")
-              |> send_resp(302, "")
+      if UserService.user_exists?(email) do
+        render_error(conn, "register", email, "Cet email est déjà utilisé")
+      else
+        case create_user(params) do  # ← Changé (avant: create_user_with_username)
+          {:ok, user} ->
+            conn
+            |> put_session(:user_id, user.id)
+            |> put_session(:user_email, user.email)
+            |> put_resp_header("location", "/onboarding")  # ← CHANGE ICI
+            |> send_resp(302, "")
 
-            {:error, changeset} ->
-              error_msg = extract_error_message(changeset)
-              render_error(conn, "register", email, error_msg)
-          end
+          {:error, changeset} ->
+            error_msg = extract_error_message(changeset)
+            render_error(conn, "register", email, error_msg)
         end
+      end
 
-      {:error, errors} ->
-        error_msg = format_errors(errors)
-        render_error(conn, "register", params["email"], error_msg)
-    end
+    {:error, errors} ->
+      error_msg = format_errors(errors)
+      render_error(conn, "register", params["email"], error_msg)
   end
+end
 
-
-  defp create_user_with_username(params) do
-    username = params["email"] |> String.split("@") |> List.first()
-
+  # APRÈS
+  defp create_user(params) do  # ← Renomme aussi
     user_attrs = %{
       "email" => params["email"],
-      "username" => username,
+      # PAS de username, il le choisira dans onboarding
       "password" => params["password"]
     }
 
     UserService.create_user(user_attrs)
   end
+
 
   defp extract_error_message(changeset) do
     case changeset.errors do

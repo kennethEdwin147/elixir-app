@@ -29,6 +29,14 @@ defmodule MyApp.Router do
 
   plug :put_secure_browser_headers
   plug :match
+
+
+  # ========================================
+  # PLUGS DE SÉCURITÉ (entre match et dispatch)
+  # ========================================
+  plug MyApp.Plugs.RequireOnboarding    # ← AJOUTE ICI
+
+
   plug :dispatch
 
   # ============================================
@@ -38,17 +46,13 @@ defmodule MyApp.Router do
   forward "/auth",         to: MyApp.Controllers.AuthController
   forward "/onboarding",   to: MyApp.Controllers.OnboardingController
   forward "/g",            to: MyApp.Controllers.GameFeedController
+  forward "/",             to: MyApp.Controllers.HomeController
 
   # ============================================
   # Route racine (EN DERNIER)
   # ============================================
 
-  get "/" do
-    # Redirige vers /g/valorant ou affiche home
-    conn
-    |> put_resp_header("location", "/g/valorant")
-    |> send_resp(302, "")
-  end
+
 
   # OU si tu veux vraiment forward:
   # forward "/", to: MyApp.Controllers.HomeController
@@ -61,11 +65,11 @@ defmodule MyApp.Router do
     send_resp(conn, 404, "Not Found")
   end
 
-  defp put_secure_browser_headers(conn, _opts) do
-    conn
-    |> put_resp_header("x-frame-options", "SAMEORIGIN")
-    |> put_resp_header("x-xss-protection", "1; mode=block")
-    |> put_resp_header("x-content-type-options", "nosniff")
-    |> put_resp_header("content-security-policy", "default-src 'self'; style-src 'self' 'unsafe-inline'; script-src 'self' 'unsafe-inline'; img-src 'self' data: https:;")
-  end
+ defp put_secure_browser_headers(conn, _opts) do
+  conn
+  |> put_resp_header("x-frame-options", "SAMEORIGIN")
+  |> put_resp_header("x-xss-protection", "1; mode=block")
+  |> put_resp_header("x-content-type-options", "nosniff")
+  |> put_resp_header("content-security-policy", "default-src 'self'; style-src 'self' 'unsafe-inline'; script-src 'self' 'unsafe-inline' https://cdn.jsdelivr.net; img-src 'self' data: https:;")
+end
 end

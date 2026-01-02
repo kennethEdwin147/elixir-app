@@ -1,0 +1,476 @@
+<!DOCTYPE html>
+<html>
+<head>
+  <meta charset="UTF-8">
+  <meta name="viewport" content="width=device-width, initial-scale=1.0">
+  <title><%= @game.name %> - LFG</title>
+
+</head>
+<body class="">
+
+<style>
+/* ==========================================================================
+   #RESET
+   ========================================================================== */
+*, *::before, *::after {
+  box-sizing: border-box;
+}
+
+* {
+  margin: 0;
+  padding: 0;
+}
+
+html {
+  font-size: 62.5%; /* 1rem = 10px */
+}
+
+body {
+  font-family: system-ui, sans-serif;
+  font-size: 13.75px;
+  font-weight: 350;
+  line-height: 1.4;
+  color: #000;
+}
+
+form {
+    font-family: monospace !important;
+}
+
+
+
+img, picture, video, canvas, svg {
+  display: block;
+  max-width: 100%;
+}
+
+input, button, textarea, select {
+  font: inherit;
+}
+
+a {
+  color: inherit;
+  text-decoration: none;
+}
+
+ul, ol {
+  list-style: none;
+}
+
+
+/* ==========================================================================
+   END #RESET
+========================================================================== */
+
+
+.header {
+  display: flex;
+  align-items: center;
+  justify-content: space-between;
+  background-color: black;
+  color: white;
+  width: 100%;
+
+}
+
+.header-menu {
+    display: flex;
+    align-items: center;
+    justify-content: space-between;
+    gap: 1rem;
+    max-width: 500px;
+}
+
+.header-container {
+    max-width: 100vw;
+    margin-left: auto;
+    margin-right: auto;
+    padding-left: 2rem;
+    padding-right: 2rem;
+}
+
+.container {
+    max-width: 92.5vw;
+    margin-left: auto;
+    margin-right: auto;
+}
+
+.game-feed-layout {
+    padding-top: 0.5rem;
+    display: flex;
+    flex-direction: column;
+    gap: 1rem;
+}
+
+@media screen and (min-width: 600px) {
+  .main-feed-margin {
+    margin-top: 2vh;
+    margin-left: 1.5vw;
+  }
+
+}
+
+
+/* ==========================================================================
+   POST
+========================================================================== */
+
+.post {
+  display: flex;
+  gap: 8px;
+  padding: 6px 0;
+}
+
+.rank {
+  color: #828282;
+  font-size: 11px;
+  text-align: right;
+}
+
+.vote {
+  cursor: pointer;
+}
+
+.arrow.voted {
+  color: #ff4655;
+  font-weight: bold;
+}
+
+.arrow {
+  color: #828282;
+  background: none;
+  border: none;
+}
+
+.arrow:hover {
+  color: #ff4655;
+}
+
+.post-content {
+  flex: 1;
+}
+
+.badge {
+  padding: 2px 6px;
+  border-radius: 3px;
+  font-size: 11px;
+  font-weight: bold;
+}
+
+.badge.plat {
+  background-color: #00d4aa;
+  color: white;
+}
+
+.badge.iron { background-color: #4a4a4a; color: white; }
+.badge.bronze { background-color: #cd7f32; color: white; }
+.badge.silver { background-color: #c0c0c0; color: black; }
+.badge.gold { background-color: #ffd700; color: black; }
+.badge.diamond { background-color: #b9f2ff; color: black; }
+.badge.ascendant { background-color: #2f5d62; color: white; }
+.badge.immortal { background-color: #bb3d65; color: white; }
+.badge.radiant { background-color: #ffffaa; color: black; }
+.badge.plat { background-color: #00d4aa; color: white; }      /* ← AJOUTE */
+
+/* Badges rangs - REMPLACE TOUT */
+.badge.fer { background-color: #4a4a4a; color: white; }
+.badge.bronze { background-color: #cd7f32; color: white; }
+.badge.argent { background-color: #c0c0c0; color: black; }
+.badge.or { background-color: #ffd700; color: black; }
+.badge.platine { background-color: #00d4aa; color: white; }
+.badge.diamant { background-color: #b9f2ff; color: black; }
+.badge.ascendant { background-color: #2f5d62; color: white; }
+.badge.immortel { background-color: #bb3d65; color: white; }
+.badge.radiant { background-color: #ffffaa; color: black; }
+
+.post-meta {
+  font-size: 11px;
+  color: #828282;
+  margin-top: 4px;
+}
+
+/* Ajoute après les badges rangs */
+/* Badges types de posts */
+
+/* LFG variants - Vert (cherche joueurs) */
+.badge.type-lf1 {
+  background-color: #e8f5e9;
+  color: #2e7d32;
+}
+
+.badge.type-lf2 {
+  background-color: #e8f5e9;
+  color: #2e7d32;
+}
+
+.badge.type-lf3 {
+  background-color: #e8f5e9;
+  color: #2e7d32;
+}
+
+.badge.type-lfg {
+  background-color: #e8f5e9;
+  color: #2e7d32;
+}
+
+
+.badge.type-strat {
+  background-color: #e3f2fd;
+  color: #1565c0;
+}
+
+.badge.type-clip {
+  background-color: #f3e5f5;
+  color: #7b1fa2;
+}
+
+/* ==========================================================================
+   END POST
+========================================================================== */
+
+.dashboard-layout {
+    padding-top: 0.5rem;
+    display: flex;
+    column-gap: 1rem;
+}
+
+.dashboard-aside {
+    max-width: 150px;
+
+}
+
+.hidden {
+    display: none;
+}
+
+
+.delete-link {
+  background: none;
+  border: none;
+  padding: 0;
+  color: #828282;
+  font-size: 11px;
+  cursor: pointer;
+  text-decoration: underline;
+}
+
+.delete-link:hover {
+  color: #ff4655;
+}
+
+
+/* ============================================================================
+   TAGS (après la section POST)
+   ========================================================================== */
+
+.post-tags {
+  margin-top: 4px;
+  font-size: 11px;
+  color: #1b7467;
+  line-height: 1.6;
+}
+
+.post-tag {
+  display: inline;
+  margin-right: 6px;
+}
+
+.post-tag::before {
+  content: '#';
+}
+
+.search-bar {
+  width: 100%;
+  max-width: 700px;
+  padding: 1.15rem 0.75rem;
+  border: 0px solid #ccc;
+  font-family: sans-serif;
+  font-size: 12px;
+  resize: vertical;
+  margin-top: 1rem;
+  margin-left: 2rem;
+  margin-bottom: 1rem;
+  background-color: #f0f0f0;
+
+}
+
+input:focus {
+  outline: none;
+}
+
+
+.submit-button {
+  padding: 1rem 2rem;
+  background-color:   #50c8c8ff;
+  border-radius: 0.5rem;
+  font-family: sans-serif;
+  font-size: 15px;
+  color: white;
+  cursor: pointer;
+}
+
+
+
+</style>
+
+<section class="header header-container" style="display:none">
+    <header class="header-menu">
+     <a href="/g/<%= @game.slug %>">
+        <span class="logo">ValoLFG</span>
+     </a>
+        <nav>
+        nouveau |
+        populaire|
+        <a href="/g/<%= @game.slug %>/submit">publier</a>
+        </nav>
+    </header>
+    <footer>
+    <%= if @current_user do %>
+         <form action="/auth/logout" method="post" style="display: inline;">
+            <input type="hidden" name="_csrf_token" value="<%= Plug.CSRFProtection.get_csrf_token() %>">
+            <button type="submit" class="logo" style="background: none; border: none; cursor: pointer; color: inherit; font: inherit;">Déconnexion</button>
+        </form>
+    <% else %>
+        <a href="/auth/login" class="logo">Connexion</a>
+    <% end %>
+    </footer>
+</section>
+
+<section style="display: flex; align-items: center;
+        justify-content: space-between; width: 100%;">
+  <article
+    style="display: flex; align-items: center; column-gap: 1rem;
+          width: 100%;">
+      <input type="text" name="tags" placeholder="Ex: ranked, mic, chill" class="search-bar">
+      <button onclick="window.location.href='/g/<%= @game.slug %>/submit'"
+          style="padding: 0.5rem 1rem; cursor: pointer;
+                background-color: black; color:white;
+                font-family:system-ui;
+                font-weight: 400;
+                font-size: 9px; border-color:blueviolet;"
+        >
+         Nouveau Post
+        </button>
+
+  </article>
+  <nav style="padding: 0rem 2rem;">
+     <%= if @current_user do %>
+         <form action="/auth/logout" method="post" style="display: inline;">
+            <input type="hidden" name="_csrf_token" value="<%= Plug.CSRFProtection.get_csrf_token() %>">
+            <button type="submit" class="logo" style="background: none; border: none; cursor: pointer; color: inherit; font: inherit;">Déconnexion</button>
+        </form>
+    <% else %>
+        <a
+         style="font-family: verdana;"
+         href="/auth/login" class="logo">Connexion</a>
+    <% end %>
+  </nav>
+</section>
+
+<section class="container game-feed-layout">
+
+<div class="dashboard-layout">
+
+<aside class="dashboard-aside hidden">
+    <p>Mes serveurs</p>
+    <p>Mes messages</p>
+</aside>
+
+<main class="main-feed-margin">
+
+<!-- Si aucun post -->
+<%= if length(@posts) == 0 do %>
+  <p style="color: #828282; margin-top: 2rem;">Aucun post pour l'instant. <a href="/g/<%= @game.slug %>/submit" style="color: #9b46ff;">Soyez le premier à publier!</a></p>
+<% else %>
+
+  <!-- Loop sur tous les posts -->
+  <%= for {post, index} <- Enum.with_index(@posts, 1) do %>
+    <article class="post">
+      <!-- Numéro de ranking -->
+      <span class="rank"><%= index %>.</span>
+
+      <!-- Vote (formulaire) -->
+      <!-- Vote (formulaire) -->
+      <div class="vote">
+        <form action="/g/<%= @game.slug %>/posts/<%= post.id %>/upvote" method="post">
+          <input type="hidden" name="_csrf_token" value="<%= Plug.CSRFProtection.get_csrf_token() %>">
+          <button type="submit" class="arrow <%= if MyApp.Services.VoteService.has_voted?(@current_user, "post", post.id), do: "voted" %>">▲</button>
+        </form>
+      </div>
+
+      <!-- Contenu principal -->
+      <div class="post-content">
+        <!-- Titre avec badges et message -->
+        <div class="post-title">
+          <!-- Badge type (LFG/Strat/Clip) -->
+          <span class="badge type-<%= post.type %>"><%= String.upcase(post.type) %></span>
+
+          <!-- Si LFG: affiche rang + région -->
+          <%= if post.type == "lfg" do %>
+            <span class="badge <%= String.downcase(String.replace(post.rank, " ", "")) %>"><%= post.rank %></span>
+            <span class="region">[<%= post.region %>]</span>
+          <% end %>
+
+          <!-- Lien vers post détail -->
+          <a href="/g/<%= @game.slug %>/posts/<%= post.id %>">
+            <%= MyApp.Helpers.HtmlHelper.escape(post.description) %>
+          </a>
+
+          <!-- Si Strat/Clip: affiche lien externe -->
+         <%= if post.url do %>
+          <div style="margin-top: 0.25rem; font-size: 11px;">
+            <a href="<%= post.url %>" target="_blank" rel="noopener" style="color: #9b46ff; font-weight: 500;">
+              <%= post.url %>
+            </a>
+          </div>
+        <% end %>
+        </div>
+
+        <!-- Contact (seulement pour LFG) -->
+        <%= if post.type == "lfg" && post.contact && post.contact != "" do %>
+          <div class="post-contact">
+            Contact: <%= MyApp.Helpers.HtmlHelper.escape(post.contact) %>
+          </div>
+        <% end %>
+
+        <!-- TAGS - AJOUTE ICI -->
+        <%= if post.tags && length(post.tags) > 0 do %>
+          <div class="post-tags">
+            <%= for tag <- post.tags do %>
+              <span class="post-tag"><%= tag %></span>
+            <% end %>
+          </div>
+        <% end %>
+
+        <!-- Métadonnées -->
+        <div class="post-meta">
+          <span class="points"><%= post.score %> point<%= if post.score > 1, do: "s", else: "" %></span>
+          <span class="separator"> | </span>
+          <span class="author">par <%= post.user.username %></span>
+          <span class="separator"> | </span>
+          <span class="time"><%= post.time_ago %></span>
+
+          <!-- AJOUTE: Nombre de commentaires SEULEMENT si > 0 -->
+          <%= if post.comment_count > 0 do %>
+            <span class="separator"> | </span>
+            <a href="/g/<%= @game.slug %>/posts/<%= post.id %>" style="color: #828282;">
+              <%= post.comment_count %> commentaire<%= if post.comment_count > 1, do: "s", else: "" %>
+            </a>
+          <% end %>
+
+
+        </div>
+      </div>
+    </article>
+  <% end %>
+
+<% end %>
+
+</main>
+
+
+
+</section>
+
+</body>
+</html>

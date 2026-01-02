@@ -38,34 +38,32 @@ defmodule MyApp.Controllers.AuthControllerTest do
   # TESTS REGISTRATION
   # ============================================================================
 
-  test "successful registration creates user and redirects" do
-    conn = conn(:post, "/auth/register", %{
-      "email" => "newuser@test.com",
-      "password" => "password123",
-      "password_confirm" => "password123"
-    })
-    |> init_test_session(%{})
-    |> put_req_header("content-type", "application/x-www-form-urlencoded")
-    |> Router.call(@opts)
+# APRÈS
+test "successful registration creates user and redirects" do
+  conn = conn(:post, "/auth/register", %{
+    "email" => "newuser@test.com",
+    "password" => "password123",
+    "password_confirm" => "password123"
+  })
+  |> init_test_session(%{})
+  |> put_req_header("content-type", "application/x-www-form-urlencoded")
+  |> Router.call(@opts)
 
-    # Vérifie redirect
-    assert conn.status == 302
-    assert get_resp_header(conn, "location") == ["/g/valorant"]
+  assert conn.status == 302
+  assert get_resp_header(conn, "location") == ["/g/valorant"]
 
-    # Vérifie user créé en DB
-    user = Repo.get_by(User, email: "newuser@test.com")
-    assert user != nil
-    assert user.username == "newuser"
+  user = Repo.get_by(User, email: "newuser@test.com")
+  assert user != nil
+  assert user.username == nil  # ← Username pas encore choisi
+  assert user.onboarding_completed == false  # ← Onboarding pas fait
 
-    # Vérifie session créée
-    assert get_session(conn, :user_id) == user.id
-  end
+  assert get_session(conn, :user_id) == user.id
+end
 
   test "registration with existing email fails" do
     # Crée user d'abord
     UserService.create_user(%{
       "email" => "existing@test.com",
-      "username" => "existing",
       "password" => "password123"
     })
 
@@ -121,7 +119,6 @@ defmodule MyApp.Controllers.AuthControllerTest do
     # Crée user
     {:ok, user} = UserService.create_user(%{
       "email" => "test@test.com",
-      "username" => "test",
       "password" => "password123"
     })
 
@@ -144,7 +141,6 @@ defmodule MyApp.Controllers.AuthControllerTest do
     # Crée user
     UserService.create_user(%{
       "email" => "test@test.com",
-      "username" => "test",
       "password" => "password123"
     })
 
@@ -180,11 +176,11 @@ defmodule MyApp.Controllers.AuthControllerTest do
 
   test "logout destroys session and redirects" do
     # Crée session
-    conn = conn(:get, "/auth/logout")
+    conn = conn(:post, "/auth/logout")  # ← POST maintenant
     |> init_test_session(%{user_id: 123, user_email: "test@test.com"})
     |> Router.call(@opts)
 
     assert conn.status == 302
-    assert get_resp_header(conn, "location") == ["/login"]
+    assert get_resp_header(conn, "location") == ["/auth/login"]
   end
 end

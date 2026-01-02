@@ -164,4 +164,24 @@ defmodule MyApp.Services.UserService do
     Repo.delete_all(query)
   end
 
+
+
+    @doc """
+  Complete l'onboarding d'un user (username + display_name).
+  """
+  def complete_onboarding(user_id, attrs) do
+    user = find_by_id(user_id)
+
+    user
+    |> User.onboarding_changeset(attrs)
+    |> Repo.update()
+  end
+
+  @doc """
+  Vérifie si un user a complété son onboarding.
+  """
+  def onboarding_completed?(user) do
+    user.onboarding_completed == true
+  end
+
 end

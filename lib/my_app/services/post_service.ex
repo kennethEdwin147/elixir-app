@@ -38,6 +38,21 @@ defmodule MyApp.Services.PostService do
     |> Enum.map(&add_comment_count/1)  # ← AJOUTE
   end
 
+ def list_recent(limit \\ 10) do
+  import Ecto.Query
+
+  Post
+  |> where([p], p.active == true)
+  |> where([p], p.game == "valorant")
+  |> order_by([p], desc: p.inserted_at)
+  |> limit(^limit)
+  |> preload(:user)
+  |> Repo.all()
+  |> Enum.map(&decode_tags/1)        # ← AJOUTE
+  |> Enum.map(&add_time_ago/1)       # ← AJOUTE
+  |> Enum.map(&add_comment_count/1)  # ← AJOUTE
+end
+
   @doc """
   Récupère un post par ID.
   """
@@ -84,14 +99,15 @@ defmodule MyApp.Services.PostService do
   Supprime un post (vérifie ownership).
   """
   def delete(post_id, user_id) do
-    case get(post_id) do
-      nil ->
-        {:error, :not_found}
-
-      post ->
-        if post.user_id == user_id do
-          Repo.delete(post)
-        else
+  case get(post_id) do
+    nil ->
+      {:error, :not_found}
+    post ->
+      if post.user_id == user_id do
+        post
+        |> Ecto.Changeset.change(%{active: false})  # ← Soft delete
+        |> Repo.update()
+      else
           {:error, :unauthorized}
         end
     end
