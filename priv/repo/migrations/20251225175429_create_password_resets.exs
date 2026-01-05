@@ -2,16 +2,19 @@ defmodule MyApp.Repo.Migrations.CreatePasswordResets do
   use Ecto.Migration
 
   def change do
-    create table(:password_resets) do
-      # Ajoute une référence à ta table users
-      add :user_id, references(:users, on_delete: :delete_all), null: false
+    create table(:password_resets, primary_key: false) do
+      add :id, :binary_id, primary_key: true
+      add :user_id, references(:users, type: :binary_id, on_delete: :delete_all), null: false
       add :token, :string, null: false
-      add :expires_at, :naive_datetime, null: false
+      add :expires_at, :utc_datetime, null: false
 
-      timestamps() # Crée inserted_at et updated_at automatiquement
+      timestamps(type: :utc_datetime)
     end
 
-    # Optionnel mais recommandé : un index pour chercher le token rapidement
+    # Index pour chercher le token rapidement
     create index(:password_resets, [:token])
+
+    # Index pour chercher par user_id
+    create unique_index(:password_resets, [:user_id])
   end
 end

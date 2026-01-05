@@ -26,8 +26,17 @@ defmodule MyApp.Plugs.LoadUser do
     user_id = get_session(conn, :user_id)
 
     if user_id do
-      user = MyApp.Repo.get(User, user_id)
-      assign(conn, :current_user, user)
+      try do
+        user = MyApp.Repo.get(User, user_id)
+        assign(conn, :current_user, user)
+      rescue
+        # Si l'ID est invalide (ex: ancien integer au lieu d'UUID)
+        # Clear la session et continue
+        Ecto.Query.CastError ->
+          conn
+          |> configure_session(drop: true)
+          |> assign(:current_user, nil)
+      end
     else
       assign(conn, :current_user, nil)
     end

@@ -200,6 +200,20 @@ input:focus {
                 required />
         </div>
 
+        <div class="form-field">
+         <input
+                    id="remember_me"
+                    name="remember_me"
+                    type="checkbox"
+                    value="1" />
+            <label for="remember_me">
+                            Remember me
+
+            </label>
+
+
+        </div>
+
         <div class="form-margin">
             <input class="form-login-button" type="submit" value="login">
         </div>

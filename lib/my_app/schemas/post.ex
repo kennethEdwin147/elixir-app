@@ -3,6 +3,9 @@ defmodule MyApp.Schemas.Post do
   import Ecto.Changeset
   alias MyApp.Schemas.User
 
+  @primary_key {:id, :binary_id, autogenerate: true}
+  @foreign_key_type :binary_id
+
   schema "posts" do
     field :type, :string, default: "lfg"
     field :url, :string
@@ -17,7 +20,7 @@ defmodule MyApp.Schemas.Post do
     field :score, :integer, default: 0
 
     belongs_to :user, User
-    timestamps()
+    timestamps(type: :utc_datetime)
   end
 
   def changeset(post, attrs) do

@@ -2,15 +2,19 @@ defmodule MyApp.Schemas.User do
   use Ecto.Schema
   import Ecto.Changeset
 
+  @primary_key {:id, :binary_id, autogenerate: true}
+  @foreign_key_type :binary_id
+
   schema "users" do
     field :email, :string
     field :username, :string
-    field :display_name, :string  # ← NOUVEAU
+    field :display_name, :string
     field :password_hash, :string
     field :password, :string, virtual: true
-    field :onboarding_completed, :boolean, default: false  # ← NOUVEAU
+    field :onboarding_completed, :boolean, default: false
+    field :is_premium, :boolean, default: false
 
-    timestamps()
+    timestamps(type: :utc_datetime)
   end
 
   @doc """
@@ -22,8 +26,8 @@ defmodule MyApp.Schemas.User do
     |> validate_required([:username, :display_name])
     |> normalize_username()
     |> validate_length(:username, min: 3, max: 20)
-    |> validate_format(:username, ~r/^[a-zA-Z0-9_-]+$/, message: "only letters, numbers, underscore and dash")  # ← Ajoute -
-    # PAS de unique_constraint sur username (duplicates OK)
+    |> validate_format(:username, ~r/^[a-zA-Z0-9_-]+$/, message: "only letters, numbers, underscore and dash")
+    |> unique_constraint(:username)
     |> put_change(:onboarding_completed, true)
   end
 
@@ -35,7 +39,7 @@ defmodule MyApp.Schemas.User do
     |> cast(attrs, [:email, :username, :display_name])
     |> validate_required([:username])
     |> normalize_username()
-    # RETIRE unique_constraint sur username
+    |> unique_constraint(:username)
     |> unique_constraint(:email)
   end
 
@@ -51,7 +55,6 @@ defmodule MyApp.Schemas.User do
     |> validate_format(:email, ~r/^[^\s]+@[^\s]+$/)
     |> validate_length(:password, min: 6)
     |> unique_constraint(:email)
-    # RETIRE unique_constraint sur username (duplicates OK)
     |> put_password_hash()
   end
 

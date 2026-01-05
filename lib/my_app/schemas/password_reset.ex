@@ -2,14 +2,17 @@ defmodule MyApp.Schemas.PasswordReset do
   use Ecto.Schema
   import Ecto.Changeset
 
+  @primary_key {:id, :binary_id, autogenerate: true}
+  @foreign_key_type :binary_id
+
   schema "password_resets" do
     field :token, :string
-    field :expires_at, :naive_datetime  # <-- Change utc_datetime par naive_datetime
+    field :expires_at, :utc_datetime
 
     # Relation vers l'utilisateur
     belongs_to :user, MyApp.Schemas.User
 
-    timestamps()
+    timestamps(type: :utc_datetime)
   end
 
   def changeset(struct, attrs) do

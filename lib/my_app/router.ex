@@ -45,17 +45,25 @@ defmodule MyApp.Router do
 
   forward "/auth",         to: MyApp.Controllers.AuthController
   forward "/onboarding",   to: MyApp.Controllers.OnboardingController
-  forward "/g",            to: MyApp.Controllers.GameFeedController
-  forward "/",             to: MyApp.Controllers.HomeController
 
   # ============================================
-  # Route racine (EN DERNIER)
+  # Route racine
   # ============================================
 
+  get "/" do
+    current_user = conn.assigns[:current_user]
 
+    html = EEx.eval_file(
+      "lib/my_app/templates/landing.html.eex",
+      assigns: [
+        current_user: current_user
+      ]
+    )
 
-  # OU si tu veux vraiment forward:
-  # forward "/", to: MyApp.Controllers.HomeController
+    conn
+    |> put_resp_content_type("text/html", "utf-8")
+    |> send_resp(200, html)
+  end
 
   # ============================================
   # 404

@@ -2,18 +2,22 @@ defmodule MyApp.Repo.Migrations.CreateUsers do
   use Ecto.Migration
 
   def change do
-    create table(:users) do
+    create table(:users, primary_key: false) do
+      add :id, :binary_id, primary_key: true
       add :email, :string, null: false
       add :username, :string, null: false
+      add :display_name, :string
       add :password_hash, :string, null: false
+      add :onboarding_completed, :boolean, default: false
+      add :is_premium, :boolean, default: false
 
-      timestamps()  # Ajoute inserted_at et updated_at automatiquement
+      timestamps(type: :utc_datetime)
     end
 
     # Index pour recherche rapide par email
     create unique_index(:users, [:email])
 
-    # Index pour recherche rapide par username (URL publique)
+    # Index pour recherche rapide par username (handle public)
     create unique_index(:users, [:username])
   end
 end
