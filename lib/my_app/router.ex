@@ -50,6 +50,19 @@ defmodule MyApp.Router do
   # Route racine
   # ============================================
 
+  get "/test-matching" do
+    html = EEx.eval_file(
+      "lib/my_app/templates/test-matching.html.eex",
+      assigns: [
+        current_user: conn.assigns[:current_user]
+      ]
+    )
+
+    conn
+    |> put_resp_content_type("text/html", "utf-8")
+    |> send_resp(200, html)
+  end
+
   get "/" do
     current_user = conn.assigns[:current_user]
 
@@ -64,6 +77,8 @@ defmodule MyApp.Router do
     |> put_resp_content_type("text/html", "utf-8")
     |> send_resp(200, html)
   end
+
+
 
   # ============================================
   # 404

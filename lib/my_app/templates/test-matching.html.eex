@@ -1,0 +1,63 @@
+<!DOCTYPE html>
+<html>
+<head>
+<meta charset="UTF-8">
+<meta name="viewport" content="width=device-width, initial-scale=1.0">
+
+<style>
+*, *::before, *::after {
+  box-sizing: border-box;
+}
+
+.texte {
+  margin: 0;
+  padding: 0;
+}
+</style>
+</head>
+<body>
+
+<div>
+  <p>5 nouveaux joueurs compatibles aujourd'hui</p>
+</div>
+
+<div>
+  <button>←</button>
+  <span>1/5</span>
+  <button>→</button>
+</div>
+
+<div>
+  <h1>@sarah_lurk</h1>
+
+  <div style="display: flex; align-items: center; justify-content: space-between; gap: 5px;
+        flex-wrap: wrap; max-width: 500px;">
+  <p class="texte">Pourquoi Sarah?</p>
+  <p class="texte">→ Même rank range que toi</p>
+  <p class="texte">→ Même région</p>
+  <p class="texte">→ Joue aux mêmes horaires</p>
+  <p class="texte">→ Cherche un duo long terme</p>
+</div>
+
+  <p>Platine 1 • EU West</p>
+
+  <div>
+    <p>Main Cypher • Sentinelle</p>
+    <p>Disponible: Mar, Jeu 19h-23h</p>
+    <p>"Lurker Cypher main. Je setup le site, vous rushez. Besoin d'une équipe qui trust les calls et communique bien."</p>
+
+    <p>Style de jeu:</p>
+    <span>Tryhard</span>
+    <span>Mic ON obligatoire</span>
+    <span>Lurker</span>
+    <span>One-trick</span>
+  </div>
+
+  <p>En ligne maintenant</p>
+
+  <button>Ça m'intéresse →</button>
+  <button>Passer</button>
+</div>
+
+</body>
+</html>
