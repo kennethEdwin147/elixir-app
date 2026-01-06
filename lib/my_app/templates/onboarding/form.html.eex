@@ -186,7 +186,7 @@ input:focus {
 </section>
 
 <section class="form-container">
-    <form action="/onboarding" method="post">
+    <form action="/profile-setup" method="post">
 
     <%# ============================================================================
     # CSRF TOKEN
@@ -205,7 +205,7 @@ input:focus {
     <% end %>
 
 
-    <form class="" method="POST" action="/onboarding">
+    <form class="" method="POST" action="/profile-setup">
 
     <div class="form-field form-field-block form-margin">
       <label>Username *</label>

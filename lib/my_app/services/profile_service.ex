@@ -5,6 +5,7 @@ defmodule MyApp.Services.ProfileService do
 
   ## CRUD
   - create_profile(attrs)                    # Créer profile
+  - create_with_game_data(user, game_id, attrs)  # Créer profile + game_specific_data (transaction)
   - update_profile(id, attrs)                # Modifier
   - activate_profile(id)                     # Activer (visible)
   - deactivate_profile(id)                   # Désactiver (invisible)
@@ -56,6 +57,69 @@ defmodule MyApp.Services.ProfileService do
     %Profile{}
     |> Profile.changeset(attrs)
     |> Repo.insert()
+  end
+
+  @doc """
+  Crée un profile avec game_specific_data en une transaction.
+  Utilisé pour l'onboarding.
+
+  ## Exemples
+      iex> create_with_game_data(user, game_id, %{
+        "bio" => "Jett main",
+        "rank" => "Platine 2",
+        "main_agent" => "Jett",
+        "secondary_agent" => "Reyna"
+      })
+      {:ok, %Profile{}}
+  """
+  def create_with_game_data(user, game_id, attrs) do
+    Repo.transaction(fn ->
+      # Extraire game_specific_data du attrs
+      main_agent = attrs["main_agent"]
+      secondary_agent = attrs["secondary_agent"]
+
+      # Créer le profile
+      profile =
+        %Profile{}
+        |> Profile.changeset(%{
+          user_id: user.id,
+          game_id: game_id,
+          bio: attrs["bio"],
+          age_range: attrs["age_range"],
+          rank: attrs["rank"],
+          region: attrs["region"],
+          playstyle: attrs["playstyle"],
+          voice_required: attrs["voice_required"] == "true" || attrs["voice_required"] == true,
+          vibe_tags: attrs["vibe_tags"] || [],
+          active: true,
+          last_active_at: DateTime.utc_now() |> DateTime.truncate(:second)
+        })
+        |> Repo.insert!()
+
+      # Créer game_specific_data pour main_agent
+      if main_agent && main_agent != "" do
+        %GameSpecificData{}
+        |> GameSpecificData.changeset(%{
+          profile_id: profile.id,
+          key: "main_agent",
+          value: main_agent
+        })
+        |> Repo.insert!()
+      end
+
+      # Créer game_specific_data pour secondary_agent si présent
+      if secondary_agent && secondary_agent != "" && secondary_agent != "Aucun" do
+        %GameSpecificData{}
+        |> GameSpecificData.changeset(%{
+          profile_id: profile.id,
+          key: "secondary_agent",
+          value: secondary_agent
+        })
+        |> Repo.insert!()
+      end
+
+      profile
+    end)
   end
 
   @doc """

@@ -1,0 +1,129 @@
+<!DOCTYPE html>
+<html lang="fr">
+<head>
+  <meta charset="UTF-8">
+  <meta name="viewport" content="width=device-width, initial-scale=1.0">
+  <title>Créer mon profil <%= @game.name %></title>
+</head>
+<body>
+  <h1>Créer mon profil <%= @game.name %></h1>
+
+  <p>Bienvenue <strong><%= @current_user.display_name || @current_user.username %></strong> !</p>
+  <p>Remplis ton profil pour commencer à rencontrer des joueurs.</p>
+
+  <%= if @errors do %>
+    <div style="color: red; border: 1px solid red; padding: 10px; margin: 10px 0;">
+      <strong>Erreurs :</strong>
+      <ul>
+        <%= for {field, {message, _}} <- @errors do %>
+          <li><%= field %>: <%= message %></li>
+        <% end %>
+      </ul>
+    </div>
+  <% end %>
+
+  <form method="POST" action="/onboarding/<%= @game.slug %>">
+    <h2>📝 Step 1 - Basics</h2>
+
+    <fieldset>
+      <legend>Bio (optionnel)</legend>
+      <textarea name="bio" rows="4" cols="50" placeholder="Dis en un peu plus sur toi..."></textarea>
+    </fieldset>
+
+    <fieldset>
+      <legend>Tranche d'âge</legend>
+      <%= for age_range <- @age_ranges do %>
+        <label>
+          <input type="radio" name="age_range" value="<%= age_range %>" required>
+          <%= age_range %> ans
+        </label><br>
+      <% end %>
+    </fieldset>
+
+    <hr>
+
+    <h2>🎮 Step 2 - Valorant</h2>
+
+    <fieldset>
+      <legend>Ton rang actuel</legend>
+      <select name="rank" required>
+        <option value="">-- Choisis ton rang --</option>
+        <%= for rank <- @ranks do %>
+          <option value="<%= rank %>"><%= rank %></option>
+        <% end %>
+      </select>
+    </fieldset>
+
+    <fieldset>
+      <legend>Ta région</legend>
+      <%= for region <- @regions do %>
+        <label>
+          <input type="radio" name="region" value="<%= region %>" required>
+          <%= region %>
+        </label><br>
+      <% end %>
+    </fieldset>
+
+    <fieldset>
+      <legend>Agent principal</legend>
+      <select name="main_agent" required>
+        <option value="">-- Choisis ton main --</option>
+        <%= for agent <- @agents do %>
+          <option value="<%= agent %>"><%= agent %></option>
+        <% end %>
+      </select>
+    </fieldset>
+
+    <fieldset>
+      <legend>Agent secondaire (optionnel)</legend>
+      <select name="secondary_agent">
+        <option value="">Aucun</option>
+        <%= for agent <- @agents do %>
+          <option value="<%= agent %>"><%= agent %></option>
+        <% end %>
+      </select>
+    </fieldset>
+
+    <hr>
+
+    <h2>⚙️ Step 3 - Préférences</h2>
+
+    <fieldset>
+      <legend>Style de jeu</legend>
+      <%= for {value, label} <- @playstyles do %>
+        <label>
+          <input type="radio" name="playstyle" value="<%= value %>" required>
+          <%= label %>
+        </label><br>
+      <% end %>
+    </fieldset>
+
+    <fieldset>
+      <legend>Vocal</legend>
+      <label>
+        <input type="checkbox" name="voice_required" value="true">
+        Mic ON obligatoire
+      </label>
+    </fieldset>
+
+    <fieldset>
+      <legend>Vibe tags (sélectionne ceux qui te correspondent)</legend>
+      <%= for tag <- @vibe_tags do %>
+        <label>
+          <input type="checkbox" name="vibe_tags[]" value="<%= tag %>">
+          <%= tag %>
+        </label><br>
+      <% end %>
+    </fieldset>
+
+    <hr>
+
+    <button type="submit" style="padding: 10px 20px; font-size: 16px; background: #4CAF50; color: white; border: none; cursor: pointer;">
+      ✅ Créer mon profil
+    </button>
+  </form>
+
+  <br>
+  <a href="/auth/logout" style="color: #999;">← Se déconnecter</a>
+</body>
+</html>

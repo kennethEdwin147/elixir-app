@@ -36,7 +36,7 @@ defmodule MyApp.Plugs.RequireOnboarding do
       conn
     else
       # User connecté → check onboarding pour certaines routes
-      skip_paths = ["/onboarding", "/auth/"]
+      skip_paths = ["/profile-setup", "/onboarding", "/auth/"]
 
       should_skip? = Enum.any?(skip_paths, fn path ->
         String.starts_with?(conn.request_path, path)
@@ -50,7 +50,7 @@ defmodule MyApp.Plugs.RequireOnboarding do
           conn
         else
           conn
-          |> put_resp_header("location", "/onboarding")
+          |> put_resp_header("location", "/profile-setup")
           |> send_resp(302, "")
           |> halt()
         end

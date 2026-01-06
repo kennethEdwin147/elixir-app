@@ -44,7 +44,94 @@ defmodule MyApp.Router do
   # ============================================
 
   forward "/auth",         to: MyApp.Controllers.AuthController
-  forward "/onboarding",   to: MyApp.Controllers.OnboardingController
+
+  # Onboarding de base (username, display_name)
+  get "/profile-setup" do
+    current_user = conn.assigns[:current_user]
+
+    unless current_user do
+      conn
+      |> put_resp_header("location", "/auth/login")
+      |> send_resp(302, "")
+    else
+      if current_user.onboarding_completed do
+        conn
+        |> put_resp_header("location", "/")
+        |> send_resp(302, "")
+      else
+        suggested_username =
+          current_user.email
+          |> String.split("@")
+          |> List.first()
+          |> String.replace(~r/[^a-zA-Z0-9_-]/, "")
+          |> String.slice(0..19)
+
+        html = EEx.eval_file(
+          "lib/my_app/templates/onboarding/form.html.eex",
+          assigns: %{
+            current_user: current_user,
+            suggested_username: suggested_username,
+            error_msg: nil
+          }
+        )
+
+        conn
+        |> put_resp_content_type("text/html", "utf-8")
+        |> send_resp(200, html)
+      end
+    end
+  end
+
+  post "/profile-setup" do
+    current_user = conn.assigns[:current_user]
+
+    unless current_user do
+      conn
+      |> put_resp_header("location", "/auth/login")
+      |> send_resp(302, "")
+    else
+      params = conn.body_params
+
+      case current_user
+           |> MyApp.Schemas.User.onboarding_changeset(params)
+           |> MyApp.Repo.update() do
+        {:ok, _updated_user} ->
+          conn
+          |> put_session(:flash_success, "Bienvenue #{params["display_name"]} ! 👋")
+          |> put_resp_header("location", "/")
+          |> send_resp(302, "")
+
+        {:error, changeset} ->
+          error_msg =
+            changeset.errors
+            |> Enum.map(fn {field, {msg, _}} -> "#{field}: #{msg}" end)
+            |> Enum.join(", ")
+
+          suggested_username =
+            current_user.email
+            |> String.split("@")
+            |> List.first()
+            |> String.replace(~r/[^a-zA-Z0-9_-]/, "")
+            |> String.slice(0..19)
+
+          html = EEx.eval_file(
+            "lib/my_app/templates/onboarding/form.html.eex",
+            assigns: %{
+              current_user: current_user,
+              suggested_username: suggested_username,
+              error_msg: error_msg
+            }
+          )
+
+          conn
+          |> put_resp_content_type("text/html", "utf-8")
+          |> send_resp(400, html)
+      end
+    end
+  end
+
+  # Onboarding par jeu (profils spécifiques)
+  forward "/onboarding",   to: MyApp.Controllers.GameOnboardingController
 
   # ============================================
   # Route racine
@@ -65,15 +152,18 @@ defmodule MyApp.Router do
 
   get "/" do
     current_user = conn.assigns[:current_user]
+    flash_success = get_session(conn, :flash_success)
 
     html = EEx.eval_file(
       "lib/my_app/templates/landing.html.eex",
       assigns: [
-        current_user: current_user
+        current_user: current_user,
+        flash_success: flash_success
       ]
     )
 
     conn
+    |> delete_session(:flash_success)
     |> put_resp_content_type("text/html", "utf-8")
     |> send_resp(200, html)
   end
