@@ -1,4 +1,4 @@
-defmodule MyApp.Services.UserService do
+defmodule MyApp.Contexts.User do
   @moduledoc """
   Service pour gérer les utilisateurs avec Ecto.
   Remplace UserStorage (JSON).

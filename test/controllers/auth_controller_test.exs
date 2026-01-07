@@ -5,7 +5,7 @@ defmodule MyApp.Controllers.AuthControllerTest do
 
   alias MyApp.{Router, Repo}
   alias MyApp.Schemas.User
-  alias MyApp.Services.UserService
+  alias MyApp.Contexts.User, as: UserContext
 
   @opts Router.init([])
 
@@ -62,7 +62,7 @@ end
 
   test "registration with existing email fails" do
     # Crée user d'abord
-    UserService.create_user(%{
+    UserContext.create_user(%{
       "email" => "existing@test.com",
       "password" => "password123"
     })
@@ -117,7 +117,7 @@ end
 
   test "login with correct credentials succeeds" do
     # Crée user
-    {:ok, user} = UserService.create_user(%{
+    {:ok, user} = UserContext.create_user(%{
       "email" => "test@test.com",
       "password" => "password123"
     })
@@ -139,7 +139,7 @@ end
 
   test "login with wrong password fails" do
     # Crée user
-    UserService.create_user(%{
+    UserContext.create_user(%{
       "email" => "test@test.com",
       "password" => "password123"
     })

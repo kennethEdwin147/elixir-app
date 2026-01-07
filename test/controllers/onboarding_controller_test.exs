@@ -5,7 +5,7 @@ defmodule MyApp.Controllers.OnboardingControllerTest do
 
   alias MyApp.{Router, Repo}
   alias MyApp.Schemas.User
-  alias MyApp.Services.UserService
+  alias MyApp.Contexts.User, as: UserContext
 
   @opts Router.init([])
 
@@ -20,7 +20,7 @@ defmodule MyApp.Controllers.OnboardingControllerTest do
 
   test "GET /onboarding shows form if not completed" do
     # Crée user sans onboarding
-    {:ok, user} = UserService.create_user(%{
+    {:ok, user} = UserContext.create_user(%{
       "email" => "newuser@test.com",
       "password" => "password123"
     })
@@ -37,12 +37,12 @@ defmodule MyApp.Controllers.OnboardingControllerTest do
 
   test "GET /onboarding redirects to dashboard if already completed" do
     # Crée user avec onboarding complété
-    {:ok, user} = UserService.create_user(%{
+    {:ok, user} = UserContext.create_user(%{
       "email" => "completed@test.com",
       "password" => "password123"
     })
 
-    {:ok, _} = UserService.complete_onboarding(user.id, %{
+    {:ok, _} = UserContext.complete_onboarding(user.id, %{
       "username" => "completed_user",
       "display_name" => "Completed User"
     })
@@ -70,7 +70,7 @@ defmodule MyApp.Controllers.OnboardingControllerTest do
 
   test "POST /onboarding completes onboarding with valid data" do
     # Crée user
-    {:ok, user} = UserService.create_user(%{
+    {:ok, user} = UserContext.create_user(%{
       "email" => "test@test.com",
       "password" => "password123"
     })
@@ -95,7 +95,7 @@ defmodule MyApp.Controllers.OnboardingControllerTest do
   end
 
   test "POST /onboarding with display_name saves both fields" do
-    {:ok, user} = UserService.create_user(%{
+    {:ok, user} = UserContext.create_user(%{
       "email" => "test@test.com",
       "password" => "password123"
     })
@@ -118,17 +118,17 @@ defmodule MyApp.Controllers.OnboardingControllerTest do
 
   test "POST /onboarding allows duplicate usernames" do
     # Crée premier user avec username
-    {:ok, user1} = UserService.create_user(%{
+    {:ok, user1} = UserContext.create_user(%{
       "email" => "user1@test.com",
       "password" => "password123"
     })
-    UserService.complete_onboarding(user1.id, %{
+    UserContext.complete_onboarding(user1.id, %{
       "username" => "duplicate_name",
       "display_name" => "User One"
     })
 
     # Crée deuxième user
-    {:ok, user2} = UserService.create_user(%{
+    {:ok, user2} = UserContext.create_user(%{
       "email" => "user2@test.com",
       "password" => "password123"
     })
@@ -153,7 +153,7 @@ defmodule MyApp.Controllers.OnboardingControllerTest do
   # ============================================================================
 
   test "POST /onboarding fails with username too short" do
-    {:ok, user} = UserService.create_user(%{
+    {:ok, user} = UserContext.create_user(%{
       "email" => "test@test.com",
       "password" => "password123"
     })
@@ -175,7 +175,7 @@ defmodule MyApp.Controllers.OnboardingControllerTest do
   end
 
   test "POST /onboarding fails with username too long" do
-    {:ok, user} = UserService.create_user(%{
+    {:ok, user} = UserContext.create_user(%{
       "email" => "test@test.com",
       "password" => "password123"
     })
@@ -193,7 +193,7 @@ defmodule MyApp.Controllers.OnboardingControllerTest do
   end
 
   test "POST /onboarding fails with invalid characters in username" do
-    {:ok, user} = UserService.create_user(%{
+    {:ok, user} = UserContext.create_user(%{
       "email" => "test@test.com",
       "password" => "password123"
     })
@@ -212,7 +212,7 @@ defmodule MyApp.Controllers.OnboardingControllerTest do
   end
 
   test "POST /onboarding fails with empty username" do
-    {:ok, user} = UserService.create_user(%{
+    {:ok, user} = UserContext.create_user(%{
       "email" => "test@test.com",
       "password" => "password123"
     })
@@ -231,7 +231,7 @@ defmodule MyApp.Controllers.OnboardingControllerTest do
   end
 
   test "POST /onboarding fails with empty display_name" do
-    {:ok, user} = UserService.create_user(%{
+    {:ok, user} = UserContext.create_user(%{
       "email" => "test@test.com",
       "password" => "password123"
     })

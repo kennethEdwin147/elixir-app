@@ -1,0 +1,175 @@
+<!DOCTYPE html>
+<html lang="fr">
+<head>
+  <meta charset="UTF-8">
+  <meta name="viewport" content="width=device-width, initial-scale=1.0">
+  <title><%= @profile.user.username %> - <%= @game.name %></title>
+  <style>
+    body {
+      font-family: system-ui, -apple-system, sans-serif;
+      max-width: 600px;
+      margin: 0 auto;
+      padding: 20px;
+      background: #0f0f0f;
+      color: #fff;
+    }
+    .header {
+      text-align: center;
+      margin-bottom: 30px;
+    }
+    .profile-card {
+      background: #0f0f0f;
+      border: 1px solid #1f1f1f;
+      border-radius: 16px;
+      padding: 30px 20px;
+      margin-bottom: 20px;
+    }
+    .profile-header {
+      text-align: center;
+      margin-bottom: 20px;
+    }
+    .username {
+      font-size: 24px;
+      font-weight: 700;
+      margin-bottom: 10px;
+    }
+    .rank-region {
+      color: #999;
+      font-size: 16px;
+    }
+    .profile-details {
+      background: #141414;
+      border: 1px solid #242424;
+      border-radius: 12px;
+      padding: 20px;
+      margin-bottom: 20px;
+    }
+    .detail-row {
+      color: #ddd;
+      font-size: 15px;
+      margin-bottom: 10px;
+    }
+    .bio {
+      color: #ccc;
+      line-height: 1.6;
+      font-size: 15px;
+      margin: 15px 0;
+      font-style: italic;
+    }
+    .tags {
+      display: flex;
+      gap: 8px;
+      flex-wrap: wrap;
+      margin-top: 15px;
+    }
+    .tag {
+      background: #1a1a1a;
+      border: 1px solid #2a2a2a;
+      color: #fff;
+      padding: 6px 12px;
+      border-radius: 6px;
+      font-size: 13px;
+    }
+    .status {
+      text-align: center;
+      margin: 20px 0;
+      color: #22c55e;
+      font-size: 15px;
+    }
+    .status-dot {
+      display: inline-block;
+      width: 8px;
+      height: 8px;
+      border-radius: 50%;
+      background: #22c55e;
+      margin-right: 8px;
+    }
+    .actions {
+      display: flex;
+      gap: 15px;
+      margin-bottom: 20px;
+    }
+    .btn {
+      flex: 1;
+      padding: 14px;
+      border-radius: 8px;
+      font-weight: 600;
+      font-size: 15px;
+      cursor: pointer;
+      border: none;
+    }
+    .btn-primary {
+      background: linear-gradient(135deg, #FF4655 0%, #FF6B7A 100%);
+      color: #fff;
+    }
+    .back-link {
+      display: inline-block;
+      margin-top: 20px;
+      color: #999;
+      text-decoration: none;
+    }
+  </style>
+</head>
+<body>
+  <div class="header">
+    <h1>ValoLFG</h1>
+  </div>
+
+  <div class="profile-card">
+    <div class="profile-header">
+      <div class="username">@<%= @profile.user.username %></div>
+      <div class="rank-region"><%= @profile.rank %> • <%= @profile.region %></div>
+    </div>
+
+    <div class="profile-details">
+      <div class="detail-row">
+        Main <%= @get_agent.(@profile) %> • <%= @profile.playstyle || "Non renseigné" %>
+      </div>
+
+      <%= if @profile.age_range do %>
+        <div class="detail-row">
+          Âge: <%= @profile.age_range %> ans
+        </div>
+      <% end %>
+
+      <%= if @profile.availabilities && length(@profile.availabilities) > 0 do %>
+        <div class="detail-row">
+          Disponible: <%= @format_availabilities.(@profile.availabilities) %>
+        </div>
+      <% end %>
+
+      <%= if @profile.voice_required do %>
+        <div class="detail-row">
+          🎤 Mic ON obligatoire
+        </div>
+      <% end %>
+
+      <%= if @profile.bio do %>
+        <div class="bio">"<%= @profile.bio %>"</div>
+      <% end %>
+
+      <%= if @profile.vibe_tags && length(@profile.vibe_tags) > 0 do %>
+        <div>
+          <div style="color: #888; font-size: 14px; margin-bottom: 10px;">Style de jeu:</div>
+          <div class="tags">
+            <%= for tag <- @profile.vibe_tags do %>
+              <span class="tag"><%= tag %></span>
+            <% end %>
+          </div>
+        </div>
+      <% end %>
+    </div>
+
+    <div class="status">
+      <span class="status-dot"></span>
+      En ligne maintenant
+    </div>
+
+    <div class="actions">
+      <button class="btn btn-primary">Envoyer une demande de connexion →</button>
+    </div>
+  </div>
+
+  <a href="/discover/<%= @game.slug %>" class="back-link">← Retour au feed</a>
+</body>
+</html>

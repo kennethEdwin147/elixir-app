@@ -1,4 +1,4 @@
-defmodule MyApp.Services.GameService do
+defmodule MyApp.Contexts.Game do
   @moduledoc """
   Service pour gérer les jeux disponibles dans l'application.
 

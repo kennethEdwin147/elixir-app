@@ -133,6 +133,9 @@ defmodule MyApp.Router do
   # Onboarding par jeu (profils spécifiques)
   forward "/onboarding",   to: MyApp.Controllers.GameOnboardingController
 
+  # Discovery feed (feed de matching par jeu)
+  forward "/discover",     to: MyApp.Controllers.ProfileDiscoveryController
+
   # ============================================
   # Route racine
   # ============================================

@@ -1,4 +1,4 @@
-defmodule MyApp.Services.ConnectionService do
+defmodule MyApp.Contexts.Connection do
   @moduledoc """
   Service pour gérer les demandes de connexion et les connexions établies.
   Flow: User A envoie une demande → User B accepte → Connection créée

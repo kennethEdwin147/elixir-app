@@ -1,6 +1,6 @@
 defmodule MyApp.Workers.CleanupWorker do
   use GenServer
-  alias MyApp.Services.UserService
+  alias MyApp.Contexts.User
 
   # On définit l'intervalle (ex: toutes les heures)
   @interval 60 * 60 * 1000
@@ -19,7 +19,7 @@ defmodule MyApp.Workers.CleanupWorker do
   @impl true
   def handle_info(:work, state) do
     # Exécute le nettoyage
-    UserService.delete_expired_tokens()
+    User.delete_expired_tokens()
 
     # Re-planifie pour dans une heure
     schedule_cleanup()

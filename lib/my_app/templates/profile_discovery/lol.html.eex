@@ -1,0 +1,36 @@
+<!DOCTYPE html>
+<html lang="fr">
+<head>
+  <meta charset="UTF-8">
+  <meta name="viewport" content="width=device-width, initial-scale=1.0">
+  <title>Discover - League of Legends</title>
+  <style>
+    body {
+      font-family: system-ui, -apple-system, sans-serif;
+      max-width: 600px;
+      margin: 100px auto;
+      padding: 20px;
+      text-align: center;
+      background: #0f0f0f;
+      color: #fff;
+    }
+    h1 {
+      font-size: 48px;
+      margin-bottom: 20px;
+    }
+    p {
+      font-size: 18px;
+      color: #999;
+    }
+    a {
+      color: #FF4655;
+      text-decoration: none;
+    }
+  </style>
+</head>
+<body>
+  <h1>Coming Soon</h1>
+  <p>Le feed League of Legends arrive bientôt !</p>
+  <p><a href="/">← Retour à l'accueil</a></p>
+</body>
+</html>

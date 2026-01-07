@@ -1,7 +1,7 @@
 defmodule MyApp.Controllers.GameOnboardingController do
   use Plug.Router
 
-  alias MyApp.Services.{GameService, ProfileService}
+  alias MyApp.Contexts.{Game, Profile}
   alias MyApp.Games.Valorant
 
   plug :match
@@ -27,7 +27,7 @@ defmodule MyApp.Controllers.GameOnboardingController do
       |> put_resp_header("location", "/auth/login")
       |> send_resp(302, "")
     else
-      case GameService.get_by_slug(game_slug) do
+      case Game.get_by_slug(game_slug) do
         nil ->
           conn
           |> put_resp_content_type("text/html")
@@ -35,7 +35,7 @@ defmodule MyApp.Controllers.GameOnboardingController do
 
         game ->
           # Vérifier si user a déjà un profile pour ce jeu
-          if ProfileService.has_profile_for_game?(current_user.id, game.id) do
+          if Profile.has_profile_for_game?(current_user.id, game.id) do
             # Déjà un profile → redirect vers le feed du jeu
             conn
             |> put_resp_header("location", "/#{game_slug}")
@@ -87,7 +87,7 @@ defmodule MyApp.Controllers.GameOnboardingController do
       |> put_resp_header("location", "/auth/login")
       |> send_resp(302, "")
     else
-      case GameService.get_by_slug(game_slug) do
+      case Game.get_by_slug(game_slug) do
         nil ->
           conn
           |> put_resp_content_type("text/html")
@@ -97,7 +97,7 @@ defmodule MyApp.Controllers.GameOnboardingController do
           params = conn.body_params
 
           # Créer le profile avec game_specific_data
-          case ProfileService.create_with_game_data(current_user, game.id, params) do
+          case Profile.create_with_game_data(current_user, game.id, params) do
             {:ok, _profile} ->
               # Success → redirect vers home avec message
               conn

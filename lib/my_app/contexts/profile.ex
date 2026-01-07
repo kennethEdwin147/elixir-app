@@ -1,4 +1,4 @@
-defmodule MyApp.Services.ProfileService do
+defmodule MyApp.Contexts.Profile do
   @moduledoc """
   Service pour gérer les profiles de jeu des utilisateurs.
   Un user peut avoir UN profile par jeu.

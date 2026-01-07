@@ -5,7 +5,7 @@ defmodule MyApp.Services.Policy do
 
   Usage dans les controllers:
     if Policy.can_edit_profile?(current_user, profile) do
-      ProfileService.update_profile(profile.id, attrs)
+      Profile.update_profile(profile.id, attrs)
     else
       send_resp(403, "Non autorisé")
     end

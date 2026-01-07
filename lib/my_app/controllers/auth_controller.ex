@@ -1,7 +1,7 @@
 defmodule MyApp.Controllers.AuthController do
   use Plug.Router
   alias MyApp.Services.Validator
-  alias MyApp.Services.UserService
+  alias MyApp.Contexts.User
 
   plug :match
   plug :dispatch
@@ -37,10 +37,10 @@ defmodule MyApp.Controllers.AuthController do
     }) do
       {:ok, _} ->
         # 1. On cherche l'utilisateur
-        user = UserService.find_by_email(params["email"])
+        user = User.find_by_email(params["email"])
 
         # 2. On délègue la vérification au service (qui utilisera Bcrypt)
-        if UserService.verify_password(user, params["password"]) do
+        if User.verify_password(user, params["password"]) do
           conn
           |> configure_session(renew: true) # <--- CRITIQUE : Génère un nouvel ID de session après login
           |> put_session(:user_id, user.id)
@@ -104,7 +104,7 @@ defmodule MyApp.Controllers.AuthController do
     {:ok, _} ->
       email = String.downcase(params["email"]) # Sécurité : email en minuscules
 
-      if UserService.user_exists?(email) do
+      if User.user_exists?(email) do
         render_error(conn, "register", email, "Cet email est déjà utilisé")
       else
         case create_user(params) do  # ← Changé (avant: create_user_with_username)
@@ -135,7 +135,7 @@ end
       "password" => params["password"]
     }
 
-    UserService.create_user(user_attrs)
+    User.create_user(user_attrs)
   end
 
 
@@ -166,8 +166,8 @@ end
     email = String.trim(conn.params["email"] || "")
 
     # Sécurité : On affiche le même message même si l'email n'existe pas
-    if user = UserService.find_by_email(email) do
-      token = UserService.generate_reset_token(user)
+    if user = User.find_by_email(email) do
+      token = User.generate_reset_token(user)
       # Ici : MyApp.Mailer.send_reset_link(user, token)
     end
 
@@ -184,7 +184,7 @@ end
   get "/reset-password" do
     token = conn.params["token"]
 
-    if UserService.is_token_valid?(token) do
+    if User.is_token_valid?(token) do
       html = EEx.eval_file("lib/my_app/templates/auth/reset_password.html.eex",
         assigns: %{error_msg: nil, token: token}
       )
@@ -205,7 +205,7 @@ end
     }) do
       {:ok, _} ->
         # 2. On tente la mise à jour si la validation passe
-        case UserService.reset_password_with_token(token, params["password"]) do
+        case User.reset_password_with_token(token, params["password"]) do
           :ok ->
             conn
             |> put_resp_header("location", "/auth/login?success=password_updated")
