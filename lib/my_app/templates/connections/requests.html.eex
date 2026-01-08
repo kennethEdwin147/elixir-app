@@ -1,0 +1,60 @@
+<!DOCTYPE html>
+<html lang="fr">
+<head>
+  <meta charset="UTF-8">
+  <meta name="viewport" content="width=device-width, initial-scale=1.0">
+  <title>Demandes de connexion</title>
+</head>
+<body>
+  <h1>Demandes de connexion reçues</h1>
+
+  <%= if @flash_success do %>
+    <p style="color: green;"><%= @flash_success %></p>
+  <% end %>
+
+  <%= if @flash_error do %>
+    <p style="color: red;"><%= @flash_error %></p>
+  <% end %>
+
+  <%= if @flash_info do %>
+    <p style="color: blue;"><%= @flash_info %></p>
+  <% end %>
+
+  <p><a href="/connections">← Voir mes connexions</a></p>
+  <p><a href="/discover/<%= @game.slug %>">← Retour au feed</a></p>
+
+  <hr>
+
+  <%= if Enum.empty?(@requests) do %>
+    <p>Aucune demande en attente</p>
+  <% else %>
+    <%= for request <- @requests do %>
+      <div style="border: 1px solid #ccc; padding: 15px; margin-bottom: 15px;">
+        <h2>@<%= request.requester.username %></h2>
+        <p><strong>Pour:</strong> <%= request.game.name %></p>
+
+        <%= if request.requester_profile do %>
+          <p><strong>Rank:</strong> <%= request.requester_profile.rank %></p>
+          <p><strong>Région:</strong> <%= request.requester_profile.region %></p>
+        <% end %>
+
+        <%= if request.message do %>
+          <p><strong>Message:</strong> "<%= request.message %>"</p>
+        <% end %>
+
+        <p><em>Reçu le <%= Calendar.strftime(request.inserted_at, "%d/%m/%Y à %H:%M") %></em></p>
+
+        <form method="POST" action="/connections/requests/<%= request.id %>/accept" style="display: inline;">
+          <input type="hidden" name="_csrf_token" value="<%= Plug.CSRFProtection.get_csrf_token() %>">
+          <button type="submit">✓ Accepter</button>
+        </form>
+
+        <form method="POST" action="/connections/requests/<%= request.id %>/decline" style="display: inline;">
+          <input type="hidden" name="_csrf_token" value="<%= Plug.CSRFProtection.get_csrf_token() %>">
+          <button type="submit">✗ Décliner</button>
+        </form>
+      </div>
+    <% end %>
+  <% end %>
+</body>
+</html>

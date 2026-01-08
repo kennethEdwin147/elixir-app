@@ -136,6 +136,9 @@ defmodule MyApp.Router do
   # Discovery feed (feed de matching par jeu)
   forward "/discover",     to: MyApp.Controllers.ProfileDiscoveryController
 
+  # Connexions (demandes et connexions établies)
+  forward "/connections",  to: MyApp.Controllers.ConnectionController
+
   # ============================================
   # Route racine
   # ============================================

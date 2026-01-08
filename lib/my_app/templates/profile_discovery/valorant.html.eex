@@ -231,8 +231,22 @@
     </div>
 
     <div class="actions">
-      <button class="btn btn-primary">Ça m'intéresse →</button>
-      <button class="btn btn-secondary">Passer</button>
+      <form method="POST" action="/connections/request" style="flex: 1;">
+        <input type="hidden" name="_csrf_token" value="<%= Plug.CSRFProtection.get_csrf_token() %>">
+        <input type="hidden" name="target_id" value="<%= @current_match.profile.user_id %>">
+        <input type="hidden" name="game_id" value="<%= @game.id %>">
+        <button type="submit" class="btn btn-primary" style="width: 100%;">Ça m'intéresse →</button>
+      </form>
+
+      <%= if @current_index < @total - 1 do %>
+        <a href="/discover/<%= @game.slug %>?index=<%= @current_index + 1 %>" style="flex: 1; text-decoration: none;">
+          <button class="btn btn-secondary" style="width: 100%;">Passer</button>
+        </a>
+      <% else %>
+        <a href="/discover/<%= @game.slug %>" style="flex: 1; text-decoration: none;">
+          <button class="btn btn-secondary" style="width: 100%;">Retour au début</button>
+        </a>
+      <% end %>
     </div>
   </div>
 

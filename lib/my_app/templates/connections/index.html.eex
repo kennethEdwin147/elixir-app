@@ -1,0 +1,60 @@
+<!DOCTYPE html>
+<html lang="fr">
+<head>
+  <meta charset="UTF-8">
+  <meta name="viewport" content="width=device-width, initial-scale=1.0">
+  <title>Mes connexions</title>
+</head>
+<body>
+  <h1>Mes connexions - <%= @game.name %></h1>
+
+  <%= if @flash_success do %>
+    <p style="color: green;"><%= @flash_success %></p>
+  <% end %>
+
+  <%= if @flash_error do %>
+    <p style="color: red;"><%= @flash_error %></p>
+  <% end %>
+
+  <%= if @flash_info do %>
+    <p style="color: blue;"><%= @flash_info %></p>
+  <% end %>
+
+  <p><a href="/connections/requests">📬 Voir les demandes reçues</a></p>
+  <p><a href="/discover/<%= @game.slug %>">← Retour au feed</a></p>
+
+  <hr>
+
+  <%= if Enum.empty?(@connections) do %>
+    <p>Aucune connexion pour l'instant</p>
+    <p><a href="/discover/<%= @game.slug %>">Découvre des joueurs →</a></p>
+  <% else %>
+    <p><strong><%= length(@connections) %></strong> connexion(s) établie(s)</p>
+
+    <%= for {connection, other_user} <- @connections do %>
+      <div style="border: 1px solid #ccc; padding: 15px; margin-bottom: 15px;">
+        <h2>@<%= other_user.username %></h2>
+
+        <%= if other_user.display_name do %>
+          <p><strong>Nom:</strong> <%= other_user.display_name %></p>
+        <% end %>
+
+        <p><strong>Jeu:</strong> <%= connection.game.name %></p>
+
+        <%= if connection.target_profile do %>
+          <p><strong>Rank:</strong> <%= connection.target_profile.rank %></p>
+          <p><strong>Région:</strong> <%= connection.target_profile.region %></p>
+        <% end %>
+
+        <p><strong>Connectés depuis:</strong> <%= @format_date.(connection.inserted_at) %></p>
+
+        <%= if connection.play_count && connection.play_count > 0 do %>
+          <p><strong>Parties jouées ensemble:</strong> <%= connection.play_count %></p>
+        <% end %>
+
+        <p><em>Contact: <%= other_user.email %></em></p>
+      </div>
+    <% end %>
+  <% end %>
+</body>
+</html>
