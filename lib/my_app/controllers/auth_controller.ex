@@ -45,7 +45,7 @@ defmodule MyApp.Controllers.AuthController do
           |> configure_session(renew: true) # <--- CRITIQUE : Génère un nouvel ID de session après login
           |> put_session(:user_id, user.id)
           |> put_session(:user_email, user.email)
-          |> put_resp_header("location", "/g/valorant")
+          |> put_resp_header("location", "/discover/valorant")
           |> send_resp(302, "")
         else
           # 3. Message générique pour ne pas révéler si c'est l'email ou le mdp qui est faux
@@ -112,7 +112,7 @@ defmodule MyApp.Controllers.AuthController do
             conn
             |> put_session(:user_id, user.id)
             |> put_session(:user_email, user.email)
-            |> put_resp_header("location", "/onboarding")  # ← CHANGE ICI
+            |> put_resp_header("location", "/profile-setup")
             |> send_resp(302, "")
 
           {:error, changeset} ->
